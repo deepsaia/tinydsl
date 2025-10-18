@@ -81,5 +81,3 @@ Add a new DSL by creating an interpreter and router module under `/api/`, then i
 TinyDSL auto-scales to support new modalities — code, music, or narrative — with the same unified interface.
 
 ---
-
-Would you like me to include a **short “Agent Quick Start” section** (2-3 lines on connecting it to GPT-4 or LangChain)?
