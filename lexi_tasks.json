@@ -1,0 +1,182 @@
+[
+  {
+    "id": "001",
+    "name": "basic_greeting",
+    "difficulty": "easy",
+    "description": "Simple greeting message generation.",
+    "goal": "Verify correct parsing of say statements.",
+    "code": "say \"Hello world!\"",
+    "expected_output": "Hello world!"
+  },
+  {
+    "id": "002",
+    "name": "conditional_greeting",
+    "difficulty": "easy",
+    "description": "Demonstrate conditional branch execution.",
+    "goal": "Correctly execute say inside an if block.",
+    "code": "set mood happy\nif mood is happy {\n  say \"You look great today!\"\n}",
+    "expected_output": "You look great today!"
+  },
+  {
+    "id": "003",
+    "name": "loop_echo",
+    "difficulty": "easy",
+    "description": "Test repeat loop expansion.",
+    "goal": "Repeat the same phrase multiple times.",
+    "code": "repeat 3 {\n  say \"Echo\"\n}",
+    "expected_output": "Echo\nEcho\nEcho"
+  },
+  {
+    "id": "004",
+    "name": "task_definition",
+    "difficulty": "medium",
+    "description": "Test task declaration and invocation.",
+    "goal": "Ensure tasks can be defined and called.",
+    "code": "task greet {\n  say \"Hello from task!\"\n}\ncall greet",
+    "expected_output": "Hello from task!"
+  },
+  {
+    "id": "005",
+    "name": "task_with_memory",
+    "difficulty": "medium",
+    "description": "Use memory storage between tasks.",
+    "goal": "Persist a variable using remember and recall.",
+    "code": "task store_memory {\n  remember greeting = \"Hello again!\"\n}\n\ncall store_memory\nrecall greeting",
+    "expected_output": "Hello again!"
+  },
+  {
+    "id": "006",
+    "name": "nested_repeat_condition",
+    "difficulty": "medium",
+    "description": "Evaluate nested loops and conditional logic.",
+    "goal": "Correctly combine repeat and if.",
+    "code": "set mood happy\nrepeat 2 {\n  if mood is happy {\n    say \"Happy loop!\"\n  }\n}",
+    "expected_output": "Happy loop!\nHappy loop!"
+  },
+  {
+    "id": "007",
+    "name": "multi_task_composition",
+    "difficulty": "medium",
+    "description": "Compose multiple reusable tasks.",
+    "goal": "Sequentially execute multiple task calls.",
+    "code": "task intro {\n  say \"Good morning!\"\n}\n\ntask outro {\n  say \"Goodbye!\"\n}\n\ncall intro\ncall outro",
+    "expected_output": "Good morning!\nGoodbye!"
+  },
+  {
+    "id": "008",
+    "name": "recall_in_condition",
+    "difficulty": "medium",
+    "description": "Test recall values inside if conditions.",
+    "goal": "Conditionally respond based on recalled memory.",
+    "code": "remember mood = happy\nif mood is happy {\n  say \"Memory check passed.\"\n}",
+    "expected_output": "Memory check passed."
+  },
+  {
+    "id": "009",
+    "name": "arithmetic_computation",
+    "difficulty": "hard",
+    "description": "Evaluate compute expressions and assignment.",
+    "goal": "Perform math operations and reuse results.",
+    "code": "compute 2+3 as result\nsay \"The sum is:\"\nrecall result",
+    "expected_output": "The sum is:\n5"
+  },
+  {
+    "id": "010",
+    "name": "conditional_memory_branch",
+    "difficulty": "hard",
+    "description": "Conditional branching with memory side effects.",
+    "goal": "Set memory only in one branch of an if statement.",
+    "code": "set mood sad\nif mood is happy {\n  remember message = \"Yay!\"\n} else {\n  remember message = \"Cheer up!\"\n}\nrecall message",
+    "expected_output": "Cheer up!"
+  },
+  {
+    "id": "011",
+    "name": "nested_task_invocation",
+    "difficulty": "hard",
+    "description": "Nested task calls to simulate function hierarchy.",
+    "goal": "Execute tasks that call other tasks.",
+    "code": "task inner {\n  say \"Inner task called!\"\n}\n\ntask outer {\n  say \"Outer task start.\"\n  call inner\n  say \"Outer task end.\"\n}\n\ncall outer",
+    "expected_output": "Outer task start.\nInner task called!\nOuter task end."
+  },
+  {
+    "id": "012",
+    "name": "loop_with_memory_increment",
+    "difficulty": "hard",
+    "description": "Track values across loop iterations.",
+    "goal": "Simulate counter increment stored in memory.",
+    "code": "remember count = 0\nrepeat 3 {\n  compute count + 1 as count\n  remember count = count\n  recall count\n}",
+    "expected_output": "1\n2\n3"
+  },
+  {
+    "id": "013",
+    "name": "branching_dialogue",
+    "difficulty": "medium",
+    "description": "Dialogue generation based on mood.",
+    "goal": "Conditional multi-branch conversation.",
+    "code": "set mood happy\nif mood is happy {\n  say \"Hello! I'm glad to see you.\"\n} else {\n  say \"Hey there, are you okay?\"\n}",
+    "expected_output": "Hello! I'm glad to see you."
+  },
+  {
+    "id": "014",
+    "name": "memory_transfer_between_tasks",
+    "difficulty": "hard",
+    "description": "Ensure memory persists across multiple tasks.",
+    "goal": "Recall variables written in previous task context.",
+    "code": "task save_name {\n  remember name = \"Lexi\"\n}\n\ntask greet_name {\n  say \"Hi\"\n  recall name\n}\n\ncall save_name\ncall greet_name",
+    "expected_output": "Hi\nLexi"
+  },
+  {
+    "id": "015",
+    "name": "contextual_reaction",
+    "difficulty": "medium",
+    "description": "Test tone-dependent output.",
+    "goal": "Say different lines depending on tone value.",
+    "code": "set tone serious\nif tone is serious {\n  say \"Let's focus.\"\n} else {\n  say \"All good!\"\n}",
+    "expected_output": "Let's focus."
+  },
+  {
+    "id": "016",
+    "name": "compound_task_sequence",
+    "difficulty": "hard",
+    "description": "Complex chain of task invocations.",
+    "goal": "Execute three linked tasks with shared memory.",
+    "code": "task start {\n  remember msg = \"Ready\"\n}\n\ntask middle {\n  recall msg\n  remember msg = \"Processing\"\n}\n\ntask end {\n  recall msg\n}\n\ncall start\ncall middle\ncall end",
+    "expected_output": "Ready\nProcessing"
+  },
+  {
+    "id": "017",
+    "name": "memory_default",
+    "difficulty": "easy",
+    "description": "Handle missing memory safely.",
+    "goal": "Recall undefined variable with placeholder.",
+    "code": "recall missing_value",
+    "expected_output": "[undefined:missing_value]"
+  },
+  {
+    "id": "018",
+    "name": "repeated_task_invocation",
+    "difficulty": "medium",
+    "description": "Invoke the same task multiple times.",
+    "goal": "Confirm consistent behavior across calls.",
+    "code": "task greet {\n  say \"Hi again!\"\n}\nrepeat 3 {\n  call greet\n}",
+    "expected_output": "Hi again!\nHi again!\nHi again!"
+  },
+  {
+    "id": "019",
+    "name": "branching_with_task",
+    "difficulty": "hard",
+    "description": "Combine conditional logic with task calls.",
+    "goal": "Only execute a task under certain conditions.",
+    "code": "set mood excited\ntask joy {\n  say \"Woohoo!\"\n}\nif mood is excited {\n  call joy\n}",
+    "expected_output": "Woohoo!"
+  },
+  {
+    "id": "020",
+    "name": "multi_step_reasoning",
+    "difficulty": "hard",
+    "description": "Simulate symbolic reasoning using compute + memory.",
+    "goal": "Perform computation and output final reasoning result.",
+    "code": "compute 3*4 as temp\nremember result = temp\nsay \"Computation done.\"\nrecall result",
+    "expected_output": "Computation done.\n12"
+  }
+]

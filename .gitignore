@@ -11,4 +11,8 @@ wheels/
 
 
 # local dirs
-outputs/
+output/
+
+# local temp files
+lexi_memory.json
+*.png

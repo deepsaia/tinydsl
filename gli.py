@@ -77,7 +77,7 @@ class GlintInterpreter:
         self.shapes.append((shape, x, y, self.size, self.color))
 
     def render(
-        self, save=False, open_after_save=False, output_root="outputs", name="render"
+        self, save=False, open_after_save=False, output_root="output", name="render"
     ):
         fig, ax = plt.subplots()
         for shape, x, y, size, color in self.shapes:
