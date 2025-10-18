@@ -1,13 +1,15 @@
 import re
 from lexi_memory import LexiMemoryStore
 
+
 class LexiInterpreter:
     """A simple interpreter for the Lexi DSL."""
+
     def __init__(self, persistent: bool = True):
         """Initialize the Lexi interpreter."""
         self.context = {"mood": None, "tone": None, "style": None}
         self.memory = LexiMemoryStore() if persistent else {}
-        self.tasks = {}      # for task definitions
+        self.tasks = {}  # for task definitions
         self.output = []
 
     def remember(self, key, value):
@@ -50,7 +52,7 @@ class LexiInterpreter:
 
             # Memory ops
             elif line.startswith("remember"):
-                key, value = re.findall(r'remember (\w+)\s*=\s*(.+)', line)[0]
+                key, value = re.findall(r"remember (\w+)\s*=\s*(.+)", line)[0]
                 self.remember(key.strip(), value.strip().strip('"'))
             elif line.startswith("recall"):
                 _, key = line.split(maxsplit=1)
@@ -93,9 +95,10 @@ class LexiInterpreter:
     def render(self):
         return "\n".join(self.output)
 
+
 # Example usage
 if __name__ == "__main__":
-    code = '''
+    code = """
     set mood happy
     say "Hello!"
     if mood is happy {
@@ -111,7 +114,7 @@ if __name__ == "__main__":
     repeat 2 {
         say "This is fun!"
     }
-    '''
+    """
     interpreter = LexiInterpreter()
     interpreter.parse(code)
     result = interpreter.render()

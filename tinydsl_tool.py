@@ -145,6 +145,6 @@ if __name__ == "__main__":
     # 🧠 Memory persistence test
     tool.set_memory("user_name", "John Arthur")
     print("Memory:", tool.get_memory())
-    
+
     # tool.clear_memory()
     # print("Memory cleared:", tool.get_memory())

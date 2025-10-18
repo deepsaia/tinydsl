@@ -2,6 +2,7 @@ import json
 import difflib
 from typing import List, Dict
 
+
 class LexiEvaluator:
     """Evaluates Lexi task outputs against expected results."""
 
@@ -26,7 +27,9 @@ class LexiEvaluator:
 
         # Scoring metrics
         exact_match = expected == actual
-        line_overlap = len(set(expected_lines) & set(actual_lines)) / max(1, len(expected_lines))
+        line_overlap = len(set(expected_lines) & set(actual_lines)) / max(
+            1, len(expected_lines)
+        )
         pass_fail = "pass" if similarity > 0.8 or line_overlap > 0.8 else "fail"
 
         return {
@@ -35,6 +38,7 @@ class LexiEvaluator:
             "difficulty": task["difficulty"],
             "similarity": round(similarity, 3),
             "line_overlap": round(line_overlap, 3),
+            "exact_match": exact_match,
             "status": pass_fail,
             "expected": expected,
             "actual": actual,
@@ -45,6 +49,7 @@ class LexiEvaluator:
         report = [self.evaluate_output(r["task_id"], r["output"]) for r in results]
         accuracy = sum(r["status"] == "pass" for r in report) / len(report)
         return {"accuracy": round(accuracy, 3), "details": report}
+
 
 # Example usage:
 if __name__ == "__main__":

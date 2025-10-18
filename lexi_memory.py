@@ -2,8 +2,10 @@ import json
 import os
 from threading import Lock
 
+
 class LexiMemoryStore:
     """Simple thread-safe persistent memory store for Lexi."""
+
     def __init__(self, path: str = "output/lexi_memory.json"):
         self.path = path
         self._lock = Lock()
