@@ -37,7 +37,7 @@ app.add_middleware(
 )
 
 # Include routes
-app.include_router(gli_router, prefix="/api/glint", tags=["Glint DSL"])
+app.include_router(gli_router, prefix="/api/gli", tags=["Glint DSL"])
 app.include_router(lexi_router, prefix="/api/lexi", tags=["Lexi DSL"])
 
 

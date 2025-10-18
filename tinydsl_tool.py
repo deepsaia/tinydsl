@@ -12,7 +12,7 @@ class GlintDSLTool:
 
     def list_examples(self, tag: Optional[str] = None):
         """List available DSL examples."""
-        url = f"{self.base_url}/examples"
+        url = f"{self.base_url}/gli/examples"
         params = {"tag": tag} if tag else {}
         resp = requests.get(url, params=params)
         resp.raise_for_status()
@@ -22,7 +22,7 @@ class GlintDSLTool:
         self, example_id: str, save: bool = True, open_after_save: bool = False
     ):
         """Run a saved DSL example by ID."""
-        url = f"{self.base_url}/run_example/{example_id}"
+        url = f"{self.base_url}/gli/run_example/{example_id}"
         params = {"save": save, "open_after_save": open_after_save}
         resp = requests.get(url, params=params)
         resp.raise_for_status()
@@ -36,7 +36,7 @@ class GlintDSLTool:
         open_after_save: bool = False,
     ):
         """Run arbitrary DSL code."""
-        url = f"{self.base_url}/run"
+        url = f"{self.base_url}/gli/run"
         data = {
             "code": code,
             "name": name,
@@ -44,6 +44,16 @@ class GlintDSLTool:
             "open_after_save": open_after_save,
         }
         resp = requests.post(url, json=data)
+        resp.raise_for_status()
+        return resp.json()
+    
+    def run_lexi(self, code: str, randomness: float = 0.1, seed: Optional[int] = None):
+        """Run Lexi DSL and return generated text."""
+        url = f"{self.base_url}/lexi/run"
+        payload = {"code": code, "randomness": randomness}
+        if seed is not None:
+            payload["seed"] = seed
+        resp = requests.post(url, json=payload, timeout=15)
         resp.raise_for_status()
         return resp.json()
 
@@ -68,3 +78,14 @@ if __name__ == "__main__":
     """
     output = tool.run_code(code, name="agent_generated_spiral")
     print("Custom render saved at:", output["path"])
+
+    # Test Lexi
+    lexi_code = """
+    set mood happy
+    say "Hello there!"
+    repeat 2 {
+        say "Have a wonderful day!"
+    }
+    """
+    result = tool.run_lexi(lexi_code, randomness=0.15)
+    print("Lexi output:\n", result["output"])
