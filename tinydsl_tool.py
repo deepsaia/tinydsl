@@ -1,17 +1,19 @@
 import requests
-from typing import Optional
+from typing import Optional, List, Dict
 
 
-class GlintDSLTool:
-    """A lightweight client for the Glint DSL FastAPI backend."""
+class TinyDSLTool:
+    """A unified client for the Glint and Lexi DSL FastAPI backend."""
 
     def __init__(self, base_url: str = "http://localhost:8008/api"):
         self.base_url = base_url.rstrip("/")
-        # Note: Ensure the API server is running before using this tool.
-        # Ensure that the examples file is accessible by the server.
+        # Ensure the FastAPI backend is running before using.
 
+    # ==========================
+    # 🔹 GLINT (visual DSL)
+    # ==========================
     def list_examples(self, tag: Optional[str] = None):
-        """List available DSL examples."""
+        """List available Glint examples."""
         url = f"{self.base_url}/gli/examples"
         params = {"tag": tag} if tag else {}
         resp = requests.get(url, params=params)
@@ -21,7 +23,7 @@ class GlintDSLTool:
     def run_example(
         self, example_id: str, save: bool = True, open_after_save: bool = False
     ):
-        """Run a saved DSL example by ID."""
+        """Run a predefined Glint example by ID."""
         url = f"{self.base_url}/gli/run_example/{example_id}"
         params = {"save": save, "open_after_save": open_after_save}
         resp = requests.get(url, params=params)
@@ -35,7 +37,7 @@ class GlintDSLTool:
         save: bool = True,
         open_after_save: bool = False,
     ):
-        """Run arbitrary DSL code."""
+        """Run arbitrary Glint DSL code."""
         url = f"{self.base_url}/gli/run"
         data = {
             "code": code,
@@ -46,9 +48,18 @@ class GlintDSLTool:
         resp = requests.post(url, json=data)
         resp.raise_for_status()
         return resp.json()
-    
-    def run_lexi(self, code: str, randomness: float = 0.1, seed: Optional[int] = None):
-        """Run Lexi DSL and return generated text."""
+
+    # ==========================
+    # 🔸 LEXI (text DSL)
+    # ==========================
+
+    def run_lexi(
+        self,
+        code: str,
+        randomness: float = 0.1,
+        seed: Optional[int] = None,
+    ):
+        """Run arbitrary Lexi DSL code."""
         url = f"{self.base_url}/lexi/run"
         payload = {"code": code, "randomness": randomness}
         if seed is not None:
@@ -57,35 +68,83 @@ class GlintDSLTool:
         resp.raise_for_status()
         return resp.json()
 
+    def run_lexi_task(self, task_id: str):
+        """Run a benchmark Lexi task by ID."""
+        url = f"{self.base_url}/lexi/task"
+        resp = requests.post(url, json={"task_id": task_id}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
 
+    def eval_lexi_outputs(self, results: List[Dict[str, str]]):
+        """Evaluate Lexi outputs against benchmark expected results."""
+        url = f"{self.base_url}/lexi/eval"
+        resp = requests.post(url, json={"results": results}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    # ==========================
+    # 🧠 Memory Management
+    # ==========================
+
+    def get_memory(self):
+        """Retrieve Lexi persistent memory contents."""
+        url = f"{self.base_url}/lexi/memory"
+        resp = requests.get(url)
+        resp.raise_for_status()
+        return resp.json()
+
+    def set_memory(self, key: str, value: str):
+        """Set a key-value pair in Lexi memory."""
+        url = f"{self.base_url}/lexi/memory/set"
+        resp = requests.post(url, json={key: value})
+        resp.raise_for_status()
+        return resp.json()
+
+    def clear_memory(self):
+        """Clear Lexi persistent memory."""
+        url = f"{self.base_url}/lexi/memory/clear"
+        resp = requests.post(url)
+        resp.raise_for_status()
+        return resp.json()
+
+
+# ==========================
+# 🔧 Example Usage
+# ==========================
 if __name__ == "__main__":
-    tool = GlintDSLTool()
-    # List all examples
-    examples = tool.list_examples()
-    print(f"Found {len(examples)} examples")
+    tool = TinyDSLTool()
 
-    # Run a predefined example
-    result = tool.run_example("021")  # polar spiral
-    print("Generated:", result["output_path"])
-
-    # Run custom DSL code
-    code = """
-    set color green
-    repeat 12 {
-        set size 2+$i
-        draw circle x=cos($i*30)*$i*8 y=sin($i*30)*$i*8
+    # 🖼️ Glint test
+    print("🎨 Running Glint test...")
+    glint_code = """
+    set color orange
+    repeat 6 {
+        set size 5+$i
+        draw circle x=$i*8 y=$i*5
     }
     """
-    output = tool.run_code(code, name="agent_generated_spiral")
-    print("Custom render saved at:", output["path"])
+    res = tool.run_code(glint_code, name="spiral_test")
+    print("Glint output:", res)
 
-    # Test Lexi
+    # 💬 Lexi test
+    print("\n💬 Running Lexi test...")
     lexi_code = """
     set mood happy
-    say "Hello there!"
+    say "Hello!"
     repeat 2 {
-        say "Have a wonderful day!"
+        say "Stay awesome!"
     }
     """
-    result = tool.run_lexi(lexi_code, randomness=0.15)
-    print("Lexi output:\n", result["output"])
+    result = tool.run_lexi(lexi_code)
+    print("Lexi output:", result["output"])
+
+    # 🎯 Lexi task example
+    task = tool.run_lexi_task("005")
+    print("Task result:", task)
+
+    # 🧠 Memory persistence test
+    tool.set_memory("user_name", "John Arthur")
+    print("Memory:", tool.get_memory())
+    
+    # tool.clear_memory()
+    # print("Memory cleared:", tool.get_memory())
