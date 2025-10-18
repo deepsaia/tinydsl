@@ -1,0 +1,149 @@
+[
+  {
+    "id": "001",
+    "name": "simple_circle",
+    "description": "Draws a single red circle at the center.",
+    "tags": ["circle", "basic", "intro"],
+    "code": "set color red\nset size 10\ndraw circle x=50 y=50"
+  },
+  {
+    "id": "002",
+    "name": "row_of_squares",
+    "description": "Creates a horizontal row of blue squares.",
+    "tags": ["square", "pattern", "repeat"],
+    "code": "set color blue\nset size 8\nrepeat 5 {\n  draw square x=10+$i*10 y=10\n}"
+  },
+  {
+    "id": "003",
+    "name": "concentric_circles",
+    "description": "Draws concentric circles centered at the origin.",
+    "tags": ["circle", "pattern", "concentric"],
+    "code": "set color purple\nrepeat 5 {\n  set size 5+$i*5\n  draw circle x=0 y=0\n}"
+  },
+  {
+    "id": "004",
+    "name": "diagonal_pattern",
+    "description": "Places small orange circles along a diagonal line.",
+    "tags": ["circle", "diagonal", "repeat"],
+    "code": "set color orange\nset size 4\nrepeat 6 {\n  draw circle x=10 y=10\n  set size 5-$i*2\n}"
+  },
+  {
+    "id": "005",
+    "name": "line_series",
+    "description": "Draws a set of horizontal black lines.",
+    "tags": ["line", "repeat", "pattern"],
+    "code": "set color black\nset size 10\nrepeat 5 {\n  draw line x=10+$i*5 y=10\n}"
+  },
+  {
+    "id": "006",
+    "name": "target_pattern",
+    "description": "Creates a target with three concentric circles in red, white, and blue.",
+    "tags": ["circle", "layers", "color"],
+    "code": "set color red\nset size 30\ndraw circle x=50 y=50\nset color white\nset size 20\ndraw circle x=50 y=50\nset color blue\nset size 10\ndraw circle x=50 y=50"
+  },
+  {
+    "id": "007",
+    "name": "checkerboard",
+    "description": "Forms a simple black checkerboard of squares.",
+    "tags": ["square", "grid", "repeat"],
+    "code": "set color black\nset size 5\nrepeat 4 {\n  draw square x=10+$i*5 y=10\n  draw square x=20+$i*10 y=10\n  draw square x=10+$i*10 y=20\n  draw square x=20+$i*5 y=20\n}"
+  },
+  {
+    "id": "008",
+    "name": "spiral_like",
+    "description": "A pseudo spiral pattern using circles of increasing size.",
+    "tags": ["circle", "spiral", "pattern"],
+    "code": "set color purple\nset size 2\nrepeat 10 {\n  draw circle x=5+$i*5 y=5+$i*5\n  set size 3+$i\n}"
+  },
+  {
+    "id": "009",
+    "name": "cross_shape",
+    "description": "Draws a simple cross shape using lines.",
+    "tags": ["line", "cross", "geometry"],
+    "code": "set color blue\nset size 10\ndraw line x=0 y=0\ndraw line x=0 y=10\ndraw line x=10 y=0\ndraw line x=10 y=10"
+  },
+  {
+    "id": "010",
+    "name": "square_frame",
+    "description": "Draws two nested red squares to form a frame.",
+    "tags": ["square", "frame", "nested"],
+    "code": "set color red\nset size 20\ndraw square x=0 y=0\nset size 10\ndraw square x=0 y=0"
+  },
+  {
+    "id": "011",
+    "name": "starburst",
+    "description": "A radial starburst using lines in alternating colors.",
+    "tags": ["line", "radial", "color"],
+    "code": "repeat 8 {\n  set color yellow\n  set size 15\ndraw line x=0 y=0\n  set color orange\ndraw line x=5 y=5\n}"
+  },
+  {
+    "id": "012",
+    "name": "grid_pattern",
+    "description": "Generates a 3x3 grid of small black squares.",
+    "tags": ["grid", "square", "pattern"],
+    "code": "set color black\nset size 5\nrepeat 3 {\n  draw square x=10+$i*5 y=10\n  draw square x=20 y=10+$i*5\n  draw square x=30 y=10+$i*5\n}"
+  },
+  {
+    "id": "013",
+    "name": "flower_shape",
+    "description": "Creates a simple flower shape from overlapping circles.",
+    "tags": ["circle", "flower", "overlap"],
+    "code": "set color pink\nset size 8\nrepeat 6 {\n  draw circle x=10 y=0+$i*5\n}"
+  },
+  {
+    "id": "014",
+    "name": "smiley_face",
+    "description": "Draws a face outline with two eyes and a smile curve.",
+    "tags": ["circle", "face", "fun"],
+    "code": "set color yellow\nset size 30\ndraw circle x=50 y=50\nset color black\nset size 5\ndraw circle x=40 y=60\ndraw circle x=60 y=60\nset color red\nset size 10\ndraw line x=40 y=40"
+  },
+  {
+    "id": "015",
+    "name": "diamond_shape",
+    "description": "Composes a diamond shape using four triangles (approximated by lines).",
+    "tags": ["line", "diamond", "geometry"],
+    "code": "set color cyan\nset size 10\ndraw line x=0 y=10\ndraw line x=10 y=0\ndraw line x=0 y=-10\ndraw line x=-10 y=0"
+  },
+  {
+    "id": "016",
+    "name": "wave_pattern",
+    "description": "Repeats small sine-like lines horizontally to form a wave pattern.",
+    "tags": ["line", "wave", "repeat"],
+    "code": "set color blue\nset size 5\nrepeat 10 {\n  draw line x=5+$i*5 y=5\n  draw line x=10+$i*5 y=0\n}"
+  },
+  {
+    "id": "017",
+    "name": "nested_squares",
+    "description": "Draws multiple nested squares with decreasing sizes.",
+    "tags": ["square", "nested", "pattern"],
+    "code": "set color gray\nrepeat 5 {\n  set size 30-$i*5\ndraw square x=0 y=0\n  set size 20\n  draw square x=0 y=0\n}"
+  },
+  {
+    "id": "018",
+    "name": "ripple_effect",
+    "description": "Creates a ripple-like effect with expanding circles.",
+    "tags": ["circle", "ripple", "motion"],
+    "code": "set color lightblue\nset size 5\nrepeat 6 {\n  draw circle x=0 y=0\n  set size 8-$i*2\n}"
+  },
+  {
+    "id": "019",
+    "name": "triangle_fan",
+    "description": "Simulates a triangle fan using lines radiating from the origin.",
+    "tags": ["line", "triangle", "radial"],
+    "code": "set color green\nset size 10\nrepeat 6 {\n  draw line x=0 y=0\n}"
+  },
+  {
+    "id": "020",
+    "name": "spiral_grid",
+    "description": "Combines circular and square patterns in a nested spiral formation.",
+    "tags": ["spiral", "hybrid", "complex"],
+    "code": "set color magenta\nset size 5\nrepeat 8 {\n  draw circle x=5 y=5\n  draw square x=10 y=10\n  set size 7+$i*2\n}"
+  },
+  {
+    "id": "021",
+    "name": "polar_spiral",
+    "description": "Draws a true spiral pattern using trigonometric functions for x and y positions, creating a smooth outward rotation.",
+    "tags": ["circle", "spiral", "trigonometric", "pattern"],
+    "code": "set color orange\nrepeat 20 {\n  set size 3+$i\n  draw circle x=cos($i*20)*$i*10 y=sin($i*20)*$i*10\n}"
+  }
+]
