@@ -43,9 +43,12 @@ app.include_router(lexi_router, prefix="/api/lexi", tags=["Lexi DSL"])
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to TinyDSL API with Glint (image) and Lexi (text) DSLs.!"}
+    return {
+        "message": "Welcome to TinyDSL API with Glint (image) and Lexi (text) DSLs.!"
+    }
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("api.main:app", host="0.0.0.0", port=8008, reload=True)

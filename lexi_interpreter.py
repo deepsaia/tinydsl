@@ -1,5 +1,6 @@
 import re
 
+
 class LexiInterpreter:
     def __init__(self):
         self.context = {"mood": None, "tone": None, "style": None}
@@ -27,7 +28,7 @@ class LexiInterpreter:
                 for _ in range(count):
                     self.parse("\n".join(block))
             elif line.startswith("if"):
-                cond = re.match(r'if (\w+) is (\w+)', line)
+                cond = re.match(r"if (\w+) is (\w+)", line)
                 if cond:
                     key, val = cond.groups()
                     block = []

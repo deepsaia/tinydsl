@@ -1,3 +1,4 @@
+# api/routes_lexi.py
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -5,17 +6,16 @@ from lexi_interpreter import LexiInterpreter
 
 router = APIRouter()
 
+
 class LexiRequest(BaseModel):
     code: str
-    randomness: float = 0.1
-    seed: int | None = None
 
 
-@router.post("/lexi/run")
+@router.post("/run")
 def run_lexi(request: LexiRequest):
-    """Run a Lexi DSL script and return the generated text."""
+    """Run a Lexi DSL script and return generated text."""
     try:
-        lexi = LexiInterpreter(seed=request.seed, randomness=request.randomness)
+        lexi = LexiInterpreter()
         lexi.parse(request.code)
         result = lexi.render()
         return JSONResponse({"status": "ok", "output": result})

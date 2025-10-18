@@ -3,8 +3,10 @@ import re
 import os
 import datetime
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
 
 class GlintInterpreter:
     """Enhanced TinyDSL interpreter with repeat indexing and expression parsing."""
@@ -30,8 +32,10 @@ class GlintInterpreter:
             elif line.startswith("draw"):
                 _, shape, *params = line.split()
                 expr_text = " ".join(params)
-                matches = re.findall(r'(\w+)=([-\w+*/.$()]+)', expr_text)
-                kwargs = {k: float(self._eval_expr(v, repeat_index)) for k, v in matches}
+                matches = re.findall(r"(\w+)=([-\w+*/.$()]+)", expr_text)
+                kwargs = {
+                    k: float(self._eval_expr(v, repeat_index)) for k, v in matches
+                }
                 self.draw(shape, **kwargs)
             elif line.startswith("repeat"):
                 count = int(line.split()[1])
@@ -72,15 +76,25 @@ class GlintInterpreter:
         x, y = kwargs.get("x", 0), kwargs.get("y", 0)
         self.shapes.append((shape, x, y, self.size, self.color))
 
-    def render(self, save=False, open_after_save=False, output_root="outputs", name="render"):
+    def render(
+        self, save=False, open_after_save=False, output_root="outputs", name="render"
+    ):
         fig, ax = plt.subplots()
         for shape, x, y, size, color in self.shapes:
             if shape == "circle":
                 ax.add_patch(plt.Circle((x, y), size, color=color, fill=False))
             elif shape == "square":
-                ax.add_patch(plt.Rectangle((x-size/2, y-size/2), size, size, color=color, fill=False))
+                ax.add_patch(
+                    plt.Rectangle(
+                        (x - size / 2, y - size / 2),
+                        size,
+                        size,
+                        color=color,
+                        fill=False,
+                    )
+                )
             elif shape == "line":
-                ax.plot([x, x+size], [y, y], color=color)
+                ax.plot([x, x + size], [y, y], color=color)
         ax.set_aspect("equal")
         ax.autoscale()
         plt.axis("off")
@@ -93,10 +107,12 @@ class GlintInterpreter:
             plt.close(fig)
             if open_after_save:
                 import webbrowser
+
                 webbrowser.open(f"file://{os.path.abspath(file_path)}")
             return file_path
         else:
             plt.show()
+
 
 if __name__ == "__main__":
     # Example usage (standalone mode)
