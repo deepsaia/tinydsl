@@ -3,19 +3,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from api.routes import router
+from api.routes_lexi import router as lexi_router
+from api.routes_gli import router as gli_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handles FastAPI startup and shutdown."""
-    logging.info("🚀 Glint DSL API is starting up...")
+    logging.info("🚀 Tiny DSL API is starting up...")
     try:
         # Example of any init logic: preload DSL configs or verify files
-        logging.info("Loading Glint examples and verifying environment...")
+        logging.info("Loading Gli examples and verifying environment...")
         yield
     finally:
-        logging.info("🛑 Glint DSL API is shutting down...")
+        logging.info("🛑 Tiny DSL API is shutting down...")
 
 
 # Initialize app
@@ -36,12 +37,13 @@ app.add_middleware(
 )
 
 # Include routes
-app.include_router(router, prefix="/api", tags=["Glint DSL"])
+app.include_router(gli_router, prefix="/api/glint", tags=["Glint DSL"])
+app.include_router(lexi_router, prefix="/api/lexi", tags=["Lexi DSL"])
 
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to the Glint DSL API!"}
+    return {"message": "Welcome to TinyDSL API with Glint (image) and Lexi (text) DSLs.!"}
 
 
 if __name__ == "__main__":
