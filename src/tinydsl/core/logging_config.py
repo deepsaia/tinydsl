@@ -14,6 +14,22 @@ from pathlib import Path
 from loguru import logger
 
 
+# Project root directory (where pyproject.toml lives)
+def get_project_root() -> Path:
+    """Get the project root directory."""
+    # Start from this file's location and go up to find pyproject.toml
+    current = Path(__file__).resolve()
+    for parent in [current] + list(current.parents):
+        if (parent / "pyproject.toml").exists():
+            return parent
+    # Fallback to current working directory
+    return Path.cwd()
+
+
+PROJECT_ROOT = get_project_root()
+DEFAULT_LOG_DIR = PROJECT_ROOT / "logs"
+
+
 def setup_logging(
     level: str = "INFO",
     log_file: str = None,
@@ -100,7 +116,7 @@ def configure_for_production():
     """Configure logging for production environment."""
     return setup_logging(
         level="WARNING",
-        log_file="logs/tinydsl.log",
+        log_file=str(DEFAULT_LOG_DIR / "tinydsl.log"),
         rotation="50 MB",
         retention="30 days",
         colorize=False,
@@ -111,7 +127,7 @@ def configure_for_development():
     """Configure logging for development environment."""
     return setup_logging(
         level="DEBUG",
-        log_file="logs/tinydsl-dev.log",
+        log_file=str(DEFAULT_LOG_DIR / "tinydsl-dev.log"),
         rotation="10 MB",
         retention="3 days",
         colorize=True,
@@ -156,14 +172,29 @@ def setup_standard_logging_interception():
     """
     import logging
 
-    # Intercept standard logging
-    logging.basicConfig(handlers=[logging.StreamHandler(InterceptHandler())], level=0, force=True)
+    class LoguruHandler(logging.Handler):
+        """Handler that redirects standard logging to loguru."""
+
+        def emit(self, record):
+            # Get corresponding Loguru level
+            try:
+                level = logger.level(record.levelname).name
+            except ValueError:
+                level = record.levelno
+
+            # Find caller from where originated
+            frame, depth = sys._getframe(6), 6
+            while frame and frame.f_code.co_filename == logging.__file__:
+                frame = frame.f_back
+                depth += 1
+
+            logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
 
     # Intercept specific loggers
     for logger_name in ["uvicorn", "uvicorn.access", "uvicorn.error", "fastapi"]:
         logging_logger = logging.getLogger(logger_name)
-        logging_logger.handlers = [logging.StreamHandler(InterceptHandler())]
-        logging_logger.setLevel(logging.INFO)
+        logging_logger.handlers = [LoguruHandler()]
+        logging_logger.propagate = False  # Don't propagate to root logger
 
 
 # Example usage patterns for developers

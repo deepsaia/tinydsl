@@ -1,6 +1,8 @@
+from pathlib import Path
+from tinydsl.core.base_dsl import BaseDSL
 from tinydsl.parser.lark_lexi_parser import LarkLexiParser
 
-class LexiInterpreter:
+class LexiInterpreter(BaseDSL):
     """
     Lexi DSL interpreter.
 
@@ -20,6 +22,17 @@ class LexiInterpreter:
         """
         self.version = version
         self.parser = LarkLexiParser(version=version)
+
+    @property
+    def name(self) -> str:
+        """DSL identifier."""
+        return "lexi"
+
+    @property
+    def grammar_path(self) -> Path:
+        """Path to Lark grammar file."""
+        data_dir = Path(__file__).parent.parent / "data"
+        return data_dir / "lexi_grammar.lark"
 
     def parse(self, code: str):
         self.output = self.parser.parse(code)

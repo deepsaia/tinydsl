@@ -12,6 +12,7 @@ wheels/
 
 # local dirs
 output/
+logs/
 
 # local temp files
 lexi_memory.json

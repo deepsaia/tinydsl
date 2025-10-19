@@ -2,6 +2,7 @@
 
 recursive-exclude dist *
 recursive-exclude output *
+recursive-exclude logs *
 recursive-exclude tests *
 recursive-include src/tinydsl/data *.json
 include LICENSE

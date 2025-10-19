@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import List, Tuple, Optional, Union
 
+from tinydsl.core.base_dsl import BaseDSL
 from tinydsl.parser.lark_gli_parser import LarkGLIParser
 from tinydsl.gli.renderers import PillowRenderer, BaseRenderer
 
@@ -11,7 +13,7 @@ from tinydsl.gli.renderers import PillowRenderer, BaseRenderer
 Shape = Union[Tuple[str, float, float, float, str], Tuple[str, float, float, float, str, float, List]]
 
 
-class GlintInterpreter:
+class GlintInterpreter(BaseDSL):
     """
     GLI interpreter:
       - Parses & executes GLI via LarkGLIParser or V2 (with variables, conditionals, functions).
@@ -42,6 +44,17 @@ class GlintInterpreter:
             supersample=supersample,
             line_width=line_width,
         )
+
+    @property
+    def name(self) -> str:
+        """DSL identifier."""
+        return "gli"
+
+    @property
+    def grammar_path(self) -> Path:
+        """Path to Lark grammar file."""
+        data_dir = Path(__file__).parent.parent / "data"
+        return data_dir / "gli_grammar.lark"
 
     def parse(self, code: str) -> List[Shape]:
         """
