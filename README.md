@@ -70,7 +70,7 @@ Images are saved to `/output` with timestamped filenames.
 Agents or Python scripts can call TinyDSL directly using the included tool:
 
 ```python
-from agent_tool import TinyDSLTool
+from tinydsl_tool import TinyDSLTool
 
 tool = TinyDSLTool(base_url="http://localhost:8008/api")
 
