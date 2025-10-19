@@ -83,31 +83,46 @@ class DSLHandler:
         Raises:
             HTTPException: If execution fails
         """
-        self.logger.info(f"Executing {self.dsl_name} code (length: {len(code)} chars)")
+        # Skip verbose logging for very short code (likely RL exploration)
+        # RL agents often generate random short snippets (< 50 chars)
+        is_exploration = len(code.strip()) < 50
+
+        if not is_exploration:
+            self.logger.info(f"Executing {self.dsl_name} code (length: {len(code)} chars)")
+
         try:
             # Create DSL instance with optional kwargs
             dsl_kwargs = dsl_kwargs or {}
             dsl = self.dsl_class(**dsl_kwargs)
 
             # Execute code
-            self.logger.debug(f"Parsing {self.dsl_name} code")
+            if not is_exploration:
+                self.logger.debug(f"Parsing {self.dsl_name} code")
             dsl.parse(code)
 
-            self.logger.debug(f"Rendering {self.dsl_name} output")
+            if not is_exploration:
+                self.logger.debug(f"Rendering {self.dsl_name} output")
             output = dsl.render()
 
             # Process output if custom processor provided
             if process_output:
-                self.logger.debug("Using custom output processor")
+                if not is_exploration:
+                    self.logger.debug("Using custom output processor")
                 result = process_output(dsl, output)
             else:
                 result = {"status": "ok", "output": output}
 
-            self.logger.success(f"Successfully executed {self.dsl_name} code")
+            if not is_exploration:
+                self.logger.success(f"Successfully executed {self.dsl_name} code")
             return result
 
         except Exception as e:
-            self.logger.error(f"Failed to execute {self.dsl_name} code: {e}")
+            # Log at debug level for exploration (RL agent trying invalid syntax)
+            # Log at error level for real user requests
+            if is_exploration:
+                self.logger.debug(f"Exploration attempt failed: {e}")
+            else:
+                self.logger.error(f"Failed to execute {self.dsl_name} code: {e}")
             raise HTTPException(status_code=400, detail=str(e))
 
     def handle_task(

@@ -3,35 +3,49 @@
     "id": "001",
     "name": "basic_conversion",
     "description": "Simple two-unit conversion",
-    "tags": ["basic", "conversion"],
-    "code": "define 1 flurb = 3.7 grobbles\nconvert 10 flurbs to grobbles"
+    "tags": [
+      "basic",
+      "conversion"
+    ],
+    "code": "define 1 flurb = 3.7 grobble\nconvert 10 flurb to grobble"
   },
   {
     "id": "002",
     "name": "chained_conversion",
     "description": "Multi-hop conversion through intermediary units",
-    "tags": ["chain", "complex"],
-    "code": "define 1 flurb = 3.7 grobbles\ndefine 1 grobble = 2.1 zepts\nconvert 10 flurbs to zepts"
+    "tags": [
+      "chain",
+      "complex"
+    ],
+    "code": "define 1 flurb = 3.7 grobble\ndefine 1 grobble = 2.1 zept\nconvert 10 flurb to zept"
   },
   {
     "id": "003",
     "name": "reverse_conversion",
     "description": "Convert in reverse direction",
-    "tags": ["bidirectional"],
-    "code": "define 1 flurb = 5.2 quibs\nconvert 20 quibs to flurbs"
+    "tags": [
+      "bidirectional"
+    ],
+    "code": "define 1 flurb = 5.2 quib\nconvert 20 quib to flurb"
   },
   {
     "id": "004",
     "name": "arithmetic_addition",
     "description": "Add quantities with unit conversion",
-    "tags": ["arithmetic", "add"],
-    "code": "define 1 flurb = 2 grobbles\ncompute 5 flurbs + 3 grobbles in grobbles"
+    "tags": [
+      "arithmetic",
+      "add"
+    ],
+    "code": "define 1 flurb = 2 grobble\ncompute 5 flurb + 3 grobble in grobble"
   },
   {
     "id": "005",
     "name": "complex_expression",
     "description": "Complex arithmetic with multiple operations",
-    "tags": ["arithmetic", "complex"],
-    "code": "define 1 voom = 4 zepts\ndefine 1 zept = 0.5 quibs\ncompute 10 vooms - 5 zepts + 8 quibs in quibs"
+    "tags": [
+      "arithmetic",
+      "complex"
+    ],
+    "code": "define 1 voom = 4 zept\ndefine 1 zept = 0.5 quib\ncompute 10 voom - 5 zept + 8 quib in quib"
   }
 ]

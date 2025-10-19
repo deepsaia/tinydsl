@@ -59,7 +59,7 @@ class TestGenericDSLClient:
                 # run_task response
                 mock_resp.json.return_value = {
                     "task_id": "001",
-                    "generated_output": "14.0 grobbles"
+                    "generated_output": "14.0 grobble"
                 }
             elif '/eval' in url:
                 # evaluate response
