@@ -14,6 +14,7 @@ from typing import Any, Callable, Dict, Optional, Type
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from tinydsl.parser.ast_parser import LarkASTParser
+from tinydsl.core.logging_config import get_logger
 import json
 
 
@@ -43,19 +44,23 @@ class DSLHandler:
             dsl_name: Name of DSL for logging/responses
             grammar_path: Path to Lark grammar file (for AST parsing)
         """
+        self.logger = get_logger(self.__class__.__name__)
         self.dsl_class = dsl_class
         self.evaluator_class = evaluator_class
         self.tasks_path = tasks_path
         self.dsl_name = dsl_name
         self.grammar_path = grammar_path
 
+        self.logger.debug(f"Initializing DSLHandler for {dsl_name}")
+
         # Initialize AST parser if grammar path provided
         self.ast_parser = None
         if grammar_path:
             try:
                 self.ast_parser = LarkASTParser(grammar_path)
+                self.logger.debug(f"AST parser initialized for {dsl_name}")
             except Exception as e:
-                print(f"Warning: Could not initialize AST parser for {dsl_name}: {e}")
+                self.logger.warning(f"Could not initialize AST parser for {dsl_name}: {e}")
 
     def handle_run(
         self,
@@ -78,23 +83,31 @@ class DSLHandler:
         Raises:
             HTTPException: If execution fails
         """
+        self.logger.info(f"Executing {self.dsl_name} code (length: {len(code)} chars)")
         try:
             # Create DSL instance with optional kwargs
             dsl_kwargs = dsl_kwargs or {}
             dsl = self.dsl_class(**dsl_kwargs)
 
             # Execute code
+            self.logger.debug(f"Parsing {self.dsl_name} code")
             dsl.parse(code)
+
+            self.logger.debug(f"Rendering {self.dsl_name} output")
             output = dsl.render()
 
             # Process output if custom processor provided
             if process_output:
-                return process_output(dsl, output)
+                self.logger.debug("Using custom output processor")
+                result = process_output(dsl, output)
+            else:
+                result = {"status": "ok", "output": output}
 
-            # Default response
-            return {"status": "ok", "output": output}
+            self.logger.success(f"Successfully executed {self.dsl_name} code")
+            return result
 
         except Exception as e:
+            self.logger.error(f"Failed to execute {self.dsl_name} code: {e}")
             raise HTTPException(status_code=400, detail=str(e))
 
     def handle_task(

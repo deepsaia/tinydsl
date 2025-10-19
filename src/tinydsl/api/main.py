@@ -1,8 +1,8 @@
-import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+from tinydsl.core.logging_config import logger, setup_standard_logging_interception
 from tinydsl.api.routes_lexi import router as lexi_router
 from tinydsl.api.routes_gli import router as gli_router
 from tinydsl.api.routes_tinycalc import router as tinycalc_router
@@ -15,11 +15,14 @@ from tinydsl.lexi.lexi import LexiInterpreter
 from tinydsl.tinycalc.tinycalc import TinyCalcInterpreter
 from tinydsl.tinysql.tinysql import TinySQLInterpreter
 
+# Setup logging interception for uvicorn and fastapi
+setup_standard_logging_interception()
+
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Handles FastAPI startup and shutdown."""
-    logging.info("🚀 TinyDSL API is starting up...")
+    logger.info("🚀 TinyDSL API is starting up...")
     try:
         # Try to register DSLs in the global registry (optional - only needed for /dsls endpoint)
         # Some DSLs may not inherit from BaseDSL, which is fine for REST API usage
@@ -28,13 +31,13 @@ async def lifespan(_app: FastAPI):
             register_dsl("lexi", LexiInterpreter)
             register_dsl("tinycalc", TinyCalcInterpreter)
             register_dsl("tinysql", TinySQLInterpreter)
-            logging.info("✅ Registered DSLs: gli, lexi, tinycalc, tinysql")
+            logger.success("✅ Registered DSLs: gli, lexi, tinycalc, tinysql")
         except ValueError as e:
-            logging.warning(f"⚠️  DSL registration skipped: {e}")
-            logging.info("API endpoints will still work, but /dsls endpoint may not list all DSLs")
+            logger.warning(f"⚠️  DSL registration skipped: {e}")
+            logger.info("API endpoints will still work, but /dsls endpoint may not list all DSLs")
         yield
     finally:
-        logging.info("🛑 TinyDSL API is shutting down...")
+        logger.info("🛑 TinyDSL API is shutting down...")
 
 
 # Initialize app
