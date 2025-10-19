@@ -12,6 +12,9 @@ jobs:
     name: Build and Publish to PyPI
     if: github.repository == 'deepsaia/tinydsl'
     runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout code
