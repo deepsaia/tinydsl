@@ -3,12 +3,13 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 **TinyDSL** is a modular, agent-ready framework for exploring and testing domain-specific languages (DSLs).
-It currently supports four DSLs:
+It currently supports five DSLs:
 
 * 🎨 **Gli** — graphics DSL for procedural image generation
 * 🗣️ **Lexi** — text DSL for structured, expressive text generation and reasoning
 * 🧮 **TinyCalc** — unit conversion DSL for novel units and calculations
 * 🗄️ **TinySQL** — simplified query DSL for data operations
+* 🔢 **TinyMath** — general-purpose arithmetic calculator with variables and functions
 
 All DSLs are served via a unified **FastAPI backend** and are designed to be invoked by **LLM agents** or external REST clients.
 
@@ -78,7 +79,8 @@ tinydsl/
 │   ├── lark_lexi_parser.py
 │   ├── lark_gli_parser.py
 │   ├── lark_tinycalc_parser.py
-│   └── lark_tinysql_parser.py
+│   ├── lark_tinysql_parser.py
+│   └── lark_tinymath_parser.py
 │
 ├── data/              # Grammars, examples, benchmarks
 │   ├── lexi_grammar.lark
@@ -98,11 +100,17 @@ tinydsl/
 │
 ├── tinycalc/          # Unit conversion DSL
 ├── tinysql/           # Query DSL
+├── tinymath/          # Arithmetic calculator DSL
+│   ├── tinymath.py    # Main interpreter
+│   └── tinymath_evaluator.py
 │
 ├── api/               # REST API layer
 │   ├── main.py        # FastAPI app
 │   ├── routes_lexi.py
-│   └── routes_gli.py
+│   ├── routes_gli.py
+│   ├── routes_tinycalc.py
+│   ├── routes_tinysql.py
+│   └── routes_tinymath.py
 │
 ├── agent_tools/       # LLM agent integrations
 ├── rl/                # Reinforcement learning framework
@@ -146,9 +154,24 @@ repeat 10 {
 
 Images save to `/output` as `{id}_{name}_{YYYYMMDD_HHMMSS}.png` (when `id`/`name` provided).
 
+### **TinyMath (Arithmetic Calculator)**
+
+```dsl
+x = 10
+y = 20
+x + y * 2
+sqrt(144)
+sin(0)
+max(5, 10, 3)
+```
+
+TinyMath supports variables, arithmetic operators (`+`, `-`, `*`, `/`, `^`, `%`), comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`), and built-in functions (trig, rounding, min/max).
+
+**Note**: TinyMath is for general arithmetic. Use **TinyCalc** for unit conversions (flurbs, grobbles, zepts).
+
 ---
 
-## 🚀 What’s New
+## 🚀 What's New
 
 * **Lark everywhere**
 
@@ -234,6 +257,11 @@ curl -X POST http://localhost:8008/api/tinycalc/run \
 curl -X POST http://localhost:8008/api/tinysql/run \
   -H 'Content-Type: application/json' \
   -d '{"code":"load table users from \"data.json\"\nselect name, age"}'
+
+# TinyMath
+curl -X POST http://localhost:8008/api/tinymath/run \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"x = 10\ny = 20\nx + y * 2\nsqrt(144)"}'
 ```
 
 ### Run Benchmark Tasks
@@ -251,6 +279,11 @@ curl -X POST http://localhost:8008/api/gli/task?task_id=gli_001
 curl -X POST http://localhost:8008/api/tinycalc/task \
   -H 'Content-Type: application/json' \
   -d '{"task_id":"tinycalc_001"}'
+
+# TinyMath task
+curl -X POST http://localhost:8008/api/tinymath/task \
+  -H 'Content-Type: application/json' \
+  -d '{"task_id":"001"}'
 ```
 
 ### Evaluate Outputs

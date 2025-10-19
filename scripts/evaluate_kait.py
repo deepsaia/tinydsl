@@ -10,7 +10,7 @@ Calculates metrics for measuring LLM knowledge acquisition:
 - Prequential Regret: Online learning performance
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional
 import json
 from pathlib import Path
@@ -232,7 +232,7 @@ class KAITEvaluator:
 
         report = {
             "experiment_id": self.experiment_id,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "config": self.config,
             "metrics": {
                 "AG": ag,
@@ -305,7 +305,7 @@ def run_kait_experiment(
     }
 
     evaluator = KAITEvaluator(
-        experiment_id=f"{dsl_name}_{agent_model}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
+        experiment_id=f"{dsl_name}_{agent_model}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
         config=config
     )
 

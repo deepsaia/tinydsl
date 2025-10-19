@@ -1,0 +1,272 @@
+[
+  {
+    "id": "001",
+    "name": "simple_addition",
+    "difficulty": "easy",
+    "description": "Add two numbers",
+    "goal": "Test basic addition",
+    "code": "2 + 3",
+    "expected_output": "5.0"
+  },
+  {
+    "id": "002",
+    "name": "simple_multiplication",
+    "difficulty": "easy",
+    "description": "Multiply two numbers",
+    "goal": "Test basic multiplication",
+    "code": "4 * 5",
+    "expected_output": "20.0"
+  },
+  {
+    "id": "003",
+    "name": "simple_division",
+    "difficulty": "easy",
+    "description": "Divide two numbers",
+    "goal": "Test basic division",
+    "code": "20 / 4",
+    "expected_output": "5.0"
+  },
+  {
+    "id": "004",
+    "name": "subtraction",
+    "difficulty": "easy",
+    "description": "Subtract two numbers",
+    "goal": "Test subtraction",
+    "code": "10 - 3",
+    "expected_output": "7.0"
+  },
+  {
+    "id": "005",
+    "name": "operator_precedence",
+    "difficulty": "medium",
+    "description": "Test order of operations",
+    "goal": "Verify multiplication before addition",
+    "code": "2 + 3 * 4",
+    "expected_output": "14.0"
+  },
+  {
+    "id": "006",
+    "name": "parentheses_precedence",
+    "difficulty": "medium",
+    "description": "Parentheses override precedence",
+    "goal": "Test parentheses",
+    "code": "(2 + 3) * 4",
+    "expected_output": "20.0"
+  },
+  {
+    "id": "007",
+    "name": "variable_assignment",
+    "difficulty": "easy",
+    "description": "Assign and use variable",
+    "goal": "Test variable storage",
+    "code": "x = 10\nx",
+    "expected_output": "x = 10.0\n10.0"
+  },
+  {
+    "id": "008",
+    "name": "variable_arithmetic",
+    "difficulty": "medium",
+    "description": "Arithmetic with variables",
+    "goal": "Test variable usage in expressions",
+    "code": "x = 5\ny = 3\nx + y",
+    "expected_output": "x = 5.0\ny = 3.0\n8.0"
+  },
+  {
+    "id": "009",
+    "name": "sqrt_function",
+    "difficulty": "easy",
+    "description": "Calculate square root",
+    "goal": "Test sqrt function",
+    "code": "sqrt(16)",
+    "expected_output": "4.0"
+  },
+  {
+    "id": "010",
+    "name": "power_operator",
+    "difficulty": "medium",
+    "description": "Exponentiation",
+    "goal": "Test ^ operator",
+    "code": "2 ^ 8",
+    "expected_output": "256.0"
+  },
+  {
+    "id": "011",
+    "name": "abs_function",
+    "difficulty": "easy",
+    "description": "Absolute value",
+    "goal": "Test abs function",
+    "code": "abs(-10)",
+    "expected_output": "10.0"
+  },
+  {
+    "id": "012",
+    "name": "max_function",
+    "difficulty": "medium",
+    "description": "Find maximum",
+    "goal": "Test max with multiple args",
+    "code": "max(3, 7, 2, 9, 1)",
+    "expected_output": "9.0"
+  },
+  {
+    "id": "013",
+    "name": "min_function",
+    "difficulty": "medium",
+    "description": "Find minimum",
+    "goal": "Test min with multiple args",
+    "code": "min(8, 3, 12, 1, 5)",
+    "expected_output": "1.0"
+  },
+  {
+    "id": "014",
+    "name": "floor_function",
+    "difficulty": "easy",
+    "description": "Floor rounding",
+    "goal": "Test floor function",
+    "code": "floor(3.7)",
+    "expected_output": "3.0"
+  },
+  {
+    "id": "015",
+    "name": "ceil_function",
+    "difficulty": "easy",
+    "description": "Ceiling rounding",
+    "goal": "Test ceil function",
+    "code": "ceil(3.2)",
+    "expected_output": "4.0"
+  },
+  {
+    "id": "016",
+    "name": "modulo_operation",
+    "difficulty": "medium",
+    "description": "Modulo operator",
+    "goal": "Test % operator",
+    "code": "17 % 5",
+    "expected_output": "2.0"
+  },
+  {
+    "id": "017",
+    "name": "negative_numbers",
+    "difficulty": "easy",
+    "description": "Negative unary operator",
+    "goal": "Test negation",
+    "code": "-5 + 10",
+    "expected_output": "5.0"
+  },
+  {
+    "id": "018",
+    "name": "complex_expression",
+    "difficulty": "hard",
+    "description": "Multi-operation expression",
+    "goal": "Test complex evaluation",
+    "code": "(10 + 5) * 2 - 3",
+    "expected_output": "27.0"
+  },
+  {
+    "id": "019",
+    "name": "pythagorean",
+    "difficulty": "hard",
+    "description": "Pythagorean theorem",
+    "goal": "Calculate hypotenuse",
+    "code": "a = 3\nb = 4\nsqrt(a^2 + b^2)",
+    "expected_output": "a = 3.0\nb = 4.0\n5.0"
+  },
+  {
+    "id": "020",
+    "name": "circle_area",
+    "difficulty": "hard",
+    "description": "Calculate circle area",
+    "goal": "Multi-step calculation",
+    "code": "pi = 3.14159\nr = 5\npi * r^2",
+    "expected_output": "pi = 3.14159\nr = 5.0\n78.53975"
+  },
+  {
+    "id": "021",
+    "name": "sin_zero",
+    "difficulty": "medium",
+    "description": "Sine of zero",
+    "goal": "Test sin function",
+    "code": "sin(0)",
+    "expected_output": "0.0"
+  },
+  {
+    "id": "022",
+    "name": "cos_zero",
+    "difficulty": "medium",
+    "description": "Cosine of zero",
+    "goal": "Test cos function",
+    "code": "cos(0)",
+    "expected_output": "1.0"
+  },
+  {
+    "id": "023",
+    "name": "exp_function",
+    "difficulty": "medium",
+    "description": "Exponential function",
+    "goal": "Test exp function",
+    "code": "round(exp(1))",
+    "expected_output": "3.0"
+  },
+  {
+    "id": "024",
+    "name": "comparison_equal",
+    "difficulty": "easy",
+    "description": "Equality comparison",
+    "goal": "Test == operator",
+    "code": "5 == 5",
+    "expected_output": "1.0"
+  },
+  {
+    "id": "025",
+    "name": "comparison_less",
+    "difficulty": "easy",
+    "description": "Less than comparison",
+    "goal": "Test < operator",
+    "code": "3 < 7",
+    "expected_output": "1.0"
+  },
+  {
+    "id": "026",
+    "name": "comparison_greater",
+    "difficulty": "easy",
+    "description": "Greater than comparison",
+    "goal": "Test > operator",
+    "code": "10 > 5",
+    "expected_output": "1.0"
+  },
+  {
+    "id": "027",
+    "name": "nested_parentheses",
+    "difficulty": "hard",
+    "description": "Deeply nested expressions",
+    "goal": "Test complex nesting",
+    "code": "((2 + 3) * (4 - 1)) / 5",
+    "expected_output": "3.0"
+  },
+  {
+    "id": "028",
+    "name": "power_chain",
+    "difficulty": "hard",
+    "description": "Chained exponentiation",
+    "goal": "Test power associativity",
+    "code": "2 ^ 3 ^ 2",
+    "expected_output": "512.0"
+  },
+  {
+    "id": "029",
+    "name": "multi_variable",
+    "difficulty": "hard",
+    "description": "Multiple variable operations",
+    "goal": "Complex variable usage",
+    "code": "x = 10\ny = 20\nz = 30\n(x + y) * z / 10",
+    "expected_output": "x = 10.0\ny = 20.0\nz = 30.0\n90.0"
+  },
+  {
+    "id": "030",
+    "name": "show_variable",
+    "difficulty": "medium",
+    "description": "Show command",
+    "goal": "Test show statement",
+    "code": "x = 42\nshow x",
+    "expected_output": "x = 42.0\nx = 42.0"
+  }
+]

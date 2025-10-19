@@ -5,7 +5,7 @@ Provides agent-friendly interface for running KAIT experiments.
 """
 
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import sys
 import os
 
@@ -168,9 +168,9 @@ class KAITAgent:
         ts = self.transfer_results["accuracy"] if self.transfer_results else 0.0
 
         report = {
-            "experiment_id": f"{self.dsl_name}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            "experiment_id": f"{self.dsl_name}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
             "dsl": self.dsl_name,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "metrics": {
                 "baseline_accuracy": self.baseline_results["accuracy"],
                 "post_exposure_accuracy": self.post_exposure_results["accuracy"],
@@ -199,7 +199,7 @@ class KAITAgent:
         if filepath is None:
             output_dir = Path("output")
             output_dir.mkdir(exist_ok=True)
-            filepath = output_dir / f"kait_agent_{self.dsl_name}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+            filepath = output_dir / f"kait_agent_{self.dsl_name}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json"
 
         with open(filepath, "w") as f:
             json.dump(report, f, indent=2)

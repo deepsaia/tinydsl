@@ -1,0 +1,56 @@
+// TinyMath Grammar - General-purpose arithmetic DSL
+// Supports variables, functions, and expressions
+
+start: statement+
+
+statement: assignment
+         | expression
+         | show_stmt
+
+assignment: NAME "=" expression
+
+show_stmt: "show" NAME
+
+?expression: comparison
+
+?comparison: addition
+           | addition "==" addition  -> eq
+           | addition "!=" addition  -> neq
+           | addition "<" addition   -> lt
+           | addition "<=" addition  -> lte
+           | addition ">" addition   -> gt
+           | addition ">=" addition  -> gte
+
+?addition: multiplication
+         | addition "+" multiplication  -> add
+         | addition "-" multiplication  -> sub
+
+?multiplication: power
+               | multiplication "*" power  -> mul
+               | multiplication "/" power  -> div
+               | multiplication "%" power  -> mod
+
+?power: unary
+      | unary "^" power  -> pow
+
+?unary: atom
+      | "-" unary  -> neg
+      | "+" unary  -> pos
+
+?atom: NUMBER                          -> number
+     | NAME                            -> var
+     | function_call
+     | "(" expression ")"
+
+function_call: NAME "(" [arguments] ")"
+
+arguments: expression ("," expression)*
+
+// Built-in functions: sin, cos, tan, sqrt, abs, log, exp, floor, ceil, round, min, max
+
+%import common.CNAME -> NAME
+%import common.NUMBER
+%import common.WS
+%import common.SH_COMMENT
+%ignore WS
+%ignore SH_COMMENT

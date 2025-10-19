@@ -10,7 +10,7 @@ Verifies that DSL artifacts are genuinely post-cutoff and novel:
 Based on: arxiv:2311.09783 (contamination detection)
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional
 import json
 import hashlib
@@ -186,7 +186,7 @@ class ContaminationChecker:
         """
         report = {
             "dsl_name": self.dsl_name,
-            "check_date": datetime.utcnow().isoformat(),
+            "check_date": datetime.now(timezone.utc).isoformat(),
             "post_cutoff": self.check_timestamps(creation_date, cutoff_date),
             "uniqueness": self.check_uniqueness_markers(),
             "provenance": self.document_provenance(creation_date, author, description)

@@ -113,8 +113,12 @@ class TestRLAgents:
         action = agent.act(obs)
         assert 0 <= action < 10
 
-        # Test episode storage
-        agent.store_transition(obs, action, 1.0)
+        # Test learning (PolicyGradientAgent uses learn() not store_transition())
+        next_obs = np.random.rand(100)
+        agent.learn(obs, action, 1.0, next_obs, done=False)
+
+        # Test episode completion
+        agent.learn(next_obs, action, 1.0, next_obs, done=True)
 
     def test_epsilon_decay(self):
         """Test epsilon decay in Q-learning agent."""

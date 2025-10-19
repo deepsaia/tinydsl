@@ -50,22 +50,35 @@ class TestGenericDSLClient:
     @patch('requests.post')
     def test_run_all_tasks(self, mock_post):
         """Test running all tasks for a DSL."""
-        mock_post.return_value.json.return_value = {
-            "evaluation": {
-                "results": [
-                    {"task_id": "001", "success": True}
-                ],
-                "summary": {
-                    "total_tasks": 1,
-                    "accuracy": 1.0
+        # Mock both run_task and evaluate calls
+        def mock_response(*args, **kwargs):
+            url = args[0] if args else kwargs.get('url', '')
+            mock_resp = Mock()
+
+            if '/task' in url:
+                # run_task response
+                mock_resp.json.return_value = {
+                    "task_id": "001",
+                    "generated_output": "14.0 grobbles"
                 }
-            }
-        }
+            elif '/eval' in url:
+                # evaluate response
+                mock_resp.json.return_value = {
+                    "summary": {
+                        "total_tasks": 1,
+                        "accuracy": 1.0
+                    }
+                }
+            mock_resp.raise_for_status = Mock()
+            return mock_resp
+
+        mock_post.side_effect = mock_response
 
         client = GenericDSLClient(base_url="http://localhost:8000")
         result = client.run_all_tasks("tinycalc", ["001"])
 
         assert "evaluation" in result
+        assert "summary" in result["evaluation"]
         assert result["evaluation"]["summary"]["accuracy"] == 1.0
 
 
@@ -89,7 +102,8 @@ class TestKAITAgent:
         mock_client = Mock()
         mock_client.run_all_tasks.return_value = {
             "evaluation": {
-                "summary": {"accuracy": 0.5}
+                "summary": {"accuracy": 0.5},
+                "details": {"correct": 1, "total": 2}
             }
         }
         mock_client_class.return_value = mock_client
@@ -99,71 +113,78 @@ class TestKAITAgent:
 
         assert "accuracy" in result
         assert result["accuracy"] == 0.5
+        assert "details" in result
 
     @patch('tinydsl.agent_tools.kait_agent.GenericDSLClient')
     def test_expose(self, mock_client_class):
         """Test exposure phase."""
         mock_client = Mock()
-        mock_client.run.return_value = {"success": True, "output": "result"}
+        mock_client.run.return_value = {"status": "ok", "output": "result"}
         mock_client_class.return_value = mock_client
 
         agent = KAITAgent("tinycalc")
         result = agent.expose(["code1", "code2"], token_budget=100)
 
-        assert "episodes_seen" in result
-        assert result["episodes_seen"] == 2
+        assert "episodes_completed" in result
+        assert result["episodes_completed"] == 2
+        assert "online_accuracies" in result
+        assert "total_tokens" in result
 
     @patch('tinydsl.agent_tools.kait_agent.GenericDSLClient')
-    def test_evaluate_post_exposure(self, mock_client_class):
+    def test_run_post_exposure(self, mock_client_class):
         """Test post-exposure evaluation."""
         mock_client = Mock()
         mock_client.run_all_tasks.return_value = {
             "evaluation": {
-                "summary": {"accuracy": 0.7}
+                "summary": {"accuracy": 0.7},
+                "details": {"correct": 7, "total": 10}
             }
         }
         mock_client_class.return_value = mock_client
 
         agent = KAITAgent("tinycalc")
         agent.baseline_results = {"accuracy": 0.5}
-        result = agent.evaluate_post_exposure(["003", "004"])
+        result = agent.run_post_exposure(["003", "004"])
 
         assert "accuracy" in result
-        assert "acquisition_gain" in result
+        assert result["accuracy"] == 0.7
 
     @patch('tinydsl.agent_tools.kait_agent.GenericDSLClient')
-    def test_evaluate_transfer(self, mock_client_class):
+    def test_run_transfer(self, mock_client_class):
         """Test transfer evaluation."""
         mock_client = Mock()
         mock_client.run_all_tasks.return_value = {
             "evaluation": {
-                "summary": {"accuracy": 0.6}
+                "summary": {"accuracy": 0.6},
+                "details": {"correct": 6, "total": 10}
             }
         }
         mock_client_class.return_value = mock_client
 
         agent = KAITAgent("tinycalc")
-        result = agent.evaluate_transfer(["005", "006"])
+        result = agent.run_transfer(["005", "006"])
 
-        assert "transfer_accuracy" in result
+        assert "accuracy" in result
+        assert result["accuracy"] == 0.6
 
     @patch('tinydsl.agent_tools.kait_agent.GenericDSLClient')
-    def test_calculate_kait_metrics(self, mock_client_class):
-        """Test calculating KAIT metrics."""
+    def test_generate_report(self, mock_client_class):
+        """Test generating KAIT report."""
         mock_client = Mock()
         mock_client_class.return_value = mock_client
 
         agent = KAITAgent("tinycalc")
-        agent.baseline_results = {"accuracy": 0.4}
-        agent.post_exposure_results = {"accuracy": 0.7}
-        agent.transfer_results = {"transfer_accuracy": 0.6}
+        agent.baseline_results = {"accuracy": 0.4, "task_ids": ["001"], "details": {}}
+        agent.post_exposure_results = {"accuracy": 0.7, "task_ids": ["002"], "details": {}}
+        agent.transfer_results = {"accuracy": 0.6, "task_ids": ["003"], "details": {}}
 
-        metrics = agent.calculate_kait_metrics()
+        report = agent.generate_report()
 
-        assert "acquisition_gain" in metrics
-        assert "transfer_score" in metrics
-        assert metrics["acquisition_gain"] == pytest.approx(0.3)
-        assert metrics["transfer_score"] == 0.6
+        assert "metrics" in report
+        assert "acquisition_gain" in report["metrics"]
+        assert "transfer_score" in report["metrics"]
+        assert report["metrics"]["acquisition_gain"] == pytest.approx(0.3)
+        assert report["metrics"]["transfer_score"] == 0.6
 
 
 # ====================
