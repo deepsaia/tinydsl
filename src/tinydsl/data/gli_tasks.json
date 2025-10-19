@@ -93,5 +93,140 @@
     "code": "set color crimson\nscale 2\ndraw circle x=20 y=20",
     "expected_output": "1 scaled shape",
     "version": "v2"
+  },
+  {
+    "id": "011",
+    "name": "spiral_pattern",
+    "difficulty": "medium",
+    "description": "Create a basic spiral using polar coordinates",
+    "goal": "Test trigonometric functions with iteration",
+    "code": "set color purple\nrepeat 15 {\n  set size 2+$i*0.5\n  draw circle x=cos($i*24)*$i*5 y=sin($i*24)*$i*5\n}",
+    "expected_output": "15 shapes in spiral"
+  },
+  {
+    "id": "012",
+    "name": "grid_squares",
+    "difficulty": "medium",
+    "description": "Create a 4x4 grid of squares",
+    "goal": "Test nested positioning logic",
+    "code": "set color teal\nset size 6\nrepeat 4 {\n  draw square x=-30+$i*20 y=-30\n  draw square x=-30+$i*20 y=-10\n  draw square x=-30+$i*20 y=10\n  draw square x=-30+$i*20 y=30\n}",
+    "expected_output": "16 shapes"
+  },
+  {
+    "id": "013",
+    "name": "nested_circles",
+    "difficulty": "easy",
+    "description": "Draw three concentric circles at origin",
+    "goal": "Test size variation",
+    "code": "set color blue\nset size 30\ndraw circle x=0 y=0\nset size 20\ndraw circle x=0 y=0\nset size 10\ndraw circle x=0 y=0",
+    "expected_output": "3 shapes"
+  },
+  {
+    "id": "014",
+    "name": "radial_burst",
+    "difficulty": "hard",
+    "description": "Create radial pattern of lines or shapes",
+    "goal": "Test radial positioning with trigonometry",
+    "code": "set color orange\nset size 3\nrepeat 16 {\n  draw circle x=cos($i*22.5)*50 y=sin($i*22.5)*50\n}",
+    "expected_output": "16 shapes"
+  },
+  {
+    "id": "015",
+    "name": "sine_wave",
+    "difficulty": "hard",
+    "description": "Draw shapes along a sine wave path",
+    "goal": "Test sine function for wave patterns",
+    "code": "set color steelblue\nset size 4\nrepeat 20 {\n  draw circle x=-40+$i*4 y=sin($i*18)*25\n}",
+    "expected_output": "20 shapes"
+  },
+  {
+    "id": "016",
+    "name": "flower_petals",
+    "difficulty": "medium",
+    "description": "Create flower with center and petals",
+    "goal": "Test combining radial and centered shapes",
+    "code": "set color pink\nset size 8\nrepeat 8 {\n  draw circle x=cos($i*45)*30 y=sin($i*45)*30\n}\nset color yellow\nset size 12\ndraw circle x=0 y=0",
+    "expected_output": "9 shapes"
+  },
+  {
+    "id": "017",
+    "name": "color_gradient",
+    "difficulty": "easy",
+    "description": "Draw shapes with different colors",
+    "goal": "Test multiple color changes",
+    "code": "set color red\nset size 10\ndraw circle x=-30 y=0\nset color yellow\ndraw circle x=0 y=0\nset color green\ndraw circle x=30 y=0",
+    "expected_output": "3 shapes"
+  },
+  {
+    "id": "018",
+    "name": "phyllotaxis_pattern",
+    "difficulty": "hard",
+    "description": "Create sunflower seed pattern using golden angle",
+    "goal": "Test advanced spiral mathematics",
+    "code": "set color forestgreen\nset size 2\nrepeat 60 {\n  draw circle x=cos($i*137.5)*sqrt($i)*4 y=sin($i*137.5)*sqrt($i)*4\n}",
+    "expected_output": "60 shapes"
+  },
+  {
+    "id": "019",
+    "name": "square_frame",
+    "difficulty": "easy",
+    "description": "Draw nested square frames",
+    "goal": "Test square rendering with size variation",
+    "code": "set color black\nset size 40\ndraw square x=0 y=0\nset size 30\ndraw square x=0 y=0\nset size 20\ndraw square x=0 y=0",
+    "expected_output": "3 shapes"
+  },
+  {
+    "id": "020",
+    "name": "checkerboard_pattern",
+    "difficulty": "medium",
+    "description": "Create alternating pattern of squares",
+    "goal": "Test precise grid positioning",
+    "code": "set color black\nset size 8\nrepeat 4 {\n  draw square x=-24+$i*16 y=-24\n  draw square x=-16+$i*16 y=-16\n  draw square x=-24+$i*16 y=-8\n  draw square x=-16+$i*16 y=0\n}",
+    "expected_output": "16 shapes"
+  },
+  {
+    "id": "021",
+    "name": "lissajous_curve",
+    "difficulty": "hard",
+    "description": "Sample a Lissajous curve pattern",
+    "goal": "Test parametric curves with sin",
+    "code": "set color purple\nset size 2\nrepeat 100 {\n  draw circle x=sin($i*5)*50 y=sin($i*7)*40\n}",
+    "expected_output": "100 shapes"
+  },
+  {
+    "id": "022",
+    "name": "ring_of_squares",
+    "difficulty": "medium",
+    "description": "Arrange squares in a circular ring",
+    "goal": "Test polar positioning with squares",
+    "code": "set color darkorange\nset size 8\nrepeat 12 {\n  draw square x=cos($i*30)*45 y=sin($i*30)*45\n}",
+    "expected_output": "12 shapes"
+  },
+  {
+    "id": "023",
+    "name": "growing_sizes",
+    "difficulty": "easy",
+    "description": "Draw shapes with incrementing sizes",
+    "goal": "Test size arithmetic",
+    "code": "set color cyan\nrepeat 6 {\n  set size 4+$i*2\n  draw circle x=$i*15-40 y=0\n}",
+    "expected_output": "6 shapes"
+  },
+  {
+    "id": "024",
+    "name": "offset_ripples",
+    "difficulty": "medium",
+    "description": "Create ripple effect from multiple centers",
+    "goal": "Test overlapping concentric patterns",
+    "code": "set color steelblue\nrepeat 5 {\n  set size 5+$i*3\n  draw circle x=-25 y=0\n}\nset color tomato\nrepeat 5 {\n  set size 5+$i*3\n  draw circle x=25 y=0\n}",
+    "expected_output": "10 shapes"
+  },
+  {
+    "id": "025",
+    "name": "rose_curve",
+    "difficulty": "hard",
+    "description": "Create a mathematical rose curve pattern",
+    "goal": "Test nested trigonometric expressions",
+    "code": "set color crimson\nset size 3\nrepeat 72 {\n  draw circle x=cos($i*5)*cos($i*30)*50 y=sin($i*5)*cos($i*30)*50\n}",
+    "expected_output": "72 shapes"
   }
 ]

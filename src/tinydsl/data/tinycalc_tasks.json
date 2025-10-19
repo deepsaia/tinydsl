@@ -133,5 +133,140 @@
     "goal": "Handle edge case of zero",
     "code": "define 1 flurb = 7.0 quibs\nconvert 0 flurbs to quibs",
     "expected_output": "0.0 quibs"
+  },
+  {
+    "id": "016",
+    "name": "large_scale_conversion",
+    "difficulty": "medium",
+    "description": "Convert very large quantities",
+    "goal": "Test numeric precision with large values",
+    "code": "define 1 flurb = 1.5 grobbles\nconvert 10000 flurbs to grobbles",
+    "expected_output": "15000.0 grobbles"
+  },
+  {
+    "id": "017",
+    "name": "tiny_fraction_conversion",
+    "difficulty": "medium",
+    "description": "Handle very small fractional conversions",
+    "goal": "Test precision with small decimals",
+    "code": "define 1 voom = 0.001 quibs\nconvert 5 vooms to quibs",
+    "expected_output": "0.005 quibs"
+  },
+  {
+    "id": "018",
+    "name": "four_hop_chain",
+    "difficulty": "hard",
+    "description": "Convert across four unit boundaries",
+    "goal": "Extended chain conversion",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 grobble = 3.0 zepts\ndefine 1 zept = 1.5 quibs\ndefine 1 quib = 2.0 vooms\nconvert 4 flurbs to vooms",
+    "expected_output": "72.0 vooms"
+  },
+  {
+    "id": "019",
+    "name": "bidirectional_verification",
+    "difficulty": "medium",
+    "description": "Convert forward and backward to verify consistency",
+    "goal": "Test conversion symmetry",
+    "code": "define 1 flurb = 3.0 grobbles\nconvert 12 grobbles to flurbs",
+    "expected_output": "4.0 flurbs"
+  },
+  {
+    "id": "020",
+    "name": "multiplication_chain",
+    "difficulty": "hard",
+    "description": "Multiply then convert result",
+    "goal": "Combine arithmetic and conversion",
+    "code": "define 1 flurb = 4.0 zepts\ncompute 5 flurbs * 3 flurbs in zepts",
+    "expected_output": "60.0 zepts"
+  },
+  {
+    "id": "021",
+    "name": "division_with_remainder",
+    "difficulty": "medium",
+    "description": "Division that produces fractional result",
+    "goal": "Handle division precision",
+    "code": "define 1 voom = 3.0 quibs\ncompute 10 vooms / 3 vooms in vooms",
+    "expected_output": "3.333... vooms"
+  },
+  {
+    "id": "022",
+    "name": "nested_operations",
+    "difficulty": "hard",
+    "description": "Complex expression with multiple operations",
+    "goal": "Test operator precedence and grouping",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 grobble = 5.0 zepts\ncompute (10 flurbs + 20 grobbles) * 2 grobbles in zepts",
+    "expected_output": "600.0 zepts"
+  },
+  {
+    "id": "023",
+    "name": "identity_conversion",
+    "difficulty": "easy",
+    "description": "Convert unit to itself",
+    "goal": "Test same-unit conversion",
+    "code": "define 1 flurb = 1.0 grobbles\nconvert 42 flurbs to flurbs",
+    "expected_output": "42.0 flurbs"
+  },
+  {
+    "id": "024",
+    "name": "circular_graph",
+    "difficulty": "hard",
+    "description": "Handle circular unit relationships",
+    "goal": "Navigate circular conversion paths",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 grobble = 3.0 zepts\ndefine 1 zept = 0.1666... flurbs\nconvert 6 flurbs to zepts",
+    "expected_output": "36.0 zepts"
+  },
+  {
+    "id": "025",
+    "name": "mixed_arithmetic_four_units",
+    "difficulty": "hard",
+    "description": "Arithmetic involving four different units",
+    "goal": "Complex multi-unit expression",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 grobble = 3.0 zepts\ndefine 1 zept = 4.0 quibs\ncompute 1 flurb + 2 grobbles + 3 zepts + 4 quibs in quibs",
+    "expected_output": "52.0 quibs"
+  },
+  {
+    "id": "026",
+    "name": "subtraction_negative_result",
+    "difficulty": "medium",
+    "description": "Subtraction that yields negative quantity",
+    "goal": "Handle negative results",
+    "code": "define 1 flurb = 5.0 zepts\ncompute 10 zepts - 4 flurbs in zepts",
+    "expected_output": "-10.0 zepts"
+  },
+  {
+    "id": "027",
+    "name": "unit_power_conversion",
+    "difficulty": "hard",
+    "description": "Handle squared or cubed units",
+    "goal": "Test dimensional analysis",
+    "code": "define 1 meter_squared = 10.76 feet_squared\nconvert 5 meter_squared to feet_squared",
+    "expected_output": "53.8 feet_squared"
+  },
+  {
+    "id": "028",
+    "name": "temperature_offset_conversion",
+    "difficulty": "hard",
+    "description": "Convert with offset (like Celsius to Fahrenheit)",
+    "goal": "Test affine transformations",
+    "code": "define celsius_to_fahrenheit(c) = c * 1.8 + 32\nconvert 100 celsius to fahrenheit",
+    "expected_output": "212.0 fahrenheit"
+  },
+  {
+    "id": "029",
+    "name": "percentage_calculation",
+    "difficulty": "medium",
+    "description": "Calculate percentage conversions",
+    "goal": "Test percentage arithmetic",
+    "code": "define 1 percent = 0.01 decimal\nconvert 75 percent to decimal",
+    "expected_output": "0.75 decimal"
+  },
+  {
+    "id": "030",
+    "name": "scientific_notation",
+    "difficulty": "medium",
+    "description": "Handle values in scientific notation",
+    "goal": "Test exponential value parsing",
+    "code": "define 1 kilometer = 1000.0 meters\nconvert 1e6 meters to kilometers",
+    "expected_output": "1000.0 kilometers"
   }
 ]

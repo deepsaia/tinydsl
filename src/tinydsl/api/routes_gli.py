@@ -229,7 +229,7 @@ def run_example(
         raise HTTPException(status_code=404, detail="Example not found")
 
     try:
-        interp = _make_interpreter(
+        interp = GlintInterpreter(
             canvas_size=canvas_size,
             supersample=supersample,
             line_width=line_width,

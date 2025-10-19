@@ -25,5 +25,248 @@
     "goal": "Project columns correctly",
     "code": "load table users from \"users.json\"\nselect name, email",
     "expected_output": "[]"
+  },
+  {
+    "id": "004",
+    "name": "filter_string_equals",
+    "difficulty": "easy",
+    "description": "Filter rows by string equality",
+    "goal": "Test string comparison in where clause",
+    "code": "load table users from \"users.json\"\nfilter users where role = \"admin\"",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "005",
+    "name": "sort_ascending",
+    "difficulty": "easy",
+    "description": "Sort table by column in ascending order",
+    "goal": "Test basic sorting",
+    "code": "load table products from \"products.json\"\nsort products by price asc",
+    "expected_output": "Sorted"
+  },
+  {
+    "id": "006",
+    "name": "sort_descending",
+    "difficulty": "easy",
+    "description": "Sort table by column in descending order",
+    "goal": "Test descending sort",
+    "code": "load table products from \"products.json\"\nsort products by price desc",
+    "expected_output": "Sorted"
+  },
+  {
+    "id": "007",
+    "name": "count_rows",
+    "difficulty": "easy",
+    "description": "Count total rows in table",
+    "goal": "Test count aggregate",
+    "code": "load table orders from \"orders.json\"\ncount orders",
+    "expected_output": "Count"
+  },
+  {
+    "id": "008",
+    "name": "sum_column",
+    "difficulty": "medium",
+    "description": "Sum values in a numeric column",
+    "goal": "Test sum aggregate function",
+    "code": "load table sales from \"sales.json\"\nsum sales.amount",
+    "expected_output": "Sum"
+  },
+  {
+    "id": "009",
+    "name": "average_column",
+    "difficulty": "medium",
+    "description": "Calculate average of numeric column",
+    "goal": "Test avg aggregate function",
+    "code": "load table scores from \"scores.json\"\navg scores.value",
+    "expected_output": "Average"
+  },
+  {
+    "id": "010",
+    "name": "max_value",
+    "difficulty": "medium",
+    "description": "Find maximum value in column",
+    "goal": "Test max aggregate",
+    "code": "load table temperatures from \"temps.json\"\nmax temperatures.celsius",
+    "expected_output": "Max"
+  },
+  {
+    "id": "011",
+    "name": "min_value",
+    "difficulty": "medium",
+    "description": "Find minimum value in column",
+    "goal": "Test min aggregate",
+    "code": "load table prices from \"prices.json\"\nmin prices.amount",
+    "expected_output": "Min"
+  },
+  {
+    "id": "012",
+    "name": "filter_and_select",
+    "difficulty": "medium",
+    "description": "Combine filter and select operations",
+    "goal": "Test operation chaining",
+    "code": "load table users from \"users.json\"\nfilter users where age > 18\nselect name, email",
+    "expected_output": "[]"
+  },
+  {
+    "id": "013",
+    "name": "join_two_tables",
+    "difficulty": "hard",
+    "description": "Join two tables on common column",
+    "goal": "Test inner join",
+    "code": "load table users from \"users.json\"\nload table orders from \"orders.json\"\njoin users with orders on user_id",
+    "expected_output": "Joined"
+  },
+  {
+    "id": "014",
+    "name": "group_by_single",
+    "difficulty": "hard",
+    "description": "Group rows by single column",
+    "goal": "Test grouping operation",
+    "code": "load table sales from \"sales.json\"\ngroup sales by region",
+    "expected_output": "Grouped"
+  },
+  {
+    "id": "015",
+    "name": "group_by_count",
+    "difficulty": "hard",
+    "description": "Group and count occurrences",
+    "goal": "Test group with aggregate",
+    "code": "load table events from \"events.json\"\ngroup events by type\ncount each",
+    "expected_output": "Grouped with counts"
+  },
+  {
+    "id": "016",
+    "name": "filter_less_than",
+    "difficulty": "easy",
+    "description": "Filter rows with less than comparison",
+    "goal": "Test < operator",
+    "code": "load table inventory from \"inventory.json\"\nfilter inventory where quantity < 10",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "017",
+    "name": "filter_range",
+    "difficulty": "medium",
+    "description": "Filter rows within numeric range",
+    "goal": "Test compound conditions",
+    "code": "load table products from \"products.json\"\nfilter products where price > 10 and price < 100",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "018",
+    "name": "filter_or_condition",
+    "difficulty": "medium",
+    "description": "Filter with OR logic",
+    "goal": "Test or operator",
+    "code": "load table users from \"users.json\"\nfilter users where role = \"admin\" or role = \"moderator\"",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "019",
+    "name": "limit_rows",
+    "difficulty": "easy",
+    "description": "Limit number of returned rows",
+    "goal": "Test limit clause",
+    "code": "load table products from \"products.json\"\nlimit 5",
+    "expected_output": "Limited"
+  },
+  {
+    "id": "020",
+    "name": "distinct_values",
+    "difficulty": "medium",
+    "description": "Get unique values from column",
+    "goal": "Test distinct operation",
+    "code": "load table orders from \"orders.json\"\ndistinct orders.status",
+    "expected_output": "Distinct"
+  },
+  {
+    "id": "021",
+    "name": "multiple_sort_keys",
+    "difficulty": "hard",
+    "description": "Sort by multiple columns",
+    "goal": "Test multi-column sorting",
+    "code": "load table employees from \"employees.json\"\nsort employees by department asc, salary desc",
+    "expected_output": "Sorted"
+  },
+  {
+    "id": "022",
+    "name": "filter_null_check",
+    "difficulty": "medium",
+    "description": "Filter rows with null values",
+    "goal": "Test null checking",
+    "code": "load table contacts from \"contacts.json\"\nfilter contacts where email is null",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "023",
+    "name": "filter_not_null",
+    "difficulty": "medium",
+    "description": "Filter rows excluding nulls",
+    "goal": "Test not null condition",
+    "code": "load table contacts from \"contacts.json\"\nfilter contacts where phone is not null",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "024",
+    "name": "update_rows",
+    "difficulty": "hard",
+    "description": "Update column values",
+    "goal": "Test update statement",
+    "code": "load table inventory from \"inventory.json\"\nupdate inventory set status = \"active\" where quantity > 0",
+    "expected_output": "Updated"
+  },
+  {
+    "id": "025",
+    "name": "delete_rows",
+    "difficulty": "hard",
+    "description": "Delete rows matching condition",
+    "goal": "Test delete statement",
+    "code": "load table logs from \"logs.json\"\ndelete from logs where timestamp < \"2023-01-01\"",
+    "expected_output": "Deleted"
+  },
+  {
+    "id": "026",
+    "name": "insert_row",
+    "difficulty": "medium",
+    "description": "Insert new row into table",
+    "goal": "Test insert statement",
+    "code": "load table users from \"users.json\"\ninsert into users values (name=\"Alice\", age=30, role=\"user\")",
+    "expected_output": "Inserted"
+  },
+  {
+    "id": "027",
+    "name": "complex_pipeline",
+    "difficulty": "hard",
+    "description": "Chain multiple operations together",
+    "goal": "Test complex query pipeline",
+    "code": "load table sales from \"sales.json\"\nfilter sales where amount > 100\ngroup by region\nsum amount\nsort by sum desc\nlimit 10",
+    "expected_output": "Pipeline result"
+  },
+  {
+    "id": "028",
+    "name": "cross_join",
+    "difficulty": "hard",
+    "description": "Perform cartesian product of two tables",
+    "goal": "Test cross join",
+    "code": "load table colors from \"colors.json\"\nload table sizes from \"sizes.json\"\ncross join colors with sizes",
+    "expected_output": "Cross joined"
+  },
+  {
+    "id": "029",
+    "name": "left_join",
+    "difficulty": "hard",
+    "description": "Left outer join two tables",
+    "goal": "Test left join preserving left table rows",
+    "code": "load table customers from \"customers.json\"\nload table orders from \"orders.json\"\nleft join customers with orders on customer_id",
+    "expected_output": "Left joined"
+  },
+  {
+    "id": "030",
+    "name": "aggregate_multiple",
+    "difficulty": "hard",
+    "description": "Calculate multiple aggregates",
+    "goal": "Test multiple aggregate functions",
+    "code": "load table transactions from \"transactions.json\"\ngroup by account\nsum amount as total\ncount as num_transactions\navg amount as avg_amount",
+    "expected_output": "Multiple aggregates"
   }
 ]
