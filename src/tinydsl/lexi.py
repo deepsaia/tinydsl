@@ -1,5 +1,5 @@
 import re
-from lexi_memory import LexiMemoryStore
+from tinydsl.src.tinydsl.lexi_memory import LexiMemoryStore
 
 
 class LexiInterpreter:

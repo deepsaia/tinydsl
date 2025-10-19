@@ -3,11 +3,14 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import json
 import os
-from gli import GlintInterpreter
+from tinydsl.src.tinydsl.gli import GlintInterpreter
 
 router = APIRouter()
 
-EXAMPLES_PATH = os.getenv("GLI_EXAMPLES_PATH", "gli_examples.json")
+root_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(root_dir, "..", "data")
+
+EXAMPLES_PATH = os.getenv("GLI_EXAMPLES_PATH", os.path.join(data_dir, "gli_examples.json"))
 
 try:
     with open(EXAMPLES_PATH, "r") as f:

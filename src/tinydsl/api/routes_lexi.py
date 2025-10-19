@@ -1,18 +1,21 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from lexi import LexiInterpreter
-from lexi_evaluator import LexiEvaluator
+from tinydsl.src.tinydsl.lexi import LexiInterpreter
+from tinydsl.src.tinydsl.lexi_evaluator import LexiEvaluator
 import json
 import os
 
-from lexi_memory import LexiMemoryStore
+from tinydsl.src.tinydsl.lexi_memory import LexiMemoryStore
 
 memory_store = LexiMemoryStore()
 
 router = APIRouter()
 
-LEXI_TASKS_PATH = os.getenv("LEXI_TASKS_PATH", "lexi_tasks.json")
+root_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(root_dir, "..", "data")
+
+LEXI_TASKS_PATH = os.getenv("LEXI_TASKS_PATH", os.path.join(data_dir, "lexi_tasks.json"))
 LEXI_EVALUATOR = LexiEvaluator(LEXI_TASKS_PATH)
 
 
