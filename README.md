@@ -323,6 +323,59 @@ print(tool.get_memory()); tool.clear_memory()
 
 ---
 
+## 🧪 Testing
+
+TinyDSL has a comprehensive test suite with 148 tests divided into unit and integration tests.
+
+### Run All Tests
+
+```bash
+# Run all tests (unit + integration)
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ --cov=src/tinydsl --cov-report=html
+```
+
+### Run Unit Tests Only (Fast)
+
+```bash
+# Exclude integration tests that require a running server
+pytest tests/ -v -m "not integration and not requires_server"
+# Runs 129 tests in ~10 seconds
+```
+
+### Run Integration Tests Only
+
+```bash
+# Start the API server first
+python -m tinydsl.api.main
+
+# In another terminal, run integration tests
+pytest tests/ -v -m "integration or requires_server"
+# Runs 19 tests
+```
+
+### Test Categories
+
+- **Unit tests** (129 tests): Fast, no server required
+  - Core framework (DSL registry, memory, evaluator)
+  - DSL interpreters (TinyCalc, TinyMath, TinySQL, Lexi, Gli)
+  - RL environment and agents
+  - Parsers and evaluators
+
+- **Integration tests** (19 tests): Require running API server
+  - `TestTinyDSLToolIntegration` - API client tools
+  - `TestGenericDSLClientIntegration` - Generic DSL client
+  - `TestRLEnvironmentIntegration` - RL with live API
+  - `TestRLTrainerIntegration` - RL training workflows
+
+### CI/CD
+
+GitHub Actions automatically runs unit tests on every push/PR. Integration tests are skipped in CI.
+
+---
+
 ## 📦 Data & Files
 
 * Examples & grammars live under `src/tinydsl/data/`
