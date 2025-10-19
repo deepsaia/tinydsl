@@ -1,0 +1,29 @@
+[
+  {
+    "id": "001",
+    "name": "simple_load",
+    "difficulty": "easy",
+    "description": "Load a table from file",
+    "goal": "Parse load statement correctly",
+    "code": "load table test from \"test.json\"\nshow tables",
+    "expected_output": "Loaded"
+  },
+  {
+    "id": "002",
+    "name": "filter_numeric",
+    "difficulty": "medium",
+    "description": "Filter by numeric comparison",
+    "goal": "Apply comparison operators",
+    "code": "load table data from \"data.json\"\nfilter data where value > 100",
+    "expected_output": "Filtered"
+  },
+  {
+    "id": "003",
+    "name": "select_columns",
+    "difficulty": "medium",
+    "description": "Select specific columns",
+    "goal": "Project columns correctly",
+    "code": "load table users from \"users.json\"\nselect name, email",
+    "expected_output": "[]"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "001",
+    "name": "load_and_show",
+    "description": "Load a table and show tables",
+    "tags": ["basic", "load"],
+    "code": "load table users from \"users.json\"\nshow tables"
+  },
+  {
+    "id": "002",
+    "name": "simple_filter",
+    "description": "Filter rows by numeric condition",
+    "tags": ["filter", "basic"],
+    "code": "load table users from \"users.json\"\nfilter users where age > 25\nselect name, age"
+  },
+  {
+    "id": "003",
+    "name": "sort_and_limit",
+    "description": "Sort and limit results",
+    "tags": ["sort", "limit"],
+    "code": "load table users from \"users.json\"\nfilter users where age > 18\nsort by age desc\nlimit 5\nselect name, age"
+  }
+]

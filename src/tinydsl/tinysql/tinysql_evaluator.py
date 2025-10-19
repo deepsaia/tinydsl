@@ -1,38 +1,31 @@
 """
-Lexi-specific evaluator with fuzzy matching.
+TinySQL-specific evaluator with exact matching.
 
-This is a thin wrapper around BaseEvaluator configured for text-based
-evaluation with similarity scoring. Maintains backwards compatibility
-with existing code while using the unified evaluation framework.
+This is a thin wrapper around BaseEvaluator configured for TinySQL
+evaluation with exact string comparison.
 """
 
 from tinydsl.core.evaluator import BaseEvaluator
 from typing import List, Dict
 
 
-class LexiEvaluator(BaseEvaluator):
+class TinySQLEvaluator(BaseEvaluator):
     """
-    Evaluates Lexi task outputs with fuzzy matching.
+    Evaluates TinySQL task outputs with exact matching.
 
-    Uses BaseEvaluator with fuzzy comparison for better handling
-    of text generation tasks where exact matches are too strict.
+    Uses BaseEvaluator with default exact comparison for SQL query
+    tasks where output format is predictable and standardized.
     """
 
-    def __init__(self, benchmark_path: str, threshold: float = 0.8):
+    def __init__(self, benchmark_path: str):
         """
-        Initialize Lexi evaluator with fuzzy matching.
+        Initialize TinySQL evaluator with exact matching.
 
         Args:
-            benchmark_path: Path to Lexi tasks JSON file
-            threshold: Similarity threshold for passing (0.0-1.0)
+            benchmark_path: Path to TinySQL tasks JSON file
         """
-        # Initialize with fuzzy comparator that returns metrics
-        comparator = BaseEvaluator.fuzzy_comparator(
-            threshold=threshold,
-            return_metrics=True
-        )
-        super().__init__(benchmark_path, comparator=comparator)
-        self.threshold = threshold
+        # Initialize with default exact matching comparator
+        super().__init__(benchmark_path)
 
     def evaluate_output(self, task_id: str, generated_output: str) -> Dict:
         """
@@ -40,21 +33,18 @@ class LexiEvaluator(BaseEvaluator):
 
         Args:
             task_id: Task identifier
-            generated_output: Generated output from Lexi
+            generated_output: Generated output from TinySQL
 
         Returns:
-            Dictionary with evaluation results including similarity metrics
+            Dictionary with evaluation results
         """
         result = self.evaluate_single(task_id, generated_output)
 
-        # Transform to match legacy LexiEvaluator API
         return {
             "task_id": result["task_id"],
             "name": result["task_name"],
             "difficulty": result["difficulty"],
-            "similarity": result.get("similarity", 0.0),
-            "line_overlap": result.get("line_overlap", 0.0),
-            "exact_match": result["expected"] == result["actual"],
+            "exact_match": result["passed"],
             "status": result["status"],
             "expected": result["expected"],
             "actual": result["actual"],
@@ -73,16 +63,14 @@ class LexiEvaluator(BaseEvaluator):
         # Use parent's batch_evaluate
         parent_result = super().batch_evaluate(results)
 
-        # Transform detailed results to match legacy API
+        # Transform detailed results to match API
         details = []
         for detail in parent_result["details"]:
             details.append({
                 "task_id": detail["task_id"],
                 "name": detail["task_name"],
                 "difficulty": detail["difficulty"],
-                "similarity": detail.get("similarity", 0.0),
-                "line_overlap": detail.get("line_overlap", 0.0),
-                "exact_match": detail["expected"] == detail["actual"],
+                "exact_match": detail["passed"],
                 "status": detail["status"],
                 "expected": detail["expected"],
                 "actual": detail["actual"],
@@ -98,12 +86,12 @@ class LexiEvaluator(BaseEvaluator):
 if __name__ == "__main__":
     import json
 
-    evaluator = LexiEvaluator("lexi_tasks.json")
+    evaluator = TinySQLEvaluator("tinysql_tasks.json")
 
     # Example result from an LLM run
     results = [
-        {"task_id": "lexi_task_002", "output": "You look great today!"},
-        {"task_id": "lexi_task_003", "output": "Echo\nEcho\nEcho"},
+        {"task_id": "tinysql_001", "output": "SELECT * FROM users"},
+        {"task_id": "tinysql_002", "output": "INSERT INTO users VALUES (1, 'Alice')"},
     ]
 
     report = evaluator.batch_evaluate(results)

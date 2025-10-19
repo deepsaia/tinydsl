@@ -3,7 +3,11 @@ from typing import Optional, List, Dict
 
 
 class TinyDSLTool:
-    """A unified client for the Glint and Lexi DSL FastAPI backend."""
+    """
+    A unified client for all TinyDSL backends.
+
+    Supports: Gli (graphics), Lexi (text), TinyCalc (units), TinySQL (queries)
+    """
 
     def __init__(self, base_url: str = "http://localhost:8008/api"):
         self.base_url = base_url.rstrip("/")
@@ -20,7 +24,7 @@ class TinyDSLTool:
         resp.raise_for_status()
         return resp.json()
 
-    def run_example(
+    def run_gli(
         self, example_id: str, save: bool = True, open_after_save: bool = False
     ):
         """Run a predefined Glint example by ID."""
@@ -107,6 +111,67 @@ class TinyDSLTool:
         resp.raise_for_status()
         return resp.json()
 
+    # ==========================
+    # 🧮 TINYCALC (unit conversion DSL)
+    # ==========================
+
+    def run_tinycalc(self, code: str):
+        """Run TinyCalc DSL code."""
+        url = f"{self.base_url}/tinycalc/run"
+        resp = requests.post(url, json={"code": code}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    def run_tinycalc_task(self, task_id: str):
+        """Run a benchmark TinyCalc task by ID."""
+        url = f"{self.base_url}/tinycalc/task"
+        resp = requests.post(url, json={"task_id": task_id}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    def eval_tinycalc_outputs(self, results: List[Dict[str, str]]):
+        """Evaluate TinyCalc outputs."""
+        url = f"{self.base_url}/tinycalc/eval"
+        resp = requests.post(url, json={"results": results}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    # ==========================
+    # 🗃️ TINYSQL (query DSL)
+    # ==========================
+
+    def run_tinysql(self, code: str):
+        """Run TinySQL DSL code."""
+        url = f"{self.base_url}/tinysql/run"
+        resp = requests.post(url, json={"code": code}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    def run_tinysql_task(self, task_id: str):
+        """Run a benchmark TinySQL task by ID."""
+        url = f"{self.base_url}/tinysql/task"
+        resp = requests.post(url, json={"task_id": task_id}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    def eval_tinysql_outputs(self, results: List[Dict[str, str]]):
+        """Evaluate TinySQL outputs."""
+        url = f"{self.base_url}/tinysql/eval"
+        resp = requests.post(url, json={"results": results}, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+
+    # ==========================
+    # 🌐 Generic DSL Operations
+    # ==========================
+
+    def list_all_dsls(self):
+        """List all available DSLs in the system."""
+        url = f"{self.base_url.rstrip('/api')}/dsls"
+        resp = requests.get(url)
+        resp.raise_for_status()
+        return resp.json()
+
 
 # ==========================
 # 🔧 Example Usage
@@ -146,5 +211,25 @@ if __name__ == "__main__":
     tool.set_memory("user_name", "John Arthur")
     print("Memory:", tool.get_memory())
 
-    # tool.clear_memory()
-    # print("Memory cleared:", tool.get_memory())
+    # 🧮 TinyCalc test
+    print("\n🧮 Running TinyCalc test...")
+    calc_code = """
+    define 1 flurb = 3.7 grobbles
+    define 1 grobble = 2.1 zepts
+    convert 10 flurbs to zepts
+    """
+    calc_result = tool.run_tinycalc(calc_code)
+    print("TinyCalc output:", calc_result["output"])
+
+    # 🗃️ TinySQL test
+    print("\n🗃️ Running TinySQL test...")
+    sql_code = """
+    show tables
+    """
+    sql_result = tool.run_tinysql(sql_code)
+    print("TinySQL output:", sql_result["output"])
+
+    # 🌐 List all DSLs
+    print("\n🌐 Available DSLs:")
+    dsls = tool.list_all_dsls()
+    print("DSLs:", dsls)

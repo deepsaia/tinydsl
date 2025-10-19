@@ -1,0 +1,33 @@
+// TinyCalc Grammar - Novel Unit Conversion DSL
+// Post-cutoff units: flurb, grobble, zept, quib, voom
+
+start: statement+
+
+statement: define_stmt
+         | convert_stmt
+         | compute_stmt
+         | set_base_stmt
+         | show_stmt
+
+define_stmt: "define" NUMBER NAME "=" NUMBER NAME
+set_base_stmt: "base" NAME
+convert_stmt: "convert" NUMBER NAME "to" NAME
+compute_stmt: "compute" expr "in" NAME
+show_stmt: "show" "units"
+
+?expr: term
+     | expr "+" term   -> add
+     | expr "-" term   -> sub
+
+?term: factor
+     | term "*" factor -> mul
+     | term "/" factor -> div
+
+?factor: NUMBER NAME   -> quantity
+       | "(" expr ")"
+       | NUMBER        -> number
+
+%import common.CNAME -> NAME
+%import common.NUMBER
+%import common.WS
+%ignore WS

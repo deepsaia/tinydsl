@@ -3,12 +3,14 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 **TinyDSL** is a modular, agent-ready framework for exploring and testing domain-specific languages (DSLs).
-It currently supports two DSLs:
+It currently supports four DSLs:
 
-* 🎨 **Gli** — a graphics DSL for procedural image generation
-* 🗣️ **Lexi** — a text DSL for structured, expressive text generation and reasoning
+* 🎨 **Gli** — graphics DSL for procedural image generation
+* 🗣️ **Lexi** — text DSL for structured, expressive text generation and reasoning
+* 🧮 **TinyCalc** — unit conversion DSL for novel units and calculations
+* 🗄️ **TinySQL** — simplified query DSL for data operations
 
-Both are served via a unified **FastAPI backend** and are designed to be invoked by **LLM agents** or external REST clients.
+All DSLs are served via a unified **FastAPI backend** and are designed to be invoked by **LLM agents** or external REST clients.
 
 ---
 
@@ -23,6 +25,95 @@ python -m tinydsl.api.main
 ```
 
 Open [http://localhost:8008/docs](http://localhost:8008/docs).
+
+---
+
+## 🏗️ Architecture
+
+### Data Flow (Example: Lexi DSL)
+
+```mermaid
+graph LR
+    A[User Input<br/>DSL Code] --> B[FastAPI<br/>Endpoint]
+    B --> C[Lexi<br/>Interpreter]
+    C --> D[Lark<br/>Parser]
+    D --> E[Parse Tree<br/>AST]
+    E --> F[Transformer<br/>Executor]
+    F --> G[Memory<br/>Store]
+    F --> H[Output<br/>Text]
+    H --> I[Evaluator<br/>optional]
+    I --> J[Metrics &<br/>Results]
+
+    style A fill:#e1f5ff
+    style H fill:#e1f5ff
+    style J fill:#e1f5ff
+    style C fill:#fff4e1
+    style D fill:#f0f0f0
+    style F fill:#f0f0f0
+```
+
+**Flow Explanation:**
+1. **User Input** → DSL code string (e.g., `say "Hello!"`)
+2. **FastAPI Endpoint** → Routes request to appropriate DSL handler
+3. **Interpreter** → Coordinates parsing and execution
+4. **Lark Parser** → Tokenizes and parses code using grammar
+5. **Parse Tree** → Abstract Syntax Tree (AST) representation
+6. **Transformer** → Walks AST, executes operations
+7. **Memory Store** → Persistent state (for `remember`/`recall`)
+8. **Output** → Final result (text, image path, data)
+9. **Evaluator** → Optional validation against expected results
+10. **Metrics** → Accuracy, similarity scores, benchmarks
+
+### Project Structure
+
+```
+tinydsl/
+├── core/               # Shared abstractions
+│   ├── base_dsl.py    # Base class for all DSLs
+│   ├── evaluator.py   # Generic evaluation framework
+│   ├── memory.py      # Persistent storage
+│   └── dsl_registry.py # Plugin architecture
+│
+├── parser/            # Grammar-based parsers
+│   ├── lark_lexi_parser.py
+│   ├── lark_gli_parser.py
+│   ├── lark_tinycalc_parser.py
+│   └── lark_tinysql_parser.py
+│
+├── data/              # Grammars, examples, benchmarks
+│   ├── lexi_grammar.lark
+│   ├── lexi_tasks.json
+│   ├── gli_grammar.lark
+│   └── ...
+│
+├── lexi/              # Text DSL implementation
+│   ├── lexi.py        # Main interpreter
+│   ├── lexi_evaluator.py
+│   └── lexi_memory.py
+│
+├── gli/               # Graphics DSL implementation
+│   ├── gli.py         # Main interpreter
+│   ├── gli_evaluator.py
+│   └── renderers.py   # Pillow/Matplotlib
+│
+├── tinycalc/          # Unit conversion DSL
+├── tinysql/           # Query DSL
+│
+├── api/               # REST API layer
+│   ├── main.py        # FastAPI app
+│   ├── routes_lexi.py
+│   └── routes_gli.py
+│
+├── agent_tools/       # LLM agent integrations
+├── rl/                # Reinforcement learning framework
+└── tests/             # Comprehensive test suite
+```
+
+**Key Design Principles:**
+- **Modularity**: Each DSL is self-contained with clear interfaces
+- **Extensibility**: Add new DSLs by implementing `BaseDSL`
+- **Testability**: Unified evaluator framework for all DSLs
+- **Agent-Ready**: REST API + Python tools for LLM integration
 
 ---
 
@@ -75,9 +166,10 @@ Images save to `/output` as `{id}_{name}_{YYYYMMDD_HHMMSS}.png` (when `id`/`name
   * Natural expressions like `10+$i*5` work.
   * `calc(...)` remains for explicit math.
 
-* **AST endpoint (Lexi)**
+* **AST endpoint (All DSLs)**
 
   * Get parse trees to inspect/visualize your programs.
+  * Unified Lark-based AST parsing across all DSLs.
 
 * **Stable filenames**
 
@@ -87,50 +179,100 @@ Images save to `/output` as `{id}_{name}_{YYYYMMDD_HHMMSS}.png` (when `id`/`name
 
 ## 📚 API Overview
 
-| DSL  | Endpoint                    | Method | Purpose                           |
-| ---- | --------------------------- | ------ | --------------------------------- |
-| Gli  | `/api/gli/run`              | POST   | Run graphics DSL code             |
-| Gli  | `/api/gli/run_example/{id}` | GET    | Execute stored example            |
-| Lexi | `/api/lexi/run`             | POST   | Execute Lexi DSL code             |
-| Lexi | `/api/lexi/task`            | POST   | Run a predefined benchmark task   |
-| Lexi | `/api/lexi/eval`            | POST   | Evaluate multiple outputs         |
-| Lexi | `/api/lexi/memory`          | GET    | View persistent memory            |
-| Lexi | `/api/lexi/memory/clear`    | POST   | Clear memory                      |
-| Lexi | `/api/lexi/memory/set`      | POST   | Set key-value in memory           |
-| Lexi | `/api/lexi/ast`             | POST   | Get AST (raw dict / pretty / DOT) |
+### Core Endpoints (All DSLs)
+
+All DSLs support these consistent endpoints:
+
+| Endpoint   | Method | Purpose                              |
+| ---------- | ------ | ------------------------------------ |
+| `/run`     | POST   | Execute DSL code                     |
+| `/task`    | POST   | Run a predefined benchmark task      |
+| `/eval`    | POST   | Evaluate multiple outputs            |
+| `/ast`     | POST   | Get AST (raw dict / pretty / DOT)    |
+
+### DSL-Specific Endpoints
+
+**Lexi** (additional endpoints):
+
+| Endpoint           | Method | Purpose                           |
+| ------------------ | ------ | --------------------------------- |
+| `/memory`          | GET    | View persistent memory            |
+| `/memory/clear`    | POST   | Clear memory                      |
+| `/memory/set`      | POST   | Set key-value in memory           |
+
+### Examples & Discovery
+
+All DSLs also provide:
+
+| Endpoint    | Method | Purpose                      |
+| ----------- | ------ | ---------------------------- |
+| `/examples` | GET    | List available examples/tasks |
 
 ---
 
 ## 🔧 Quick Calls
 
-### Run **Lexi**
+### Run DSL Code
 
 ```bash
+# Lexi
 curl -X POST http://localhost:8008/api/lexi/run \
   -H 'Content-Type: application/json' \
   -d '{"code":"set mood happy\nsay \"Hello!\""}'
-```
 
-### Get **Lexi AST**
-
-```bash
-curl -X POST http://localhost:8008/api/lexi/ast \
-  -H 'Content-Type: application/json' \
-  -d '{"code":"say \"Hi\"","include_pretty":true,"include_dot":false}'
-```
-
-### Run **Gli** (Pillow default)
-
-```bash
+# Gli
 curl -X POST http://localhost:8008/api/gli/run \
   -H 'Content-Type: application/json' \
-  -d '{"id":"adhoc_001","name":"blue_circle","code":"set color blue\nset size 10\ndraw circle x=50 y=50","save":true}'
+  -d '{"code":"set color blue\nset size 10\ndraw circle x=50 y=50","save":true}'
+
+# TinyCalc
+curl -X POST http://localhost:8008/api/tinycalc/run \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"define 1 flurb = 3 grobble\nconvert 10 flurb to grobble"}'
+
+# TinySQL
+curl -X POST http://localhost:8008/api/tinysql/run \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"load table users from \"data.json\"\nselect name, age"}'
 ```
 
-### Run a stored **Gli** example
+### Run Benchmark Tasks
 
 ```bash
-curl "http://localhost:8008/api/gli/run_example/003?save=true&engine=pillow"
+# Lexi task
+curl -X POST http://localhost:8008/api/lexi/task \
+  -H 'Content-Type: application/json' \
+  -d '{"task_id":"lexi_001"}'
+
+# Gli task
+curl -X POST http://localhost:8008/api/gli/task?task_id=gli_001
+
+# TinyCalc task
+curl -X POST http://localhost:8008/api/tinycalc/task \
+  -H 'Content-Type: application/json' \
+  -d '{"task_id":"tinycalc_001"}'
+```
+
+### Evaluate Outputs
+
+```bash
+# Evaluate multiple task results
+curl -X POST http://localhost:8008/api/lexi/eval \
+  -H 'Content-Type: application/json' \
+  -d '{"results":[{"task_id":"lexi_001","output":"Hello!"},{"task_id":"lexi_002","output":"Goodbye!"}]}'
+```
+
+### Get AST (Parse Tree)
+
+```bash
+# Get AST for any DSL
+curl -X POST http://localhost:8008/api/tinycalc/ast \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"define 1 flurb = 3 grobble","include_pretty":true,"include_dot":false}'
+
+curl -X POST http://localhost:8008/api/lexi/ast \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"say \"Hello world!\"","include_pretty":true}'
 ```
 
 ---
@@ -165,13 +307,23 @@ You can override data paths with env vars:
 
 Add a new DSL by creating:
 
-* Parser + transformer (`parser/lark_<dsl>.py`)
-* Interpreter (`<dsl>/<dsl>.py`)
-* API router (`api/routes_<dsl>.py`)
-* Optional: examples + tasks JSON
+1. **Grammar**: Define syntax in `data/<dsl>_grammar.lark`
+2. **Parser**: Implement transformer in `parser/lark_<dsl>_parser.py`
+3. **Interpreter**: Extend `BaseDSL` in `<dsl>/<dsl>.py`
+4. **Evaluator**: Create evaluator in `<dsl>/<dsl>_evaluator.py`
+5. **API Routes**: Add endpoints in `api/routes_<dsl>.py`
+6. **Data**: Add examples and tasks in `data/`
+7. **Tests**: Add test suite in `tests/test_<dsl>.py`
 
-Register it in `api/main.py`.
-TinyDSL’s modular design makes it easy to study **continual learning, compositional reasoning, and symbolic generalization** across DSLs.
+Register routes in `api/main.py`.
+
+**All DSLs share:**
+- Unified evaluation framework (`BaseEvaluator`)
+- Common testing infrastructure
+- Plugin architecture (`DSLRegistry`)
+- REST API patterns
+
+TinyDSL's modular design makes it easy to study **continual learning, compositional reasoning, and symbolic generalization** across DSLs.
 
 ---
 

@@ -1,3 +1,7 @@
+// Unified Lexi Grammar - Supports all V1 and V2 features
+// V1 features: set, say, remember, recall, if, repeat, task, call
+// V2 features: strings, lists, foreach, match, try/catch
+
 start: statement+
 
 statement: set_stmt
@@ -8,26 +12,59 @@ statement: set_stmt
          | repeat_block
          | task_def
          | call_stmt
+         | string_op      // V2
+         | list_op        // V2
+         | length_op      // V2 - universal length for strings and lists
+         | foreach_block  // V2
+         | match_block    // V2
+         | try_block      // V2
 
+// Basic statements - V1 & V2
 set_stmt: "set" NAME assign_value
 say_stmt: "say" STRING
 remember_stmt: "remember" NAME "=" assign_value
 recall_stmt: "recall" NAME
 call_stmt: "call" NAME
-if_block: "if" NAME "is" NAME block
+if_block: "if" NAME "is" NAME block ["else" block]  // V2 adds else
 repeat_block: "repeat" NUMBER block
 task_def: "task" NAME block
 block: "{" statement+ "}"
 
-# ---- Disambiguated values
-# Existing behavior (plain literals) is preserved.
-# New: calc(...) explicitly enters math mode, removing ambiguity.
+// String operations (V2)
+string_op: "concat" NAME NAME "as" NAME                    -> str_concat
+         | "split" NAME STRING "as" NAME                   -> str_split
+         | "substring" NAME NUMBER NUMBER "as" NAME        -> str_substring
+         | "upper" NAME "as" NAME                          -> str_upper
+         | "lower" NAME "as" NAME                          -> str_lower
+
+// List operations (V2)
+list_op: "list" NAME "=" "[" value_list "]"                -> list_create
+       | "append" NAME assign_value                        -> list_append
+       | "get" NAME NUMBER "as" NAME                       -> list_get
+
+// Universal length operation (works for both strings and lists) - V2
+// Merged to avoid grammar ambiguity
+length_op: "length" NAME "as" NAME
+
+value_list: assign_value ("," assign_value)*
+
+// Foreach loop (V2)
+foreach_block: "foreach" NAME "in" NAME block
+
+// Pattern matching (V2)
+match_block: "match" NAME "{" match_case+ "}"
+match_case: assign_value "=>" block
+
+// Error handling (V2)
+try_block: "try" block "catch" NAME block
+
+// ---- Disambiguated values (V1 & V2)
 assign_value: STRING                   -> plain_string
             | NAME                     -> plain_name
             | NUMBER                   -> plain_number
             | "calc" "(" expr ")"      -> math_call
 
-# ---- Math subgrammar is only visible after 'calc(' ... ')'
+// ---- Math subgrammar (only visible after 'calc(' ... ')')
 ?expr: term
      | expr "+" term   -> add
      | expr "-" term   -> sub

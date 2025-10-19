@@ -2,31 +2,37 @@
 from __future__ import annotations
 
 import os
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Union
 
 from tinydsl.parser.lark_gli_parser import LarkGLIParser
 from tinydsl.gli.renderers import PillowRenderer, BaseRenderer
 
-Shape = Tuple[str, float, float, float, str]
+# Support both v1 and v2 shape formats
+Shape = Union[Tuple[str, float, float, float, str], Tuple[str, float, float, float, str, float, List]]
 
 
 class GlintInterpreter:
     """
     GLI interpreter:
-      - Parses & executes GLI via LarkGLIParser.
+      - Parses & executes GLI via LarkGLIParser or V2 (with variables, conditionals, functions).
       - Always renders via Pillow for crisp, anti-aliased output.
+      - Use version='v2' for enhanced features (variables, conditionals, functions, transforms)
     """
 
     def __init__(
         self,
         renderer: Optional[BaseRenderer] = None,
         accumulate: bool = False,
+        version: str = 'v1',  # 'v1' or 'v2'
         *,
         canvas_size: int = 768,
         supersample: int = 2,
         line_width: int = 2,
     ):
-        self._parser = LarkGLIParser()
+        # Choose parser version
+        self._parser = LarkGLIParser(version=version)
+
+        self.version = version
         self.shapes: List[Shape] = []
         self.accumulate = accumulate
 

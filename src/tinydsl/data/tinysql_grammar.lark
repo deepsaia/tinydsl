@@ -1,0 +1,31 @@
+// TinySQL Grammar - Simplified query DSL
+
+start: statement+
+
+statement: load_stmt
+         | filter_stmt
+         | select_stmt
+         | sort_stmt
+         | limit_stmt
+         | show_stmt
+         | join_stmt
+
+load_stmt: "load" "table" NAME "from" STRING
+filter_stmt: "filter" NAME "where" NAME COMP_OP value
+select_stmt: "select" name_list
+sort_stmt: "sort" "by" NAME ["asc" | "desc"]
+limit_stmt: "limit" NUMBER
+show_stmt: "show" "tables"
+join_stmt: "join" NAME "on" NAME "=" NAME
+
+name_list: NAME ("," NAME)*
+
+value: STRING | NUMBER | NAME
+
+COMP_OP: ">" | "<" | "=" | ">=" | "<=" | "!="
+
+%import common.CNAME -> NAME
+%import common.NUMBER
+%import common.ESCAPED_STRING -> STRING
+%import common.WS
+%ignore WS

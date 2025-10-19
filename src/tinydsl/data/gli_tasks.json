@@ -1,0 +1,97 @@
+[
+  {
+    "id": "001",
+    "name": "simple_circle",
+    "difficulty": "easy",
+    "description": "Draw a single circle",
+    "goal": "Basic shape rendering",
+    "code": "set color red\nset size 10\ndraw circle x=50 y=50",
+    "expected_output": "1 shape"
+  },
+  {
+    "id": "002",
+    "name": "color_change",
+    "difficulty": "easy",
+    "description": "Draw shapes with different colors",
+    "goal": "Test color switching",
+    "code": "set color blue\nset size 5\ndraw circle x=10 y=10\nset color green\ndraw circle x=20 y=20",
+    "expected_output": "2 shapes"
+  },
+  {
+    "id": "003",
+    "name": "simple_repeat",
+    "difficulty": "medium",
+    "description": "Use repeat to draw multiple shapes",
+    "goal": "Test loop iteration",
+    "code": "set color purple\nset size 5\nrepeat 3 {\n  draw circle x=10+$i*10 y=10\n}",
+    "expected_output": "3 shapes"
+  },
+  {
+    "id": "004",
+    "name": "repeat_with_math",
+    "difficulty": "medium",
+    "description": "Use math expressions in repeat loop",
+    "goal": "Test inline math",
+    "code": "set color orange\nrepeat 5 {\n  set size 3+$i\n  draw circle x=$i*8 y=$i*5\n}",
+    "expected_output": "5 shapes"
+  },
+  {
+    "id": "005",
+    "name": "trigonometric_pattern",
+    "difficulty": "hard",
+    "description": "Create pattern using sin/cos",
+    "goal": "Test trigonometric functions",
+    "code": "set color gold\nrepeat 12 {\n  set size 3\n  draw circle x=cos($i*30)*40 y=sin($i*30)*40\n}",
+    "expected_output": "12 shapes"
+  },
+  {
+    "id": "006",
+    "name": "variable_assignment",
+    "difficulty": "medium",
+    "description": "Use variables (v2 feature)",
+    "goal": "Test variable support",
+    "code": "var radius 15\nset color teal\nset size radius\ndraw circle x=0 y=0",
+    "expected_output": "1 shape",
+    "version": "v2"
+  },
+  {
+    "id": "007",
+    "name": "conditional_drawing",
+    "difficulty": "hard",
+    "description": "Use if/else to conditionally draw (v2 feature)",
+    "goal": "Test conditionals",
+    "code": "var mode on\nset color red\nif mode is on {\n  draw circle x=10 y=10\n} else {\n  draw square x=10 y=10\n}",
+    "expected_output": "1 shape",
+    "version": "v2"
+  },
+  {
+    "id": "008",
+    "name": "function_definition",
+    "difficulty": "hard",
+    "description": "Define and call functions (v2 feature)",
+    "goal": "Test user-defined functions",
+    "code": "define ring(r) {\n  set size 3\n  repeat 8 {\n    draw circle x=cos($i*45)*r y=sin($i*45)*r\n  }\n}\ncall ring(30)",
+    "expected_output": "8 shapes",
+    "version": "v2"
+  },
+  {
+    "id": "009",
+    "name": "transforms_rotation",
+    "difficulty": "hard",
+    "description": "Use rotation transform (v2 feature)",
+    "goal": "Test rotation",
+    "code": "set color navy\nrotate 45\ndraw square x=0 y=0",
+    "expected_output": "1 shape rotated",
+    "version": "v2"
+  },
+  {
+    "id": "010",
+    "name": "transforms_scale",
+    "difficulty": "hard",
+    "description": "Use scale transform (v2 feature)",
+    "goal": "Test scaling",
+    "code": "set color crimson\nscale 2\ndraw circle x=20 y=20",
+    "expected_output": "1 scaled shape",
+    "version": "v2"
+  }
+]

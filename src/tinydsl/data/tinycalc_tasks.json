@@ -1,0 +1,137 @@
+[
+  {
+    "id": "001",
+    "name": "simple_direct_conversion",
+    "difficulty": "easy",
+    "description": "Single-step unit conversion",
+    "goal": "Learn basic conversion factor application",
+    "code": "define 1 flurb = 3.5 grobbles\nconvert 4 flurbs to grobbles",
+    "expected_output": "14.0 grobbles"
+  },
+  {
+    "id": "002",
+    "name": "reverse_lookup",
+    "difficulty": "easy",
+    "description": "Bidirectional conversion test",
+    "goal": "Apply inverse conversion factor",
+    "code": "define 1 flurb = 2.0 grobbles\nconvert 10 grobbles to flurbs",
+    "expected_output": "5.0 flurbs"
+  },
+  {
+    "id": "003",
+    "name": "two_hop_chain",
+    "difficulty": "medium",
+    "description": "Convert through intermediate unit",
+    "goal": "Compose multiple conversion factors",
+    "code": "define 1 flurb = 3.0 grobbles\ndefine 1 grobble = 2.0 zepts\nconvert 5 flurbs to zepts",
+    "expected_output": "30.0 zepts"
+  },
+  {
+    "id": "004",
+    "name": "three_hop_chain",
+    "difficulty": "hard",
+    "description": "Convert across three unit boundaries",
+    "goal": "Chain multiple conversions correctly",
+    "code": "define 1 flurb = 2.5 grobbles\ndefine 1 grobble = 4.0 zepts\ndefine 1 zept = 0.5 quibs\nconvert 8 flurbs to quibs",
+    "expected_output": "40.0 quibs"
+  },
+  {
+    "id": "005",
+    "name": "addition_same_unit",
+    "difficulty": "easy",
+    "description": "Add quantities in same unit",
+    "goal": "Verify arithmetic without conversion",
+    "code": "define 1 flurb = 1.0 grobbles\ncompute 10 flurbs + 5 flurbs in flurbs",
+    "expected_output": "15.0 flurbs"
+  },
+  {
+    "id": "006",
+    "name": "addition_mixed_units",
+    "difficulty": "medium",
+    "description": "Add quantities with different units",
+    "goal": "Convert and add correctly",
+    "code": "define 1 flurb = 3.0 grobbles\ncompute 2 flurbs + 6 grobbles in grobbles",
+    "expected_output": "12.0 grobbles"
+  },
+  {
+    "id": "007",
+    "name": "subtraction_mixed",
+    "difficulty": "medium",
+    "description": "Subtract with unit conversion",
+    "goal": "Handle negative direction operations",
+    "code": "define 1 flurb = 5.0 zepts\ncompute 10 flurbs - 20 zepts in zepts",
+    "expected_output": "30.0 zepts"
+  },
+  {
+    "id": "008",
+    "name": "multiplication_units",
+    "difficulty": "medium",
+    "description": "Multiply quantities",
+    "goal": "Scale values correctly",
+    "code": "define 1 voom = 2.0 quibs\ncompute 4 vooms * 3 vooms in vooms",
+    "expected_output": "12.0 vooms"
+  },
+  {
+    "id": "009",
+    "name": "division_units",
+    "difficulty": "medium",
+    "description": "Divide quantities with units",
+    "goal": "Perform division with conversion",
+    "code": "define 1 flurb = 4.0 grobbles\ncompute 20 flurbs / 5 flurbs in flurbs",
+    "expected_output": "4.0 flurbs"
+  },
+  {
+    "id": "010",
+    "name": "complex_expression",
+    "difficulty": "hard",
+    "description": "Multi-operation expression with conversions",
+    "goal": "Chain operations and conversions",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 grobble = 3.0 zepts\ncompute 10 flurbs + 5 grobbles - 10 zepts in zepts",
+    "expected_output": "65.0 zepts"
+  },
+  {
+    "id": "011",
+    "name": "fractional_conversion",
+    "difficulty": "medium",
+    "description": "Handle non-integer conversion factors",
+    "goal": "Precise decimal arithmetic",
+    "code": "define 1 voom = 1.5 quibs\nconvert 6 vooms to quibs",
+    "expected_output": "9.0 quibs"
+  },
+  {
+    "id": "012",
+    "name": "reverse_chain",
+    "difficulty": "hard",
+    "description": "Convert backwards through chain",
+    "goal": "Navigate conversion graph in reverse",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 grobble = 5.0 zepts\nconvert 50 zepts to flurbs",
+    "expected_output": "5.0 flurbs"
+  },
+  {
+    "id": "013",
+    "name": "diamond_graph",
+    "difficulty": "hard",
+    "description": "Multiple paths between units",
+    "goal": "Find any valid conversion path",
+    "code": "define 1 flurb = 2.0 grobbles\ndefine 1 flurb = 4.0 zepts\ndefine 1 grobble = 2.0 zepts\nconvert 3 flurbs to zepts",
+    "expected_output": "12.0 zepts"
+  },
+  {
+    "id": "014",
+    "name": "mixed_addition_three_units",
+    "difficulty": "hard",
+    "description": "Add three different unit types",
+    "goal": "Multiple conversions in one expression",
+    "code": "define 1 flurb = 3.0 grobbles\ndefine 1 grobble = 2.0 zepts\ncompute 2 flurbs + 3 grobbles + 12 zepts in zepts",
+    "expected_output": "30.0 zepts"
+  },
+  {
+    "id": "015",
+    "name": "zero_conversion",
+    "difficulty": "easy",
+    "description": "Convert zero quantity",
+    "goal": "Handle edge case of zero",
+    "code": "define 1 flurb = 7.0 quibs\nconvert 0 flurbs to quibs",
+    "expected_output": "0.0 quibs"
+  }
+]

@@ -1,8 +1,25 @@
 from tinydsl.parser.lark_lexi_parser import LarkLexiParser
 
 class LexiInterpreter:
-    def __init__(self):
-        self.parser = LarkLexiParser()
+    """
+    Lexi DSL interpreter.
+
+    Use version='v2' for enhanced features:
+    - String operations (concat, split, substring, length, upper, lower)
+    - Lists/Arrays (create, append, get, length, foreach)
+    - Pattern matching (match/case)
+    - Error handling (try/catch)
+    """
+
+    def __init__(self, version: str = 'v1'):
+        """
+        Initialize Lexi interpreter.
+
+        Args:
+            version: 'v1' (default) or 'v2' (enhanced features)
+        """
+        self.version = version
+        self.parser = LarkLexiParser(version=version)
 
     def parse(self, code: str):
         self.output = self.parser.parse(code)

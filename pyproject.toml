@@ -1,11 +1,11 @@
 [project]
 name = "tinydsl"
-description = "A modular agent-ready framework for exploring domain-specific languages (DSLs)"
+description = "A modular agent-ready framework for exploring domain-specific languages (DSLs) with KAIT protocol support"
 readme = "README.md"
 authors = [{ name = "Deepak" }]
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
-keywords = ["tinydsl", "dsl", "domain specific language", "agent"]
+keywords = ["tinydsl", "dsl", "domain specific language", "agent", "kait", "knowledge acquisition"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -30,7 +30,9 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=25.9.0",
-    "ruff>=0.14.1"
+    "ruff>=0.14.1",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0"
 ]
 
 [build-system]
@@ -42,7 +44,7 @@ where = ["src"]
 exclude = ["tests*", "dist*", "output*"]
 
 [tool.setuptools.package-data]
-"tinydsl" = ["data/*.json"]
+"tinydsl" = ["data/*.json", "data/*.lark"]
 
 [tool.setuptools_scm]
 fallback_version = "0.0.1"

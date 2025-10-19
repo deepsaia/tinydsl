@@ -1,21 +1,52 @@
+// Unified Gli Grammar - Supports all V1 and V2 features
+// V1 features: set, draw, repeat
+// V2 features: variables, conditionals, functions, transforms
+
 start: statement+
 
 statement: set_stmt
          | draw_stmt
          | repeat_block
+         | if_block          // V2
+         | var_stmt          // V2
+         | func_def          // V2
+         | call_stmt         // V2
+         | transform_stmt    // V2
 
+// Variable assignment (V2)
+var_stmt: "var" NAME "=" assign_value
+
+// Set context property (color, size, etc.) - V1 & V2
 set_stmt: "set" NAME assign_value
 
+// Conditional (V2)
+if_block: "if" NAME COMP_OP assign_value block ["else" block]
+COMP_OP: "is" | "==" | ">" | "<" | ">=" | "<=" | "!="
+
+// Function definition and call (V2)
+func_def: "define" NAME "(" [param_list] ")" block
+call_stmt: "call" NAME "(" [arg_list] ")"
+param_list: NAME ("," NAME)*
+arg_list: assign_value ("," assign_value)*
+
+// Transform operations (V2)
+transform_stmt: "rotate" value
+              | "scale" value ["," value]
+              | "translate" value "," value
+              | "push"
+              | "pop"
+
+// Drawing - V1 & V2
 draw_stmt: "draw" NAME [draw_args]
 draw_args: param+
-
 param: NAME "=" value
 
-# Smart values: one token; the transformer decides math vs literal
+// Smart values: one token; the transformer decides math vs literal
 assign_value: VALUE
 value: VALUE
-VALUE: /[^\s}]+/
+VALUE: /[^\s},)]+/  // Excludes whitespace, braces, commas, parens
 
+// Repeat block - V1 & V2
 repeat_block: "repeat" NUMBER block
 block: "{" statement+ "}"
 

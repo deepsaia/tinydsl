@@ -1,0 +1,92 @@
+[
+  {
+    "id": "001",
+    "name": "simple_greeting",
+    "description": "Basic say statement",
+    "tags": ["basic", "say"],
+    "code": "say \"Hello world!\""
+  },
+  {
+    "id": "002",
+    "name": "conditional_message",
+    "description": "Use if/else for conditional output",
+    "tags": ["control", "conditional"],
+    "code": "set mood happy\nif mood is happy {\n  say \"Great day!\"\n} else {\n  say \"Stay strong!\"\n}"
+  },
+  {
+    "id": "003",
+    "name": "repeat_loop",
+    "description": "Repeat a message multiple times",
+    "tags": ["loop", "repeat"],
+    "code": "repeat 3 {\n  say \"Echo\"\n}"
+  },
+  {
+    "id": "004",
+    "name": "task_and_call",
+    "description": "Define and call a task",
+    "tags": ["task", "function"],
+    "code": "task greet {\n  say \"Hello from task!\"\n}\ncall greet"
+  },
+  {
+    "id": "005",
+    "name": "memory_usage",
+    "description": "Store and recall from memory",
+    "tags": ["memory", "persistence"],
+    "code": "remember name = \"Alice\"\nrecall name"
+  },
+  {
+    "id": "006",
+    "name": "math_calculation",
+    "description": "Use calc for math operations",
+    "tags": ["math", "calc"],
+    "code": "set x calc(5 + 3 * 2)\nremember result = x\nrecall result"
+  },
+  {
+    "id": "007",
+    "name": "string_concat",
+    "description": "Concatenate strings (v2 feature)",
+    "tags": ["string", "concat", "v2"],
+    "code": "set first \"Hello\"\nset last \"World\"\nconcat first last as greeting\nrecall greeting",
+    "version": "v2"
+  },
+  {
+    "id": "008",
+    "name": "string_split",
+    "description": "Split string into list (v2 feature)",
+    "tags": ["string", "list", "v2"],
+    "code": "set text \"apple,banana,cherry\"\nsplit text \",\" as fruits\nrecall fruits",
+    "version": "v2"
+  },
+  {
+    "id": "009",
+    "name": "list_operations",
+    "description": "Create and manipulate lists (v2 feature)",
+    "tags": ["list", "array", "v2"],
+    "code": "list colors = [\"red\", \"green\", \"blue\"]\nappend colors \"yellow\"\nlength colors as count\nrecall count",
+    "version": "v2"
+  },
+  {
+    "id": "010",
+    "name": "foreach_loop",
+    "description": "Iterate over list with foreach (v2 feature)",
+    "tags": ["loop", "list", "v2"],
+    "code": "list items = [\"apple\", \"banana\", \"cherry\"]\nforeach item in items {\n  say item\n}",
+    "version": "v2"
+  },
+  {
+    "id": "011",
+    "name": "pattern_matching",
+    "description": "Use match/case for pattern matching (v2 feature)",
+    "tags": ["match", "pattern", "v2"],
+    "code": "set mood happy\nmatch mood {\n  happy => { say \"Feeling great!\" }\n  sad => { say \"Cheer up!\" }\n}",
+    "version": "v2"
+  },
+  {
+    "id": "012",
+    "name": "error_handling",
+    "description": "Use try/catch for error handling (v2 feature)",
+    "tags": ["error", "try", "catch", "v2"],
+    "code": "try {\n  recall missing_var\n} catch error {\n  say \"Variable not found\"\n}",
+    "version": "v2"
+  }
+]

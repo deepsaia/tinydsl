@@ -3,11 +3,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from tinydsl.lexi.lexi import LexiInterpreter
 from tinydsl.lexi.lexi_evaluator import LexiEvaluator
-import json
+from tinydsl.api.common_handlers import DSLHandler
 import os
 
 from tinydsl.lexi.lexi_memory import LexiMemoryStore
-from tinydsl.parser.lark_lexi_parser import LarkLexiASTParser
 
 memory_store = LexiMemoryStore()
 
@@ -17,7 +16,16 @@ root_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(root_dir, "..", "data")
 
 LEXI_TASKS_PATH = os.getenv("LEXI_TASKS_PATH", os.path.join(data_dir, "lexi_tasks.json"))
-LEXI_EVALUATOR = LexiEvaluator(LEXI_TASKS_PATH)
+LEXI_GRAMMAR_PATH = os.getenv("LEXI_GRAMMAR_PATH", os.path.join(data_dir, "lexi_grammar.lark"))
+
+# Initialize common handler
+handler = DSLHandler(
+    dsl_class=LexiInterpreter,
+    evaluator_class=LexiEvaluator,
+    tasks_path=LEXI_TASKS_PATH,
+    dsl_name="lexi",
+    grammar_path=LEXI_GRAMMAR_PATH,
+)
 
 
 # ---------- Request Schemas ----------
@@ -71,71 +79,41 @@ def set_lexi_memory(item: dict):
 
 
 # ---------- Core Run ----------
+def _lexi_run_processor(dsl_instance, output):
+    """Custom processor for Lexi /run endpoint to include memory."""
+    mem_data = {}
+    if hasattr(dsl_instance, "memory"):
+        if hasattr(dsl_instance.memory, "load"):  # LexiMemoryStore
+            mem_data = dsl_instance.memory.load()
+        elif isinstance(dsl_instance.memory, dict):
+            mem_data = dsl_instance.memory
+    return {"status": "ok", "output": output, "memory": mem_data}
+
+
 @router.post("/run")
 def run_lexi(request: LexiRequest):
     """Run a Lexi DSL script and return generated text."""
-    try:
-        lexi = LexiInterpreter()
-        lexi.parse(request.code)
-        result = lexi.render()
-        mem_data = {}
-        if hasattr(lexi, "memory"):
-            if hasattr(lexi.memory, "load"):  # LexiMemoryStore
-                mem_data = lexi.memory.load()
-            elif isinstance(lexi.memory, dict):
-                mem_data = lexi.memory
-
-        return JSONResponse({"status": "ok", "output": result, "memory": mem_data})
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    response = handler.handle_run(
+        code=request.code,
+        process_output=_lexi_run_processor
+    )
+    return JSONResponse(response)
 
 
 # ---------- Task Execution ----------
 @router.post("/task")
 def run_lexi_task(request: TaskRequest):
     """Run a predefined Lexi task from benchmark JSON."""
-    try:
-        with open(LEXI_TASKS_PATH, "r") as f:
-            tasks = json.load(f)
-        task = next((t for t in tasks if t["id"] == request.task_id), None)
-        if not task:
-            raise HTTPException(status_code=404, detail="Task not found")
-
-        lexi = LexiInterpreter()
-        lexi.parse(task["code"])
-        result = lexi.render()
-        return JSONResponse(
-            {
-                "status": "ok",
-                "task_id": task["id"],
-                "task_name": task["name"],
-                "expected_output": task["expected_output"],
-                "generated_output": result,
-            }
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    response = handler.handle_task(task_id=request.task_id)
+    return JSONResponse(response)
 
 
 # ---------- Evaluation ----------
 @router.post("/eval")
 def evaluate_lexi_outputs(request: EvalRequest):
     """Evaluate multiple Lexi outputs against benchmark expectations."""
-    try:
-        report = LEXI_EVALUATOR.batch_evaluate(request.results)
-        return JSONResponse(
-            {
-                "status": "ok",
-                "summary": {
-                    "accuracy": report["accuracy"],
-                    "passed": sum(r["status"] == "pass" for r in report["details"]),
-                    "total": len(report["details"]),
-                },
-                "details": report["details"],
-            }
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    response = handler.handle_eval(results=request.results)
+    return JSONResponse(response)
 
 
 @router.post("/ast")
@@ -147,17 +125,9 @@ def lexi_ast(request: ASTRequest):
       - pretty: human-readable tree dump (optional)
       - dot: Graphviz DOT string (optional)
     """
-    try:
-        astp = LarkLexiASTParser()
-        tree = astp.parse_tree(request.code)
-        payload = {
-            "status": "ok",
-            "tree": astp.tree_to_dict(tree),
-        }
-        if request.include_pretty:
-            payload["pretty"] = astp.tree_pretty(tree)
-        if request.include_dot:
-            payload["dot"] = astp.tree_to_dot(tree)
-        return JSONResponse(payload)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"AST parse error: {e}")
+    response = handler.handle_ast(
+        code=request.code,
+        include_pretty=request.include_pretty,
+        include_dot=request.include_dot,
+    )
+    return JSONResponse(response)
