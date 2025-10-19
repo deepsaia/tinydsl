@@ -1,6 +1,6 @@
-# CONTRIBUTION.md
+# CONTRIBUTING to tinydsl!
 
-Thanks for helping improve **TinyDSL**! This doc keeps contributions fast and friction-free.
+Thanks for taking interest and helping improve **TinyDSL**! This doc keeps contributions fast and friction-free.
 
 ---
 
