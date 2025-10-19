@@ -25,13 +25,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Hatch
+      - name: Install build tools
         run: |
-          python -m pip install --upgrade pip
-          pip install hatch
+          pip install --upgrade pip
+          pip install build
 
-      - name: Build package
-        run: hatch build
+      - name: Build wheel and sdist
+        run: python -m build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
