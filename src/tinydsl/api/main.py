@@ -31,7 +31,7 @@ async def lifespan(_app: FastAPI):
             register_dsl("lexi", LexiInterpreter)
             register_dsl("tinycalc", TinyCalcInterpreter)
             register_dsl("tinysql", TinySQLInterpreter)
-            logger.success("✅ Registered DSLs: gli, lexi, tinycalc, tinysql")
+            logger.success("Registered DSLs: gli, lexi, tinycalc, tinysql")
         except ValueError as e:
             logger.warning(f"⚠️  DSL registration skipped: {e}")
             logger.info("API endpoints will still work, but /dsls endpoint may not list all DSLs")

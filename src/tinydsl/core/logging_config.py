@@ -2,11 +2,19 @@
 Centralized logging configuration using loguru.
 
 Loguru provides better logging with:
-- Colorized output
+- Colorized output (errors/warnings in bold with emojis)
 - Better exception handling
 - Simpler API
 - Automatic rotation
 - No configuration files needed
+
+Log Level Colors:
+- DEBUG: Blue text
+- INFO: Cyan text
+- SUCCESS: Bold green text
+- WARNING: Bold yellow text
+- ERROR: Bold red text with ❌ marker
+- CRITICAL: Bright red text (with red background) and 🚨 marker
 """
 
 import sys
@@ -53,37 +61,67 @@ def setup_logging(
     # Remove default handler
     logger.remove()
 
-    # Add console handler with nice formatting
-    log_format = (
-        "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
-        "<level>{level: <8}</level> | "
-        "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
-        "<level>{message}</level>"
-    )
+    # Customize level colors - make errors and critical stand out more
+    logger.level("DEBUG", color="<blue>")
+    logger.level("INFO", color="<cyan>")
+    logger.level("SUCCESS", color="<green><bold>")
+    logger.level("WARNING", color="<yellow><bold>")
+    logger.level("ERROR", color="<red><bold>")
+    logger.level("CRITICAL", color="<RED><bold>")  # Uppercase RED = bright red
+
+    # Custom format function with conditional formatting for errors
+    def custom_formatter(record):
+        """Custom formatter that adds error markers based on level."""
+        # Add error marker prefix
+        if record["level"].name == "CRITICAL":
+            marker = "🚨 "
+        elif record["level"].name == "ERROR":
+            marker = "❌ "
+        else:
+            marker = ""
+
+        # Build the format string
+        fmt = (
+            "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+            "<level>{level: <8}</level> | "
+            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
+            f"{marker}<level>{{message}}</level>\n"
+        )
+
+        return fmt
 
     logger.add(
         sys.stderr,
-        format=log_format,
+        format=custom_formatter,
         level=level,
         colorize=colorize,
         backtrace=True,
         diagnose=True,
     )
 
-    # Add file handler if specified
+    # Add file handler if specified (without color codes for files)
     if log_file:
         log_path = Path(log_file)
         log_path.parent.mkdir(parents=True, exist_ok=True)
 
+        # Simplified format for file output (no emojis/colors)
+        file_format = (
+            "{time:YYYY-MM-DD HH:mm:ss} | "
+            "{level: <8} | "
+            "{name}:{function}:{line} | "
+            "{message}"
+        )
+
         logger.add(
             log_file,
-            format=log_format,
+            format=file_format,
             level=level,
             rotation=rotation,
             retention=retention,
             compression="zip",
             backtrace=True,
             diagnose=True,
+            colorize=False,  # No colors in file
         )
 
     return logger
@@ -205,8 +243,8 @@ Basic usage:
     logger.debug("Debug message")
     logger.info("Info message")
     logger.warning("Warning message")
-    logger.error("Error message")
-    logger.critical("Critical message")
+    logger.error("Error message")  # Shows in red with ❌
+    logger.critical("Critical message")  # Shows in bright red with 🚨
 
 In classes:
     from tinydsl.core.logging_config import get_logger
@@ -222,7 +260,7 @@ Exception logging:
     try:
         dangerous_operation()
     except Exception as e:
-        logger.exception("Operation failed")  # Automatically includes traceback
+        logger.exception("Operation failed")  # Automatically includes traceback in red
 
 Contextual logging:
     with logger.contextualize(request_id="12345"):
@@ -237,4 +275,20 @@ Performance timing:
         logger.info("Function started")
         time.sleep(1)
         logger.info("Function completed")
+
+Customizing colors further:
+    If you want to change colors or add custom levels:
+
+    from tinydsl.core.logging_config import logger
+
+    # Change existing level color
+    logger.level("ERROR", color="<magenta><bold>")
+
+    # Add custom level
+    logger.level("TRACE", no=5, color="<cyan>", icon="🔍")
+    logger.log("TRACE", "Custom trace message")
+
+    # Available colors: black, red, green, yellow, blue, magenta, cyan, white
+    # Available styles: bold, dim, italic, underline
+    # Uppercase colors (e.g., RED) are brighter versions
 """
