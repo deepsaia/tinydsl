@@ -145,5 +145,208 @@
     "description": "Draws a true spiral pattern using trigonometric functions for x and y positions, creating a smooth outward rotation.",
     "tags": ["circle", "spiral", "trigonometric", "pattern"],
     "code": "set color orange\nrepeat 20 {\n  set size 3+$i\n  draw circle x=cos($i*20)*$i*10 y=sin($i*20)*$i*10\n}"
+  },
+  {
+    "id": "022",
+    "name": "radial_burst_circles",
+    "description": "Small circles placed radially with increasing radius.",
+    "tags": ["circle", "radial", "pattern"],
+    "code": "set color gold\nset size 3\nrepeat 24 {\n  draw circle x=cos($i*15)*($i*6) y=sin($i*15)*($i*6)\n}"
+  },
+  {
+    "id": "023",
+    "name": "phyllotaxis",
+    "description": "Sunflower-style phyllotaxis using the golden angle.",
+    "tags": ["circle", "spiral", "phyllotaxis"],
+    "code": "set color forestgreen\nset size 2\nrepeat 80 {\n  draw circle x=cos($i*137.5)*($i*3) y=sin($i*137.5)*($i*3)\n}"
+  },
+  {
+    "id": "024",
+    "name": "rose_curve_rings",
+    "description": "Rings placed along a rose curve (k=4).",
+    "tags": ["circle", "polar", "rose"],
+    "code": "set color crimson\nrepeat 48 {\n  set size 2+$i*0.2\n  draw circle x=cos($i*7.5)*cos($i*30)*($i*4) y=sin($i*7.5)*cos($i*30)*($i*4)\n}"
+  },
+  {
+    "id": "025",
+    "name": "grid_points",
+    "description": "9x9 grid of tiny points (circles) centered around origin.",
+    "tags": ["grid", "circle", "repeat"],
+    "code": "set color black\nset size 1\nrepeat 9 {\n  draw circle x=-40+$i*10 y=-40\n  draw circle x=-40+$i*10 y=-30\n  draw circle x=-40+$i*10 y=-20\n  draw circle x=-40+$i*10 y=-10\n  draw circle x=-40+$i*10 y=0\n  draw circle x=-40+$i*10 y=10\n  draw circle x=-40+$i*10 y=20\n  draw circle x=-40+$i*10 y=30\n  draw circle x=-40+$i*10 y=40\n}"
+  },
+  {
+    "id": "026",
+    "name": "spiral_squares",
+    "description": "Squares growing in size along a spiral path.",
+    "tags": ["square", "spiral", "growth"],
+    "code": "set color teal\nrepeat 18 {\n  set size 4+$i\n  draw square x=cos($i*20)*($i*9) y=sin($i*20)*($i*9)\n}"
+  },
+  {
+    "id": "027",
+    "name": "bullseye_triple",
+    "description": "Three concentric circles forming a bullseye.",
+    "tags": ["circle", "concentric", "layers"],
+    "code": "set color firebrick\nset size 30\ndraw circle x=0 y=0\nset color white\nset size 18\ndraw circle x=0 y=0\nset color navy\nset size 8\ndraw circle x=0 y=0"
+  },
+  {
+    "id": "028",
+    "name": "sine_wave_lines",
+    "description": "Horizontal lines placed along a sine wave.",
+    "tags": ["line", "wave", "trigonometric"],
+    "code": "set color royalblue\nset size 8\nrepeat 30 {\n  draw line x=-60+$i*4 y=sin($i*12)*20\n}"
+  },
+  {
+    "id": "029",
+    "name": "ring_of_squares",
+    "description": "Squares arranged evenly around a ring.",
+    "tags": ["square", "radial", "pattern"],
+    "code": "set color darkorange\nset size 6\nrepeat 16 {\n  draw square x=cos($i*22.5)*60 y=sin($i*22.5)*60\n}"
+  },
+  {
+    "id": "030",
+    "name": "flower_petals",
+    "description": "Petal-like circles around a center.",
+    "tags": ["circle", "flower", "radial"],
+    "code": "set color deeppink\nset size 10\nrepeat 12 {\n  draw circle x=cos($i*30)*40 y=sin($i*30)*40\n}\nset color black\nset size 6\ndraw circle x=0 y=0"
+  },
+  {
+    "id": "031",
+    "name": "nested_grid_squares",
+    "description": "A 5x5 grid made with nested repeats.",
+    "tags": ["square", "grid", "nested"],
+    "code": "set color dimgray\nset size 6\nrepeat 5 {\n  draw square x=-40+$i*20 y=-40\n  draw square x=-40+$i*20 y=-20\n  draw square x=-40+$i*20 y=0\n  draw square x=-40+$i*20 y=20\n  draw square x=-40+$i*20 y=40\n}"
+  },
+  {
+    "id": "032",
+    "name": "spiral_rays",
+    "description": "Short lines radiating and drifting outward.",
+    "tags": ["line", "spiral", "radial"],
+    "code": "set color goldenrod\nset size 12\nrepeat 24 {\n  draw line x=cos($i*15)*($i*5) y=sin($i*15)*($i*5)\n}"
+  },
+  {
+    "id": "033",
+    "name": "offset_ripples",
+    "description": "Two ripple rings offset from the origin.",
+    "tags": ["circle", "ripple", "offset"],
+    "code": "set color steelblue\nrepeat 6 {\n  set size 6+$i*4\n  draw circle x=-20 y=0\n}\nset color tomato\nrepeat 6 {\n  set size 6+$i*4\n  draw circle x=20 y=0\n}"
+  },
+  {
+    "id": "034",
+    "name": "lissajous_points",
+    "description": "Samples a Lissajous curve with small circles.",
+    "tags": ["circle", "lissajous", "trigonometric"],
+    "code": "set color purple\nset size 2\nrepeat 80 {\n  draw circle x=sin($i*9)*60 y=sin($i*7+90)*40\n}"
+  },
+  {
+    "id": "035",
+    "name": "square_spiral_stairs",
+    "description": "Squares stepping outward in a quarter-turn pattern.",
+    "tags": ["square", "stair", "pattern"],
+    "code": "set color slategray\nset size 8\nrepeat 20 {\n  draw square x=$i*6 y=0\n  draw square x=$i*6 y=$i*4\n  draw square x=0 y=$i*4\n}"
+  },
+  {
+    "id": "036",
+    "name": "polar_dots_ringfade",
+    "description": "Dots on a ring whose size changes with angle.",
+    "tags": ["circle", "polar", "fade"],
+    "code": "set color teal\nrepeat 36 {\n  set size 2+abs(sin($i*10))*6\n  draw circle x=cos($i*10)*60 y=sin($i*10)*60\n}"
+  },
+  {
+    "id": "037",
+    "name": "snowman",
+    "description": "Three stacked circles with buttons, eyes, and a smile.",
+    "tags": ["circle", "character", "stacked"],
+    "code": "set color skyblue\nset size 20\ndraw circle x=0 y=-25\nset size 14\ndraw circle x=0 y=-5\nset size 10\ndraw circle x=0 y=10\nset color black\nset size 1.5\nrepeat 3 {\n  draw circle x=-2+$i*2 y=-5\n}\nset size 1.5\ndraw circle x=-3 y=12\ndraw circle x=3 y=12\nset size 6\ndraw line x=-3 y=6"
+  },
+  {
+    "id": "038",
+    "name": "robot_head",
+    "description": "A square head, circular eyes, and a straight mouth.",
+    "tags": ["square", "circle", "character"],
+    "code": "set color gray\nset size 30\ndraw square x=0 y=0\nset color black\nset size 6\ndraw circle x=-10 y=10\ndraw circle x=10 y=10\nset size 12\ndraw line x=-15 y=-5"
+  },
+  {
+    "id": "039",
+    "name": "traffic_light",
+    "description": "Three lights stacked in a housing.",
+    "tags": ["circle", "square", "stacked"],
+    "code": "set color black\nset size 30\ndraw square x=0 y=10\nset color red\nset size 8\ndraw circle x=0 y=20\nset color yellow\nset size 8\ndraw circle x=0 y=10\nset color green\nset size 8\ndraw circle x=0 y=0"
+  },
+  {
+    "id": "040",
+    "name": "clock_face",
+    "description": "Outer circle with 12 hour marks.",
+    "tags": ["circle", "radial", "pattern"],
+    "code": "set color black\nset size 40\ndraw circle x=0 y=0\nset size 2\nrepeat 12 {\n  draw circle x=cos($i*30)*35 y=sin($i*30)*35\n}"
+  },
+  {
+    "id": "041",
+    "name": "flower_of_life_hex",
+    "description": "Center circle with six neighbors in a hex pattern.",
+    "tags": ["circle", "hexagon", "pattern"],
+    "code": "set color teal\nset size 20\ndraw circle x=0 y=0\nrepeat 6 {\n  draw circle x=cos($i*60)*20 y=sin($i*60)*20\n}"
+  },
+  {
+    "id": "042",
+    "name": "orbiting_moons",
+    "description": "A central body with small moons around a ring.",
+    "tags": ["circle", "ring", "variation"],
+    "code": "set color slateblue\nset size 10\ndraw circle x=0 y=0\nset color lightgray\nrepeat 12 {\n  set size 3+abs(sin($i*15))*2\n  draw circle x=cos($i*30)*30 y=sin($i*30)*30\n}"
+  },
+  {
+    "id": "043",
+    "name": "city_skyline",
+    "description": "Simple skyline made from squares of varying size.",
+    "tags": ["square", "city", "silhouette"],
+    "code": "set color black\nrepeat 8 {\n  set size 10+$i*2\n  draw square x=-40+$i*10 y=-20+$i\n}"
+  },
+  {
+    "id": "044",
+    "name": "barcode_stripes",
+    "description": "Evenly spaced horizontal bars.",
+    "tags": ["line", "pattern", "minimal"],
+    "code": "set color black\nset size 60\nrepeat 15 {\n  draw line x=-30 y=-40+$i*6\n}"
+  },
+  {
+    "id": "045",
+    "name": "caterpillar",
+    "description": "Overlapping body segments with tiny eyes.",
+    "tags": ["circle", "character", "sequence"],
+    "code": "set color forestgreen\nset size 8\nrepeat 7 {\n  draw circle x=-30+$i*10 y=0\n}\nset color black\nset size 2\ndraw circle x=-35 y=8\ndraw circle x=-25 y=8"
+  },
+  {
+    "id": "046",
+    "name": "yin_yang_outline",
+    "description": "Outline-only approximation with nested circles.",
+    "tags": ["circle", "symbol", "outline"],
+    "code": "set color black\nset size 40\ndraw circle x=0 y=0\nset size 20\ndraw circle x=0 y=10\nset size 20\ndraw circle x=0 y=-10\nset size 4\ndraw circle x=0 y=20\nset size 4\ndraw circle x=0 y=-20"
+  },
+  {
+    "id": "047",
+    "name": "glasses",
+    "description": "Two circular lenses connected by a bridge.",
+    "tags": ["circle", "line", "object"],
+    "code": "set color black\nset size 12\ndraw circle x=-15 y=0\ndraw circle x=15 y=0\nset size 10\ndraw line x=-5 y=0"
+  },
+  {
+    "id": "048",
+    "name": "cloud_cluster",
+    "description": "A fluffy cloud made from overlapping circles.",
+    "tags": ["circle", "cluster", "weather"],
+    "code": "set color lightgray\nset size 12\ndraw circle x=-20 y=0\ndraw circle x=-8 y=8\ndraw circle x=5 y=6\ndraw circle x=18 y=0\nset size 16\ndraw circle x=-2 y=0"
+  },
+  {
+    "id": "049",
+    "name": "ufo",
+    "description": "Disc body with a small cabin and lights.",
+    "tags": ["circle", "square", "object"],
+    "code": "set color silver\nset size 20\ndraw circle x=0 y=0\nset size 12\ndraw square x=0 y=5\nset color lime\nset size 2\nrepeat 5 {\n  draw circle x=-8+$i*4 y=10\n}"
+  },
+  {
+    "id": "050",
+    "name": "orbit_rings",
+    "description": "Multiple rings of small dots at increasing radii.",
+    "tags": ["circle", "rings", "radial"],
+    "code": "set color steelblue\nset size 2\nrepeat 24 {\n  draw circle x=cos($i*15)*25 y=sin($i*15)*25\n}\nset color cornflowerblue\nrepeat 24 {\n  draw circle x=cos($i*15)*45 y=sin($i*15)*45\n}\nset color lightsteelblue\nrepeat 24 {\n  draw circle x=cos($i*15)*65 y=sin($i*15)*65\n}"
   }
 ]

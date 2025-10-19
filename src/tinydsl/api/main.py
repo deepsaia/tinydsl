@@ -3,12 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from api.routes_lexi import router as lexi_router
-from api.routes_gli import router as gli_router
+from tinydsl.api.routes_lexi import router as lexi_router
+from tinydsl.api.routes_gli import router as gli_router
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """Handles FastAPI startup and shutdown."""
     logging.info("🚀 Tiny DSL API is starting up...")
     try:
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "api.main:app",
+        "tinydsl.api.main:app",
         host="0.0.0.0",
         port=8008,
         reload=True

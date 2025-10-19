@@ -178,5 +178,275 @@
     "goal": "Perform computation and output final reasoning result.",
     "code": "compute 3*4 as temp\nremember result = temp\nsay \"Computation done.\"\nrecall result",
     "expected_output": "Computation done.\n12"
+  },
+  {
+    "id": "021",
+    "name": "simple_memory_store",
+    "difficulty": "easy",
+    "description": "Store a value in memory and recall it.",
+    "goal": "Verify remember + recall basic flow.",
+    "code": "remember nickname = \"Lex\"\nrecall nickname",
+    "expected_output": "Lex"
+  },
+  {
+    "id": "022",
+    "name": "context_math_assign",
+    "difficulty": "easy",
+    "description": "Assign a value using math and recall it via context->memory.",
+    "goal": "Ensure math parsing in set and persistence via remember.",
+    "code": "set count 1+2\nremember count = count\nrecall count",
+    "expected_output": "3.0"
+  },
+  {
+    "id": "023",
+    "name": "repeat_say_fixed",
+    "difficulty": "easy",
+    "description": "Repeat a fixed message multiple times.",
+    "goal": "Basic repeat that appends identical lines.",
+    "code": "repeat 2 {\n  say \"Ping\"\n}",
+    "expected_output": "Ping\nPing"
+  },
+  {
+    "id": "024",
+    "name": "if_with_context_flag",
+    "difficulty": "easy",
+    "description": "Set a flag in context and branch on it.",
+    "goal": "Only run say when condition holds.",
+    "code": "set flag on\nif flag is on {\n  say \"Enabled\"\n}",
+    "expected_output": "Enabled"
+  },
+  {
+    "id": "025",
+    "name": "task_basic_echo",
+    "difficulty": "easy",
+    "description": "Define a simple task and call it.",
+    "goal": "Verify task_def and call_stmt.",
+    "code": "task echo {\n  say \"Echo from task\"\n}\ncall echo",
+    "expected_output": "Echo from task"
+  },
+  {
+    "id": "026",
+    "name": "repeat_then_recall",
+    "difficulty": "medium",
+    "description": "Increment a counter in context and write to memory.",
+    "goal": "Use math in set with repeat; persist and read.",
+    "code": "set count 0\nrepeat 3 {\n  set count count+1\n  remember last = count\n}\nrecall last",
+    "expected_output": "3.0"
+  },
+  {
+    "id": "027",
+    "name": "chain_of_says",
+    "difficulty": "easy",
+    "description": "Multiple say lines in order.",
+    "goal": "Preserve output order.",
+    "code": "say \"Line A\"\nsay \"Line B\"\nsay \"Line C\"",
+    "expected_output": "Line A\nLine B\nLine C"
+  },
+  {
+    "id": "028",
+    "name": "task_calls_task",
+    "difficulty": "medium",
+    "description": "A task that calls another task.",
+    "goal": "Nested task call execution order.",
+    "code": "task inner {\n  say \"Inner\"\n}\n\ntask outer {\n  say \"Outer start\"\n  call inner\n  say \"Outer end\"\n}\n\ncall outer",
+    "expected_output": "Outer start\nInner\nOuter end"
+  },
+  {
+    "id": "029",
+    "name": "repeat_memory_log",
+    "difficulty": "medium",
+    "description": "Append values to memory each loop and recall at end.",
+    "goal": "Confirm memory updates overwrite with latest value.",
+    "code": "remember last_msg = \"\"\nrepeat 3 {\n  remember last_msg = \"tick\"\n}\nrecall last_msg",
+    "expected_output": "tick"
+  },
+  {
+    "id": "030",
+    "name": "gate_by_mood",
+    "difficulty": "medium",
+    "description": "Use context variable to gate a message.",
+    "goal": "if mood is happy prints compliment.",
+    "code": "set mood happy\nif mood is happy {\n  say \"Great vibes!\"\n}",
+    "expected_output": "Great vibes!"
+  },
+  {
+    "id": "031",
+    "name": "two_tasks_sequence",
+    "difficulty": "medium",
+    "description": "Run two different tasks in sequence.",
+    "goal": "Ensure both tasks run and outputs are ordered.",
+    "code": "task a {\n  say \"Alpha\"\n}\n\ntask b {\n  say \"Beta\"\n}\n\ncall a\ncall b",
+    "expected_output": "Alpha\nBeta"
+  },
+  {
+    "id": "032",
+    "name": "math_then_say",
+    "difficulty": "medium",
+    "description": "Compute with set and output by recalling via memory.",
+    "goal": "Math in set with reuse across lines.",
+    "code": "set total 2*6\nremember total = total\nsay \"Result:\"\nrecall total",
+    "expected_output": "Result:\n12.0"
+  },
+  {
+    "id": "033",
+    "name": "repeat_double_say",
+    "difficulty": "medium",
+    "description": "Two say lines inside repeat.",
+    "goal": "Repeat body appends twice per iteration.",
+    "code": "repeat 2 {\n  say \"Hello\"\n  say \"World\"\n}",
+    "expected_output": "Hello\nWorld\nHello\nWorld"
+  },
+  {
+    "id": "034",
+    "name": "task_sets_context",
+    "difficulty": "medium",
+    "description": "Task sets a context var used after.",
+    "goal": "Task side-effect in context affects later branch.",
+    "code": "task mooder {\n  set mood happy\n}\ncall mooder\nif mood is happy {\n  say \"Mood set!\"\n}",
+    "expected_output": "Mood set!"
+  },
+  {
+    "id": "035",
+    "name": "memory_default_undefined",
+    "difficulty": "easy",
+    "description": "Recall a never-set memory key.",
+    "goal": "Return placeholder for missing key.",
+    "code": "recall nothing_here",
+    "expected_output": "[undefined:nothing_here]"
+  },
+  {
+    "id": "036",
+    "name": "accumulator_pattern",
+    "difficulty": "hard",
+    "description": "Accumulate running sum in context and report final.",
+    "goal": "Use repeat + set math accumulation.",
+    "code": "set sum 0\nrepeat 4 {\n  set sum sum+2\n}\nremember answer = sum\nrecall answer",
+    "expected_output": "8.0"
+  },
+  {
+    "id": "037",
+    "name": "toggle_flag",
+    "difficulty": "medium",
+    "description": "Flip a flag once and branch.",
+    "goal": "Set then branch against new value.",
+    "code": "set flag off\nset flag on\nif flag is on {\n  say \"Flag on\"\n}",
+    "expected_output": "Flag on"
+  },
+  {
+    "id": "038",
+    "name": "repeat_and_remember_each",
+    "difficulty": "hard",
+    "description": "Update memory each iteration and immediately recall.",
+    "goal": "Recall inside loop prints per-iteration value.",
+    "code": "set n 0\nrepeat 3 {\n  set n n+1\n  remember n = n\n  recall n\n}",
+    "expected_output": "1.0\n2.0\n3.0"
+  },
+  {
+    "id": "039",
+    "name": "task_chain_three",
+    "difficulty": "hard",
+    "description": "Three tasks chained by calls.",
+    "goal": "Order of outputs must follow call order.",
+    "code": "task t1 { say \"One\" }\n\ntask t2 { say \"Two\" }\n\ntask t3 { say \"Three\" }\n\ncall t1\ncall t2\ncall t3",
+    "expected_output": "One\nTwo\nThree"
+  },
+  {
+    "id": "040",
+    "name": "greeting_with_name_in_memory",
+    "difficulty": "medium",
+    "description": "Put a name in memory then greet by recalling.",
+    "goal": "Combine say before and recall after.",
+    "code": "remember user = \"Ava\"\nsay \"Hello\"\nrecall user",
+    "expected_output": "Hello\nAva"
+  },
+  {
+    "id": "041",
+    "name": "context_overwrite",
+    "difficulty": "medium",
+    "description": "Overwrite a context value and branch.",
+    "goal": "Second set wins; condition uses new value.",
+    "code": "set tone calm\nset tone excited\nif tone is excited {\n  say \"Hype!\"\n}",
+    "expected_output": "Hype!"
+  },
+  {
+    "id": "042",
+    "name": "repeat_zero_effect",
+    "difficulty": "easy",
+    "description": "Repeat zero times should produce no output.",
+    "goal": "Ensure repeat 0 is a no-op.",
+    "code": "repeat 0 {\n  say \"nope\"\n}",
+    "expected_output": ""
+  },
+  {
+    "id": "043",
+    "name": "nested_task_memory",
+    "difficulty": "hard",
+    "description": "Inner task writes memory; outer recalls it.",
+    "goal": "Memory visibility across task calls.",
+    "code": "task writer {\n  remember key = \"value\"\n}\n\ntask reader {\n  recall key\n}\n\ncall writer\ncall reader",
+    "expected_output": "value"
+  },
+  {
+    "id": "044",
+    "name": "branch_on_style",
+    "difficulty": "medium",
+    "description": "Set style and print only if matches.",
+    "goal": "Another branch variable besides mood/tone.",
+    "code": "set style formal\nif style is formal {\n  say \"Good day.\"\n}",
+    "expected_output": "Good day."
+  },
+  {
+    "id": "045",
+    "name": "two_phase_memory",
+    "difficulty": "medium",
+    "description": "Write to memory, then overwrite and recall.",
+    "goal": "Latest memory value should be returned.",
+    "code": "remember msg = \"old\"\nremember msg = \"new\"\nrecall msg",
+    "expected_output": "new"
+  },
+  {
+    "id": "046",
+    "name": "repeat_build_phrase",
+    "difficulty": "hard",
+    "description": "Build a multi-line chant.",
+    "goal": "Repeat say to compose final output.",
+    "code": "repeat 3 {\n  say \"Go!\"\n}\nsay \"Done!\"",
+    "expected_output": "Go!\nGo!\nGo!\nDone!"
+  },
+  {
+    "id": "047",
+    "name": "math_chain_context",
+    "difficulty": "hard",
+    "description": "Chain multiple math sets.",
+    "goal": "Confirm math uses latest context values.",
+    "code": "set a 2\nset b a*3\nset c b+4\nremember c = c\nrecall c",
+    "expected_output": "10.0"
+  },
+  {
+    "id": "048",
+    "name": "task_sets_and_reads_memory",
+    "difficulty": "hard",
+    "description": "One task sets memory; the same task recalls.",
+    "goal": "Memory within same task is immediately visible.",
+    "code": "task memo {\n  remember k = \"v\"\n  recall k\n}\ncall memo",
+    "expected_output": "v"
+  },
+  {
+    "id": "049",
+    "name": "repeat_branches_on_context",
+    "difficulty": "hard",
+    "description": "Branch inside repeat using a constant context.",
+    "goal": "Condition checked each iteration.",
+    "code": "set mood happy\nrepeat 2 {\n  if mood is happy {\n    say \"Yay\"\n  }\n}",
+    "expected_output": "Yay\nYay"
+  },
+  {
+    "id": "050",
+    "name": "task_reuse_context_math",
+    "difficulty": "hard",
+    "description": "Task computes in context and final recall outside.",
+    "goal": "Context changes from task persist.",
+    "code": "task compute {\n  set x 5\n  set x x*2\n}\ncall compute\nremember x = x\nrecall x",
+    "expected_output": "10.0"
   }
 ]

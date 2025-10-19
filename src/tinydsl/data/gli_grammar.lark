@@ -1,0 +1,26 @@
+start: statement+
+
+statement: set_stmt
+         | draw_stmt
+         | repeat_block
+
+set_stmt: "set" NAME assign_value
+
+draw_stmt: "draw" NAME [draw_args]
+draw_args: param+
+
+param: NAME "=" value
+
+# Smart values: one token; the transformer decides math vs literal
+assign_value: VALUE
+value: VALUE
+VALUE: /[^\s}]+/
+
+repeat_block: "repeat" NUMBER block
+block: "{" statement+ "}"
+
+%import common.CNAME           -> NAME
+%import common.NUMBER
+%import common.ESCAPED_STRING  -> STRING
+%import common.WS
+%ignore WS

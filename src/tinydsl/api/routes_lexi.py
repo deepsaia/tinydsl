@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from tinydsl.src.tinydsl.lexi import LexiInterpreter
-from tinydsl.src.tinydsl.lexi_evaluator import LexiEvaluator
+from tinydsl.lexi.lexi import LexiInterpreter
+from tinydsl.lexi.lexi_evaluator import LexiEvaluator
 import json
 import os
 
-from tinydsl.src.tinydsl.lexi_memory import LexiMemoryStore
+from tinydsl.lexi.lexi_memory import LexiMemoryStore
+from tinydsl.parser.lark_lexi_parser import LarkLexiASTParser
 
 memory_store = LexiMemoryStore()
 
@@ -30,6 +31,12 @@ class TaskRequest(BaseModel):
 
 class EvalRequest(BaseModel):
     results: list  # list of { "task_id": "...", "output": "..." }
+
+
+class ASTRequest(BaseModel):
+    code: str
+    include_pretty: bool = True
+    include_dot: bool = False
 
 
 @router.get("/memory")
@@ -129,3 +136,28 @@ def evaluate_lexi_outputs(request: EvalRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/ast")
+def lexi_ast(request: ASTRequest):
+    """
+    Parse Lexi code and return its AST.
+    Returns:
+      - tree: JSON-serializable AST (type/children/tokens)
+      - pretty: human-readable tree dump (optional)
+      - dot: Graphviz DOT string (optional)
+    """
+    try:
+        astp = LarkLexiASTParser()
+        tree = astp.parse_tree(request.code)
+        payload = {
+            "status": "ok",
+            "tree": astp.tree_to_dict(tree),
+        }
+        if request.include_pretty:
+            payload["pretty"] = astp.tree_pretty(tree)
+        if request.include_dot:
+            payload["dot"] = astp.tree_to_dot(tree)
+        return JSONResponse(payload)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"AST parse error: {e}")

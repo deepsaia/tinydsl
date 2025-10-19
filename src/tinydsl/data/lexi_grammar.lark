@@ -1,0 +1,54 @@
+start: statement+
+
+statement: set_stmt
+         | say_stmt
+         | remember_stmt
+         | recall_stmt
+         | if_block
+         | repeat_block
+         | task_def
+         | call_stmt
+
+set_stmt: "set" NAME assign_value
+say_stmt: "say" STRING
+remember_stmt: "remember" NAME "=" assign_value
+recall_stmt: "recall" NAME
+call_stmt: "call" NAME
+if_block: "if" NAME "is" NAME block
+repeat_block: "repeat" NUMBER block
+task_def: "task" NAME block
+block: "{" statement+ "}"
+
+# ---- Disambiguated values
+# Existing behavior (plain literals) is preserved.
+# New: calc(...) explicitly enters math mode, removing ambiguity.
+assign_value: STRING                   -> plain_string
+            | NAME                     -> plain_name
+            | NUMBER                   -> plain_number
+            | "calc" "(" expr ")"      -> math_call
+
+# ---- Math subgrammar is only visible after 'calc(' ... ')'
+?expr: term
+     | expr "+" term   -> add
+     | expr "-" term   -> sub
+
+?term: pow
+     | term "*" pow    -> mul
+     | term "/" pow    -> div
+
+?pow: factor
+    | factor "^" pow   -> pow
+
+?factor: NUMBER        -> m_number
+       | NAME          -> m_var
+       | "-" factor    -> m_neg
+       | "(" expr ")"
+       | FUNC "(" expr ")" -> m_func
+
+FUNC: /(sin|cos|tan|sqrt|abs|min|max|exp|log)/
+
+%import common.CNAME -> NAME
+%import common.NUMBER
+%import common.ESCAPED_STRING -> STRING
+%import common.WS
+%ignore WS

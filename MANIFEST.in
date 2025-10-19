@@ -4,4 +4,5 @@ recursive-exclude dist *
 recursive-exclude output *
 recursive-exclude tests *
 recursive-include src/tinydsl/data *.json
+include LICENSE
 # include .env.example

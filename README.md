@@ -1,10 +1,12 @@
 # 🧩 TinyDSL
 
-**TinyDSL** is a modular, agent-ready framework for exploring and testing domain-specific languages (DSLs).  
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
+**TinyDSL** is a modular, agent-ready framework for exploring and testing domain-specific languages (DSLs).
 It currently supports two DSLs:
 
-* 🎨 **Gli** — a graphics DSL for procedural image generation  
-* 🗣️ **Lexi** — a text DSL for structured, expressive text generation and reasoning  
+* 🎨 **Gli** — a graphics DSL for procedural image generation
+* 🗣️ **Lexi** — a text DSL for structured, expressive text generation and reasoning
 
 Both are served via a unified **FastAPI backend** and are designed to be invoked by **LLM agents** or external REST clients.
 
@@ -12,15 +14,15 @@ Both are served via a unified **FastAPI backend** and are designed to be invoked
 
 ## ⚙️ Get Started
 
-Use [uv](https://github.com/astral-sh/uv) for lightweight environment management:
+Use [uv](https://github.com/astral-sh/uv):
 
 ```bash
 uv venv
 uv sync
-python -m api.main
-````
+python -m tinydsl.api.main
+```
 
-Then open [http://localhost:8008/docs](http://localhost:8008/docs) for the interactive API UI.
+Open [http://localhost:8008/docs](http://localhost:8008/docs).
 
 ---
 
@@ -34,7 +36,7 @@ say "Hello!"
 repeat 2 { say "Have a wonderful day!" }
 ```
 
-Lexi supports memory persistence:
+Lexi supports persistent memory:
 
 ```dsl
 remember name = "John Arthur"
@@ -51,55 +53,111 @@ repeat 10 {
 }
 ```
 
-Images are saved to `/output` with timestamped filenames.
+Images save to `/output` as `{id}_{name}_{YYYYMMDD_HHMMSS}.png` (when `id`/`name` provided).
 
 ---
 
-## 🚀 Highlights
+## 🚀 What’s New
 
-- Unified API for multiple DSLs (`/api/gli`, `/api/lexi`)
-- Persistent, session-safe memory for Lexi (`/api/lexi/memory`)
-- Built-in benchmark tasks and evaluation metrics
-- Lightweight agent tool (`TinyDSLTool`) for integration with LangChain, Autogen, or OpenAI agents
-- Simple modular structure to add new DSLs (e.g., music, logic, or code)
+* **Lark everywhere**
 
----
+  * `lark_lexi_parser` and `lark_gli_parser` now power both DSLs.
+  * Deterministic, extensible grammars; clearer errors.
 
-## 🤖 Agent Integration
+* **Pillow renderer by default (Gli)**
 
-Agents or Python scripts can call TinyDSL directly using the included tool:
+  * Crisp, anti-aliased output via supersampling.
+  * Matplotlib still available if you want it.
 
-```python
-from tinydsl_tool import TinyDSLTool
+* **Smarter inline math**
 
-tool = TinyDSLTool(base_url="http://localhost:8008/api")
+  * `$i` loop index, `pi`, `e` available.
+  * Natural expressions like `10+$i*5` work.
+  * `calc(...)` remains for explicit math.
 
-# Run Lexi DSL
-lexi_code = 'set mood happy\nsay "Hello there!"'
-print(tool.run_lexi(lexi_code)["output"])
+* **AST endpoint (Lexi)**
 
-# Run a benchmark task
-print(tool.run_lexi_task("005"))
+  * Get parse trees to inspect/visualize your programs.
 
-# View and clear Lexi memory
-print(tool.get_memory())
-tool.clear_memory()
-```
+* **Stable filenames**
+
+  * Artifacts saved as `{id}_{name}_{timestamp}.png` when `id` and/or `name` provided.
 
 ---
 
 ## 📚 API Overview
 
-| DSL  | Endpoint                    | Method | Purpose                         |
-| ---- | --------------------------- | ------ | ------------------------------- |
-| Gli  | `/api/gli/run`              | POST   | Run graphics DSL code           |
-| Gli  | `/api/gli/run_example/{id}` | GET    | Execute stored example          |
-| Lexi | `/api/lexi/run`             | POST   | Execute Lexi DSL code           |
-| Lexi | `/api/lexi/task`            | POST   | Run a predefined benchmark task |
-| Lexi | `/api/lexi/eval`            | POST   | Evaluate multiple outputs       |
-| Lexi | `/api/lexi/memory`          | GET    | View persistent memory          |
-| Lexi | `/api/lexi/memory/clear`    | POST   | Clear memory                    |
-| Lexi | `/api/lexi/memory/set`      | POST   | Set key-value in memory         |
+| DSL  | Endpoint                    | Method | Purpose                           |
+| ---- | --------------------------- | ------ | --------------------------------- |
+| Gli  | `/api/gli/run`              | POST   | Run graphics DSL code             |
+| Gli  | `/api/gli/run_example/{id}` | GET    | Execute stored example            |
+| Lexi | `/api/lexi/run`             | POST   | Execute Lexi DSL code             |
+| Lexi | `/api/lexi/task`            | POST   | Run a predefined benchmark task   |
+| Lexi | `/api/lexi/eval`            | POST   | Evaluate multiple outputs         |
+| Lexi | `/api/lexi/memory`          | GET    | View persistent memory            |
+| Lexi | `/api/lexi/memory/clear`    | POST   | Clear memory                      |
+| Lexi | `/api/lexi/memory/set`      | POST   | Set key-value in memory           |
+| Lexi | `/api/lexi/ast`             | POST   | Get AST (raw dict / pretty / DOT) |
+
+---
+
+## 🔧 Quick Calls
+
+### Run **Lexi**
+
+```bash
+curl -X POST http://localhost:8008/api/lexi/run \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"set mood happy\nsay \"Hello!\""}'
+```
+
+### Get **Lexi AST**
+
+```bash
+curl -X POST http://localhost:8008/api/lexi/ast \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"say \"Hi\"","include_pretty":true,"include_dot":false}'
+```
+
+### Run **Gli** (Pillow default)
+
+```bash
+curl -X POST http://localhost:8008/api/gli/run \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"adhoc_001","name":"blue_circle","code":"set color blue\nset size 10\ndraw circle x=50 y=50","save":true}'
+```
+
+### Run a stored **Gli** example
+
+```bash
+curl "http://localhost:8008/api/gli/run_example/003?save=true&engine=pillow"
+```
+
+---
+
+## 🤖 Agent Integration
+
+```python
+from tinydsl.agent_tools.tinydsl_tool import TinyDSLTool
+
+tool = TinyDSLTool(base_url="http://localhost:8008/api")
+print(tool.run_lexi('say "Hello there!"')["output"])
+print(tool.run_lexi_task("005"))
+print(tool.get_memory()); tool.clear_memory()
+```
+
+---
+
+## 📦 Data & Files
+
+* Examples & grammars live under `src/tinydsl/data/`
+
+  * `gli_examples.json`, `gli_grammar.lark`
+  * `lexi_tasks.json`, `lexi_grammar.lark`
+* Outputs: `./output/` (images, `lexi_memory.json`)
+
+You can override data paths with env vars:
+`GLI_EXAMPLES_PATH`, `GLI_GRAMMAR_PATH`, `LEXI_TASKS_PATH`, `LEXI_GRAMMAR_PATH`.
 
 ---
 
@@ -107,60 +165,19 @@ tool.clear_memory()
 
 Add a new DSL by creating:
 
-* An interpreter (`<dsl_name>.py`)
-* An API router (`routes_<dsl_name>.py`)
-* Example data or evaluation JSONs (optional)
+* Parser + transformer (`parser/lark_<dsl>.py`)
+* Interpreter (`<dsl>/<dsl>.py`)
+* API router (`api/routes_<dsl>.py`)
+* Optional: examples + tasks JSON
 
-Then register it in `api/main.py`.
-TinyDSL’s modular design supports quick experimentation for **acquire-and-apply learning** across multiple DSLs.
-
----
-
-## 🧭 Agent Workflow Example
-
-TinyDSL is built for agent-based experiments testing **acquisition, consolidation, and transfer** of new skills.
-A typical loop looks like this:
-
-1. **Discover Tasks**
-   The agent fetches all available benchmark tasks:
-
-   ```python
-   tasks = [tool.run_lexi_task(tid) for tid in ["001", "002"]]
-   ```
-
-2. **Execute & Learn**
-   The agent runs Lexi or Gli code, storing intermediate results in memory:
-
-   ```python
-   tool.run_lexi('remember mood = "happy"')
-   tool.run_lexi('if mood is happy { say "Training complete!" }')
-   ```
-
-3. **Evaluate**
-   After training or inference, results are scored automatically:
-
-   ```python
-   results = [{"task_id": "002", "output": "You look great today!"}]
-   print(tool.eval_lexi_outputs(results))
-   ```
-
-4. **Persist State**
-   Memory is persisted across sessions to simulate **skill retention**:
-
-   ```python
-   print(tool.get_memory())  # See consolidated knowledge
-   ```
-
-5. **Transfer Test**
-   Clear memory and test new unseen compositions:
-
-   ```python
-   tool.clear_memory()
-   tool.run_lexi_task("020")  # Multi-step reasoning
-   ```
+Register it in `api/main.py`.
+TinyDSL’s modular design makes it easy to study **continual learning, compositional reasoning, and symbolic generalization** across DSLs.
 
 ---
 
-With this flow, LLM agents can **learn a new DSL in one session** and **apply it in another**, making TinyDSL a foundation for studying *continual learning, compositional reasoning, and symbolic generalization*.
+## 🪪 License
+
+Licensed under the **Apache License, Version 2.0**.  
+See [LICENSE](LICENSE) for details.
 
 ---
