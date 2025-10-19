@@ -1,11 +1,11 @@
 [project]
 name = "tinydsl"
-version = "0.0.1"
 description = "A modular agent-ready framework for exploring domain-specific languages (DSLs)"
 readme = "README.md"
 authors = [{ name = "Deepak" }]
 license = "MIT"
 requires-python = ">=3.12"
+dynamic = ["version"]
 dependencies = [
     "fastapi>=0.119.0",
     "matplotlib>=3.10.7",
