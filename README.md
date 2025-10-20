@@ -21,11 +21,30 @@ Use [uv](https://github.com/astral-sh/uv):
 
 ```bash
 uv venv
-uv sync
+uv add tinydsl
+python -m tinydsl.api.main
+```
+
+Or pip
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install tinydsl
 python -m tinydsl.api.main
 ```
 
 Open [http://localhost:8008/docs](http://localhost:8008/docs).
+
+
+### Local Dev
+
+```bash
+git clone https://github.com/deepsaia/tinydsl.git
+uv venv
+uv sync
+python -m tinydsl.api.main
+```
 
 ---
 
