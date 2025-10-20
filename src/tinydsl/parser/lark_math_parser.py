@@ -1,6 +1,7 @@
-from lark import Lark, Transformer, v_args
+from lark import Lark, Transformer
 import math
 from tinydsl.parser.base_parser import BaseParser
+
 
 class MathTransformer(Transformer):
     """Transforms parsed tree into evaluated numeric result."""
@@ -17,12 +18,24 @@ class MathTransformer(Transformer):
             return float(self.context[name])
         raise ValueError(f"Unknown variable: {name}")
 
-    def add(self, args): return args[0] + args[1]
-    def sub(self, args): return args[0] - args[1]
-    def mul(self, args): return args[0] * args[1]
-    def div(self, args): return args[0] / args[1]
-    def pow(self, args): return args[0] ** args[1]
-    def neg(self, args): return -args[0]
+    def add(self, args):
+        return args[0] + args[1]
+
+    def sub(self, args):
+        return args[0] - args[1]
+
+    def mul(self, args):
+        return args[0] * args[1]
+
+    def div(self, args):
+        return args[0] / args[1]
+
+    def pow(self, args):
+        return args[0] ** args[1]
+
+    def neg(self, args):
+        return -args[0]
+
     def func(self, args):
         func_name = args[0]
         val = args[1]
@@ -30,6 +43,7 @@ class MathTransformer(Transformer):
         if func_name in safe_funcs:
             return safe_funcs[func_name](val)
         raise ValueError(f"Unknown function: {func_name}")
+
 
 # Grammar for mathematical expressions with variables and math functions
 GRAMMAR = r"""
@@ -53,6 +67,7 @@ GRAMMAR = r"""
     %import common.WS_INLINE
     %ignore WS_INLINE
 """
+
 
 class LarkMathParser(BaseParser):
     """Reusable Lark-based mathematical expression parser."""

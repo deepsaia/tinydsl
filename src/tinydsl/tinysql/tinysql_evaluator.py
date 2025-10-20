@@ -66,20 +66,19 @@ class TinySQLEvaluator(BaseEvaluator):
         # Transform detailed results to match API
         details = []
         for detail in parent_result["details"]:
-            details.append({
-                "task_id": detail["task_id"],
-                "name": detail["task_name"],
-                "difficulty": detail["difficulty"],
-                "exact_match": detail["passed"],
-                "status": detail["status"],
-                "expected": detail["expected"],
-                "actual": detail["actual"],
-            })
+            details.append(
+                {
+                    "task_id": detail["task_id"],
+                    "name": detail["task_name"],
+                    "difficulty": detail["difficulty"],
+                    "exact_match": detail["passed"],
+                    "status": detail["status"],
+                    "expected": detail["expected"],
+                    "actual": detail["actual"],
+                }
+            )
 
-        return {
-            "accuracy": round(parent_result["accuracy"], 3),
-            "details": details
-        }
+        return {"accuracy": round(parent_result["accuracy"], 3), "details": details}
 
 
 # Example usage:

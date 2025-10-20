@@ -69,24 +69,60 @@ class ContaminationChecker:
         """
         Check for novel/unique identifiers in the DSL.
 
-        Returns:
-            Dict with uniqueness indicators
-        """
-        # Extract unique tokens from grammar/examples
-        unique_tokens = set()
+        Extracts identifiers from grammar comments in these formats:
+        - // Post-cutoff <category>: identifier1, identifier2, ...
+        - // Novel <category>: identifier1, identifier2, ...
 
-        # Check for novel keywords
+        Where <category> can be any word (units, keywords, identifiers, tokens, features, etc.)
+
+        Extensible: Users can add custom categories and the parser will detect them.
+
+        Returns:
+            Dict with uniqueness indicators including categories
+        """
+        import re
+
         grammar = self.artifacts.get("grammar", "")
         examples = self.artifacts.get("examples", [])
 
-        # Novel unit names for TinyCalc
-        novel_units = ["flurb", "grobble", "zept", "quib", "voom"]
-        found_units = [u for u in novel_units if u in grammar or any(u in str(ex) for ex in examples)]
+        # Flexible pattern that matches any category after Post-cutoff/Novel
+        # Examples:
+        #   // Post-cutoff units: flurb, grobble
+        #   // Novel keywords: remember, recall
+        #   // Post-cutoff identifiers: foo, bar
+        #   // Novel custom-markers: xyz, abc
+        novel_pattern = (
+            r"//\s*(?:Post-cutoff|Novel|post-cutoff|novel)\s+([\w-]+):\s*(.+)"
+        )
+        novel_matches = re.findall(novel_pattern, grammar, re.IGNORECASE)
+
+        # Also extract novel features descriptions (informational)
+        features_pattern = r"//\s*(?:Novel|novel)\s+features:\s*(.+)"
+        features_matches = re.findall(features_pattern, grammar, re.IGNORECASE)
+
+        # Organize by category
+        declared_by_category = {}
+        declared_novel = set()
+
+        for category, identifiers_str in novel_matches:
+            # Extract comma-separated identifiers
+            identifiers = [id.strip() for id in identifiers_str.split(",")]
+            declared_by_category[category] = identifiers
+            declared_novel.update(identifiers)
+
+        # Verify these declared identifiers actually appear in artifacts
+        found_identifiers = []
+        for identifier in declared_novel:
+            if identifier in grammar or any(identifier in str(ex) for ex in examples):
+                found_identifiers.append(identifier)
 
         return {
-            "novel_identifiers": found_units,
-            "count": len(found_units),
-            "unique": len(found_units) > 0
+            "novel_identifiers": found_identifiers,
+            "declared_in_grammar": list(declared_novel),
+            "declared_by_category": declared_by_category,
+            "novel_features": features_matches,
+            "count": len(found_identifiers),
+            "unique": len(found_identifiers) > 0,
         }
 
     def distributional_analysis(self, model_outputs: List[str]) -> Dict[str, float]:
@@ -119,26 +155,27 @@ class ContaminationChecker:
         freq = Counter(all_chars)
         total = len(all_chars)
 
-        entropy = -sum((count/total) * math.log2(count/total) for count in freq.values())
+        entropy = -sum(
+            (count / total) * math.log2(count / total) for count in freq.values()
+        )
 
         # Normalize entropy
         max_entropy = math.log2(len(freq))
         normalized_entropy = entropy / max_entropy if max_entropy > 0 else 0.0
 
-        signal = "generalization" if normalized_entropy > 0.7 else "potential_memorization"
+        signal = (
+            "generalization" if normalized_entropy > 0.7 else "potential_memorization"
+        )
 
         return {
             "entropy": entropy,
             "normalized_entropy": normalized_entropy,
             "peakedness": 1.0 - normalized_entropy,
-            "signal": signal
+            "signal": signal,
         }
 
     def document_provenance(
-        self,
-        creation_date: datetime,
-        author: str,
-        description: str
+        self, creation_date: datetime, author: str, description: str
     ) -> Dict[str, Any]:
         """
         Document artifact provenance.
@@ -160,7 +197,7 @@ class ContaminationChecker:
             "content_hashes": {
                 key: self.compute_content_hash(str(value))
                 for key, value in self.artifacts.items()
-            }
+            },
         }
 
     def run_full_check(
@@ -169,7 +206,7 @@ class ContaminationChecker:
         cutoff_date: datetime,
         model_outputs: Optional[List[str]] = None,
         author: str = "TinyDSL",
-        description: str = "Post-cutoff DSL for KAIT testing"
+        description: str = "Post-cutoff DSL for KAIT testing",
     ) -> Dict[str, Any]:
         """
         Run complete contamination check.
@@ -189,22 +226,31 @@ class ContaminationChecker:
             "check_date": datetime.now(timezone.utc).isoformat(),
             "post_cutoff": self.check_timestamps(creation_date, cutoff_date),
             "uniqueness": self.check_uniqueness_markers(),
-            "provenance": self.document_provenance(creation_date, author, description)
+            "provenance": self.document_provenance(creation_date, author, description),
         }
 
         if model_outputs:
-            report["distributional_analysis"] = self.distributional_analysis(model_outputs)
+            report["distributional_analysis"] = self.distributional_analysis(
+                model_outputs
+            )
 
         # Overall verdict
         report["verdict"] = {
-            "contamination_likely": not report["post_cutoff"] or not report["uniqueness"]["unique"],
+            "contamination_likely": not report["post_cutoff"]
+            or not report["uniqueness"]["unique"],
             "novel": report["post_cutoff"] and report["uniqueness"]["unique"],
-            "confidence": "high" if report["post_cutoff"] and report["uniqueness"]["unique"] else "low"
+            "confidence": (
+                "high"
+                if report["post_cutoff"] and report["uniqueness"]["unique"]
+                else "low"
+            ),
         }
 
         return report
 
-    def save_report(self, report: Dict[str, Any], output_path: Optional[Path] = None) -> Path:
+    def save_report(
+        self, report: Dict[str, Any], output_path: Optional[Path] = None
+    ) -> Path:
         """
         Save contamination report.
 
@@ -231,7 +277,7 @@ def check_dsl_contamination(
     grammar_path: Path,
     examples_path: Path,
     creation_date: datetime,
-    model_cutoff: datetime
+    model_cutoff: datetime,
 ) -> Dict[str, Any]:
     """
     Check a DSL for contamination.
@@ -253,10 +299,7 @@ def check_dsl_contamination(
     with open(examples_path) as f:
         examples = json.load(f)
 
-    artifacts = {
-        "grammar": grammar,
-        "examples": examples
-    }
+    artifacts = {"grammar": grammar, "examples": examples}
 
     checker = ContaminationChecker(dsl_name, artifacts)
 
@@ -264,7 +307,7 @@ def check_dsl_contamination(
         creation_date=creation_date,
         cutoff_date=model_cutoff,
         author="TinyDSL Project",
-        description=f"Novel {dsl_name} DSL created for KAIT protocol testing"
+        description=f"Novel {dsl_name} DSL created for KAIT protocol testing",
     )
 
     report_path = checker.save_report(report)
@@ -284,7 +327,7 @@ if __name__ == "__main__":
         grammar_path=dsl_dir / "tinycalc_grammar.lark",
         examples_path=dsl_dir / "tinycalc_examples.json",
         creation_date=datetime(2025, 1, 19),  # Created today
-        model_cutoff=datetime(2025, 1, 1)  # Example cutoff
+        model_cutoff=datetime(2025, 1, 1),  # Example cutoff
     )
 
     print("\n📊 Contamination Check Results:")

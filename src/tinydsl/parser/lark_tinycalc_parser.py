@@ -3,8 +3,8 @@ Lark parser for TinyCalc DSL - Novel unit conversion language.
 """
 
 import os
-from typing import Dict, List, Tuple
-from lark import Lark, Transformer, v_args, Token
+from typing import Dict, List
+from lark import Lark, Transformer, v_args
 
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -154,13 +154,13 @@ class TinyCalcTransformer(Transformer):
 
         if from_unit not in self.units:
             # Check if user used plural form
-            if from_unit.endswith('s') and from_unit[:-1] in self.units:
+            if from_unit.endswith("s") and from_unit[:-1] in self.units:
                 hint = f"\n💡 Hint: Use '{from_unit[:-1]}' instead of '{from_unit}' (TinyCalc units must match exactly)"
                 raise ValueError(f"Unknown unit: {from_unit}{hint}")
             raise ValueError(f"Unknown unit: {from_unit}")
         if to_unit not in self.units:
             # Check if user used plural form
-            if to_unit.endswith('s') and to_unit[:-1] in self.units:
+            if to_unit.endswith("s") and to_unit[:-1] in self.units:
                 hint = f"\n💡 Hint: Use '{to_unit[:-1]}' instead of '{to_unit}' (TinyCalc units must match exactly)"
                 raise ValueError(f"Unknown unit: {to_unit}{hint}")
             raise ValueError(f"Unknown unit: {to_unit}")
@@ -210,18 +210,35 @@ class LarkTinyCalcParser:
             code_lower = code.strip().lower()
 
             # Check if user is trying to use general variable syntax
-            if "define" in code_lower and "=" in code and ("flurb" not in code_lower and "grobble" not in code_lower and "zept" not in code_lower):
-                hint = ("\n\n💡 Hint: TinyCalc is for unit conversions only.\n"
-                       "   For general arithmetic with variables, use TinyMath instead!\n"
-                       "   Example: POST /api/tinymath/run with code like 'x = 10'")
+            if (
+                "define" in code_lower
+                and "=" in code
+                and (
+                    "flurb" not in code_lower
+                    and "grobble" not in code_lower
+                    and "zept" not in code_lower
+                )
+            ):
+                hint = (
+                    "\n\n💡 Hint: TinyCalc is for unit conversions only.\n"
+                    "   For general arithmetic with variables, use TinyMath instead!\n"
+                    "   Example: POST /api/tinymath/run with code like 'x = 10'"
+                )
                 raise ValueError(f"TinyCalc parse error: {error_msg}{hint}")
 
             # Check if user is trying to use simple arithmetic
-            if any(op in code and "convert" not in code_lower and "compute" not in code_lower and "define" not in code_lower
-                   for op in ["+", "-", "*", "/"]) or code.strip().startswith("/"):
-                hint = ("\n\n💡 Hint: TinyCalc is for unit conversions only.\n"
-                       "   For general arithmetic, use TinyMath instead!\n"
-                       "   Example: POST /api/tinymath/run with code like '2 + 3' or 'sqrt(16)'")
+            if any(
+                op in code
+                and "convert" not in code_lower
+                and "compute" not in code_lower
+                and "define" not in code_lower
+                for op in ["+", "-", "*", "/"]
+            ) or code.strip().startswith("/"):
+                hint = (
+                    "\n\n💡 Hint: TinyCalc is for unit conversions only.\n"
+                    "   For general arithmetic, use TinyMath instead!\n"
+                    "   Example: POST /api/tinymath/run with code like '2 + 3' or 'sqrt(16)'"
+                )
                 raise ValueError(f"TinyCalc parse error: {error_msg}{hint}")
 
             raise ValueError(f"TinyCalc parse error: {error_msg}")

@@ -9,11 +9,7 @@ class BaseReward(ABC):
 
     @abstractmethod
     def __call__(
-        self,
-        state: List[str],
-        action: str,
-        result: Dict[str, Any],
-        expected: str
+        self, state: List[str], action: str, result: Dict[str, Any], expected: str
     ) -> float:
         """
         Calculate reward for a state-action-result triple.

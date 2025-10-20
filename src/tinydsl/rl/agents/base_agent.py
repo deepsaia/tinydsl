@@ -1,7 +1,6 @@
 """Base agent interface."""
 
 from abc import ABC, abstractmethod
-from typing import Any
 import numpy as np
 
 
@@ -38,7 +37,7 @@ class BaseAgent(ABC):
         action: int,
         reward: float,
         next_observation: np.ndarray,
-        done: bool
+        done: bool,
     ):
         """
         Update agent based on experience.

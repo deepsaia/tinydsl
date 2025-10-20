@@ -34,10 +34,12 @@ async def lifespan(_app: FastAPI):
             register_dsl("tinycalc", TinyCalcInterpreter)
             register_dsl("tinysql", TinySQLInterpreter)
             register_dsl("tinymath", TinyMathInterpreter)
-            logger.success("✅ Registered DSLs: gli, lexi, tinycalc, tinysql, tinymath")
+            logger.success("Registered DSLs: gli, lexi, tinycalc, tinysql, tinymath")
         except ValueError as e:
             logger.warning(f"⚠️  DSL registration skipped: {e}")
-            logger.info("API endpoints will still work, but /dsls endpoint may not list all DSLs")
+            logger.info(
+                "API endpoints will still work, but /dsls endpoint may not list all DSLs"
+            )
         yield
     finally:
         logger.info("🛑 TinyDSL API is shutting down...")
@@ -63,9 +65,15 @@ app.add_middleware(
 # Include routes
 app.include_router(gli_router, prefix="/api/gli", tags=["Gli DSL - Graphics"])
 app.include_router(lexi_router, prefix="/api/lexi", tags=["Lexi DSL - Text"])
-app.include_router(tinycalc_router, prefix="/api/tinycalc", tags=["TinyCalc DSL - Unit Conversion"])
-app.include_router(tinysql_router, prefix="/api/tinysql", tags=["TinySQL DSL - Data Query"])
-app.include_router(tinymath_router, prefix="/api/tinymath", tags=["TinyMath DSL - Arithmetic"])
+app.include_router(
+    tinycalc_router, prefix="/api/tinycalc", tags=["TinyCalc DSL - Unit Conversion"]
+)
+app.include_router(
+    tinysql_router, prefix="/api/tinysql", tags=["TinySQL DSL - Data Query"]
+)
+app.include_router(
+    tinymath_router, prefix="/api/tinymath", tags=["TinyMath DSL - Arithmetic"]
+)
 
 
 @app.get("/")
@@ -75,13 +83,28 @@ def root():
         "message": "Welcome to TinyDSL API - A modular framework for domain-specific languages",
         "version": "0.4.0",
         "dsls": {
-            "gli": {"endpoint": "/api/gli", "description": "Graphics DSL for procedural image generation"},
-            "lexi": {"endpoint": "/api/lexi", "description": "Text DSL for structured text generation"},
-            "tinycalc": {"endpoint": "/api/tinycalc", "description": "Novel unit conversion DSL"},
-            "tinysql": {"endpoint": "/api/tinysql", "description": "Simple query DSL for structured data"},
-            "tinymath": {"endpoint": "/api/tinymath", "description": "General-purpose arithmetic calculator"}
+            "gli": {
+                "endpoint": "/api/gli",
+                "description": "Graphics DSL for procedural image generation",
+            },
+            "lexi": {
+                "endpoint": "/api/lexi",
+                "description": "Text DSL for structured text generation",
+            },
+            "tinycalc": {
+                "endpoint": "/api/tinycalc",
+                "description": "Novel unit conversion DSL",
+            },
+            "tinysql": {
+                "endpoint": "/api/tinysql",
+                "description": "Simple query DSL for structured data",
+            },
+            "tinymath": {
+                "endpoint": "/api/tinymath",
+                "description": "General-purpose arithmetic calculator",
+            },
         },
-        "docs": "/docs"
+        "docs": "/docs",
     }
 
 
@@ -89,24 +112,17 @@ def root():
 def list_dsls():
     """List all registered DSLs."""
     from tinydsl.core.dsl_registry import list_available_dsls
+
     registered = list_available_dsls()
 
     # Fallback: list all DSLs even if not registered
     if not registered:
         registered = ["gli", "lexi", "tinycalc", "tinysql", "tinymath"]
 
-    return {
-        "status": "ok",
-        "dsls": registered
-    }
+    return {"status": "ok", "dsls": registered}
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(
-        "tinydsl.api.main:app",
-        host="0.0.0.0",
-        port=8008,
-        reload=True
-        )
+    uvicorn.run("tinydsl.api.main:app", host="0.0.0.0", port=8008, reload=True)

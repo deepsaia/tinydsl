@@ -18,10 +18,7 @@ class RLEvaluator:
         pass
 
     def evaluate_agent(
-        self,
-        agent: BaseAgent,
-        env: DSLEnv,
-        n_episodes: int = 100
+        self, agent: BaseAgent, env: DSLEnv, n_episodes: int = 100
     ) -> Dict[str, Any]:
         """
         Evaluate agent comprehensively.
@@ -64,14 +61,11 @@ class RLEvaluator:
             "std_length": np.std(lengths),
             "success_rate": np.mean(successes),
             "n_episodes": n_episodes,
-            "sample_programs": programs[:5]  # First 5 programs
+            "sample_programs": programs[:5],  # First 5 programs
         }
 
     def compare_agents(
-        self,
-        agents: Dict[str, BaseAgent],
-        env: DSLEnv,
-        n_episodes: int = 100
+        self, agents: Dict[str, BaseAgent], env: DSLEnv, n_episodes: int = 100
     ) -> Dict[str, Dict[str, Any]]:
         """
         Compare multiple agents.
@@ -93,8 +87,7 @@ class RLEvaluator:
         return results
 
     def compute_sample_efficiency(
-        self,
-        training_curves: List[List[float]]
+        self, training_curves: List[List[float]]
     ) -> Dict[str, float]:
         """
         Compute sample efficiency metrics.
@@ -122,5 +115,7 @@ class RLEvaluator:
         return {
             "mean_auc": np.mean(aucs),
             "mean_episodes_to_threshold": np.mean(episodes_to_threshold),
-            "convergence_rate": 1.0 / np.mean(episodes_to_threshold) if episodes_to_threshold else 0.0
+            "convergence_rate": (
+                1.0 / np.mean(episodes_to_threshold) if episodes_to_threshold else 0.0
+            ),
         }

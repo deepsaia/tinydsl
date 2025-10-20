@@ -33,29 +33,28 @@ def train_agent_on_task(dsl_name="tinycalc", task_id="001", agent_type="qlearnin
         num_episodes = 100
     elif agent_type == "qlearning":
         agent = QLearningAgent(
-            action_space_size=env.action_space_size,
-            learning_rate=0.01,
-            epsilon=0.3
+            action_space_size=env.action_space_size, learning_rate=0.01, epsilon=0.3
         )
         num_episodes = 2000
     elif agent_type == "pg":
         agent = PolicyGradientAgent(
-            action_space_size=env.action_space_size,
-            learning_rate=0.001
+            action_space_size=env.action_space_size, learning_rate=0.001
         )
         num_episodes = 5000
     else:
         raise ValueError(f"Unknown agent type: {agent_type}")
 
     # Create trainer
-    trainer = RLTrainer(env, agent, log_dir=f"output/rl_logs/{dsl_name}_{task_id}_{agent_type}")
+    trainer = RLTrainer(
+        env, agent, log_dir=f"output/rl_logs/{dsl_name}_{task_id}_{agent_type}"
+    )
 
     # Train
     stats = trainer.train(
         num_episodes=num_episodes,
         eval_every=max(num_episodes // 10, 1),
         save_every=max(num_episodes // 5, 1),
-        verbose=True
+        verbose=True,
     )
 
     print("\n📊 Final Statistics:")
@@ -65,7 +64,7 @@ def train_agent_on_task(dsl_name="tinycalc", task_id="001", agent_type="qlearnin
 
     # Evaluate
     print("\n🧪 Final Evaluation (10 episodes):")
-    eval_stats = stats['evaluation']
+    eval_stats = stats["evaluation"]
     print(f"  Success Rate: {eval_stats['success_rate']:.2%}")
     print(f"  Avg Reward: {eval_stats['avg_reward']:.2f}")
     print(f"  Avg Length: {eval_stats['avg_length']:.1f}")

@@ -1,6 +1,9 @@
 // Unified Gli Grammar - Supports all V1 and V2 features
 // V1 features: set, draw, repeat
 // V2 features: variables, conditionals, functions, transforms
+//
+// Post-cutoff keywords: draw, rotate, scale, translate, push, pop
+// Novel features: procedural graphics DSL, transform stack operations
 
 start: statement+
 

@@ -1,4 +1,5 @@
 """Tests for core framework components."""
+
 import pytest
 import os
 from tinydsl.core.base_dsl import BaseDSL
@@ -106,7 +107,7 @@ class TestEvaluator:
                 "name": "Test Task",
                 "code": "test code",
                 "expected_output": "test output",
-                "difficulty": "easy"
+                "difficulty": "easy",
             }
         ]
         with open(tasks_file, "w") as f:
@@ -127,7 +128,7 @@ class TestEvaluator:
                 "name": "Convert Task",
                 "code": "define 1 flurb = 2 grobble\nconvert 1 flurb to grobble",
                 "expected_output": "2.0 grobble",
-                "difficulty": "easy"
+                "difficulty": "easy",
             }
         ]
         with open(tasks_file, "w") as f:

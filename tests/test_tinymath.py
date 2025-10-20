@@ -1,4 +1,5 @@
 """Tests for TinyMath DSL."""
+
 import pytest
 from tinydsl.tinymath.tinymath import TinyMathInterpreter
 

@@ -15,8 +15,12 @@ router = APIRouter()
 root_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(root_dir, "..", "data")
 
-LEXI_TASKS_PATH = os.getenv("LEXI_TASKS_PATH", os.path.join(data_dir, "lexi_tasks.json"))
-LEXI_GRAMMAR_PATH = os.getenv("LEXI_GRAMMAR_PATH", os.path.join(data_dir, "lexi_grammar.lark"))
+LEXI_TASKS_PATH = os.getenv(
+    "LEXI_TASKS_PATH", os.path.join(data_dir, "lexi_tasks.json")
+)
+LEXI_GRAMMAR_PATH = os.getenv(
+    "LEXI_GRAMMAR_PATH", os.path.join(data_dir, "lexi_grammar.lark")
+)
 
 # Initialize common handler
 handler = DSLHandler(
@@ -93,10 +97,7 @@ def _lexi_run_processor(dsl_instance, output):
 @router.post("/run")
 def run_lexi(request: LexiRequest):
     """Run a Lexi DSL script and return generated text."""
-    response = handler.handle_run(
-        code=request.code,
-        process_output=_lexi_run_processor
-    )
+    response = handler.handle_run(code=request.code, process_output=_lexi_run_processor)
     return JSONResponse(response)
 
 

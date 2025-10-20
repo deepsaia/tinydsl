@@ -45,13 +45,11 @@ class KAITEvaluator:
             "exposure": {},
             "post_exposure": {},
             "transfer": {},
-            "retention": {}
+            "retention": {},
         }
 
     def calculate_acquisition_gain(
-        self,
-        baseline_accuracy: float,
-        post_exposure_accuracy: float
+        self, baseline_accuracy: float, post_exposure_accuracy: float
     ) -> float:
         """
         AG = Δ accuracy from B→P on T_persist
@@ -77,11 +75,7 @@ class KAITEvaluator:
         """
         return transfer_results.get("accuracy", 0.0)
 
-    def calculate_retention(
-        self,
-        t0_accuracy: float,
-        t_delta_accuracy: float
-    ) -> float:
+    def calculate_retention(self, t0_accuracy: float, t_delta_accuracy: float) -> float:
         """
         R(Δt): Retention after time delay.
 
@@ -97,9 +91,7 @@ class KAITEvaluator:
         return t_delta_accuracy / t0_accuracy
 
     def calculate_sample_efficiency(
-        self,
-        acquisition_gain: float,
-        exposure_tokens: int
+        self, acquisition_gain: float, exposure_tokens: int
     ) -> float:
         """
         Sample efficiency: AG per 1k exposure tokens.
@@ -116,9 +108,7 @@ class KAITEvaluator:
         return acquisition_gain / (exposure_tokens / 1000)
 
     def calculate_compute_efficiency(
-        self,
-        acquisition_gain: float,
-        tflops: float
+        self, acquisition_gain: float, tflops: float
     ) -> float:
         """
         Compute efficiency: AG per TFLOP.
@@ -135,9 +125,7 @@ class KAITEvaluator:
         return acquisition_gain / tflops
 
     def stability_plasticity_index(
-        self,
-        prior_skills_retained: float,
-        new_skills_gained: float
+        self, prior_skills_retained: float, new_skills_gained: float
     ) -> Dict[str, float]:
         """
         Stability-plasticity trade-off.
@@ -152,14 +140,14 @@ class KAITEvaluator:
         ratio = (
             prior_skills_retained / new_skills_gained
             if new_skills_gained > 0
-            else float('inf')
+            else float("inf")
         )
 
         return {
             "stability": prior_skills_retained,
             "plasticity": new_skills_gained,
             "ratio": ratio,
-            "balanced": abs(prior_skills_retained - new_skills_gained) < 0.1
+            "balanced": abs(prior_skills_retained - new_skills_gained) < 0.1,
         }
 
     def prequential_regret(self, online_accuracies: List[float]) -> Dict[str, float]:
@@ -178,13 +166,15 @@ class KAITEvaluator:
             return {"total_regret": 0.0, "avg_regret": 0.0, "final_accuracy": 0.0}
 
         ideal_accuracies = [1.0] * len(online_accuracies)
-        regrets = [ideal - actual for ideal, actual in zip(ideal_accuracies, online_accuracies)]
+        regrets = [
+            ideal - actual for ideal, actual in zip(ideal_accuracies, online_accuracies)
+        ]
 
         return {
             "total_regret": sum(regrets),
             "avg_regret": sum(regrets) / len(regrets),
             "final_accuracy": online_accuracies[-1] if online_accuracies else 0.0,
-            "learning_curve": online_accuracies
+            "learning_curve": online_accuracies,
         }
 
     def store_phase_results(self, phase: str, results: Dict[str, Any]) -> None:
@@ -210,8 +200,7 @@ class KAITEvaluator:
         retention_24h = None
         if "retention_24h" in self.results:
             retention_24h = self.calculate_retention(
-                post_exposure_acc,
-                self.results["retention_24h"].get("accuracy", 0.0)
+                post_exposure_acc, self.results["retention_24h"].get("accuracy", 0.0)
             )
 
         # Sample efficiency
@@ -223,7 +212,7 @@ class KAITEvaluator:
         if "prior_skills" in self.results and "new_skills" in self.results:
             sp_index = self.stability_plasticity_index(
                 self.results["prior_skills"].get("retained", 0.0),
-                self.results["new_skills"].get("gained", 0.0)
+                self.results["new_skills"].get("gained", 0.0),
             )
 
         # Regret
@@ -240,13 +229,13 @@ class KAITEvaluator:
                 "R_24h": retention_24h,
                 "sample_efficiency": sample_eff,
                 "stability_plasticity": sp_index,
-                "regret": regret
+                "regret": regret,
             },
             "phase_results": {
                 "baseline": self.results["baseline"],
                 "post_exposure": self.results["post_exposure"],
-                "transfer": self.results["transfer"]
-            }
+                "transfer": self.results["transfer"],
+            },
         }
 
         return report
@@ -280,7 +269,7 @@ def run_kait_experiment(
     baseline_tasks: List[str],
     exposure_episodes: List[str],
     transfer_tasks: List[str],
-    exposure_tokens: int
+    exposure_tokens: int,
 ) -> Dict[str, Any]:
     """
     Run a complete KAIT experiment.
@@ -301,12 +290,12 @@ def run_kait_experiment(
         "agent_model": agent_model,
         "exposure_tokens": exposure_tokens,
         "baseline_tasks": baseline_tasks,
-        "transfer_tasks": transfer_tasks
+        "transfer_tasks": transfer_tasks,
     }
 
     evaluator = KAITEvaluator(
         experiment_id=f"{dsl_name}_{agent_model}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
-        config=config
+        config=config,
     )
 
     # NOTE: Actual task execution would happen here
@@ -340,7 +329,7 @@ if __name__ == "__main__":
         baseline_tasks=["001", "002", "003"],
         exposure_episodes=["episode_1", "episode_2"],
         transfer_tasks=["010", "011", "012"],
-        exposure_tokens=5000
+        exposure_tokens=5000,
     )
 
     print("\n📈 Metrics Summary:")

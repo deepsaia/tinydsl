@@ -28,8 +28,7 @@ class LexiEvaluator(BaseEvaluator):
         """
         # Initialize with fuzzy comparator that returns metrics
         comparator = BaseEvaluator.fuzzy_comparator(
-            threshold=threshold,
-            return_metrics=True
+            threshold=threshold, return_metrics=True
         )
         super().__init__(benchmark_path, comparator=comparator)
         self.threshold = threshold
@@ -76,22 +75,21 @@ class LexiEvaluator(BaseEvaluator):
         # Transform detailed results to match legacy API
         details = []
         for detail in parent_result["details"]:
-            details.append({
-                "task_id": detail["task_id"],
-                "name": detail["task_name"],
-                "difficulty": detail["difficulty"],
-                "similarity": detail.get("similarity", 0.0),
-                "line_overlap": detail.get("line_overlap", 0.0),
-                "exact_match": detail["expected"] == detail["actual"],
-                "status": detail["status"],
-                "expected": detail["expected"],
-                "actual": detail["actual"],
-            })
+            details.append(
+                {
+                    "task_id": detail["task_id"],
+                    "name": detail["task_name"],
+                    "difficulty": detail["difficulty"],
+                    "similarity": detail.get("similarity", 0.0),
+                    "line_overlap": detail.get("line_overlap", 0.0),
+                    "exact_match": detail["expected"] == detail["actual"],
+                    "status": detail["status"],
+                    "expected": detail["expected"],
+                    "actual": detail["actual"],
+                }
+            )
 
-        return {
-            "accuracy": round(parent_result["accuracy"], 3),
-            "details": details
-        }
+        return {"accuracy": round(parent_result["accuracy"], 3), "details": details}
 
 
 # Example usage:

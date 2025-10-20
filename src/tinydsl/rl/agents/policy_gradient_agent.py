@@ -17,7 +17,7 @@ class PolicyGradientAgent(BaseAgent):
         action_space_size: int,
         state_size: int = 100,
         learning_rate: float = 0.001,
-        gamma: float = 0.99
+        gamma: float = 0.99,
     ):
         """
         Initialize policy gradient agent.
@@ -56,7 +56,7 @@ class PolicyGradientAgent(BaseAgent):
         action: int,
         reward: float,
         next_observation: np.ndarray,
-        done: bool
+        done: bool,
     ):
         """Store experience in buffer."""
         self.episode_buffer.append((observation, action, reward))

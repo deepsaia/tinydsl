@@ -1,5 +1,5 @@
 """Tests for TinyCalc DSL."""
-import pytest
+
 from tinydsl.tinycalc.tinycalc import TinyCalcInterpreter
 
 

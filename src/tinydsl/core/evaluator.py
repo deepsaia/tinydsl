@@ -9,7 +9,7 @@ Provides a reusable framework for:
 - Fuzzy matching for text-based DSLs
 """
 
-from typing import List, Dict, Any, Callable, Optional, Tuple
+from typing import List, Dict, Any, Callable, Optional
 import json
 from pathlib import Path
 import difflib
@@ -24,9 +24,7 @@ class BaseEvaluator:
     """
 
     def __init__(
-        self,
-        tasks_path: str,
-        comparator: Optional[Callable[[str, str], bool]] = None
+        self, tasks_path: str, comparator: Optional[Callable[[str, str], bool]] = None
     ):
         """
         Initialize evaluator.
@@ -53,8 +51,7 @@ class BaseEvaluator:
 
     @staticmethod
     def fuzzy_comparator(
-        threshold: float = 0.8,
-        return_metrics: bool = False
+        threshold: float = 0.8, return_metrics: bool = False
     ) -> Callable:
         """
         Create a fuzzy string comparator using sequence matching.
@@ -72,6 +69,7 @@ class BaseEvaluator:
                 comparator=BaseEvaluator.fuzzy_comparator(threshold=0.85)
             )
         """
+
         def comparator(actual: str, expected: str) -> bool:
             actual_clean = str(actual).strip()
             expected_clean = str(expected).strip()
@@ -95,7 +93,7 @@ class BaseEvaluator:
                 return passed, {
                     "similarity": round(similarity, 3),
                     "line_overlap": round(line_overlap, 3),
-                    "threshold": threshold
+                    "threshold": threshold,
                 }
             return passed
 
@@ -130,7 +128,7 @@ class BaseEvaluator:
                 "task_id": task_id,
                 "status": "error",
                 "message": "Task not found",
-                "passed": False
+                "passed": False,
             }
 
         expected = task.get("expected_output", "")
@@ -151,7 +149,7 @@ class BaseEvaluator:
             "passed": passed,
             "expected": expected,
             "actual": actual_output,
-            "match": passed
+            "match": passed,
         }
 
         # Add any additional metrics from the comparator
@@ -201,14 +199,14 @@ class BaseEvaluator:
             "passed": passed,
             "failed": total - passed,
             "by_difficulty": by_difficulty,
-            "details": details
+            "details": details,
         }
 
     def run_all_tasks(
         self,
         executor: Callable[[str], str],
         difficulty: Optional[str] = None,
-        limit: Optional[int] = None
+        limit: Optional[int] = None,
     ) -> Dict[str, Any]:
         """
         Run all tasks through an executor function.
@@ -231,15 +229,9 @@ class BaseEvaluator:
         for task in tasks:
             try:
                 output = executor(task["code"])
-                results.append({
-                    "task_id": task["id"],
-                    "output": output
-                })
+                results.append({"task_id": task["id"], "output": output})
             except Exception as e:
-                results.append({
-                    "task_id": task["id"],
-                    "output": f"[ERROR: {str(e)}]"
-                })
+                results.append({"task_id": task["id"], "output": f"[ERROR: {str(e)}]"})
 
         return self.batch_evaluate(results)
 

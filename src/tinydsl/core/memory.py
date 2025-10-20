@@ -8,7 +8,6 @@ maintain state across invocations.
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 import json
-import os
 from pathlib import Path
 
 

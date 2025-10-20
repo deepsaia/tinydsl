@@ -2,6 +2,7 @@ from pathlib import Path
 from tinydsl.core.base_dsl import BaseDSL
 from tinydsl.parser.lark_lexi_parser import LarkLexiParser
 
+
 class LexiInterpreter(BaseDSL):
     """
     Lexi DSL interpreter.
@@ -13,7 +14,7 @@ class LexiInterpreter(BaseDSL):
     - Error handling (try/catch)
     """
 
-    def __init__(self, version: str = 'v1'):
+    def __init__(self, version: str = "v1"):
         """
         Initialize Lexi interpreter.
 

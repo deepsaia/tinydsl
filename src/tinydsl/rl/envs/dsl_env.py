@@ -6,7 +6,6 @@ Wraps any TinyDSL as an RL environment compatible with standard interfaces.
 
 from typing import Any, Dict, Tuple, Optional, List
 import numpy as np
-from copy import deepcopy
 
 
 class DSLEnv:
@@ -26,7 +25,7 @@ class DSLEnv:
         task_id: str,
         reward_fn: Optional[callable] = None,
         max_steps: int = 50,
-        vocabulary: Optional[List[str]] = None
+        vocabulary: Optional[List[str]] = None,
     ):
         """
         Initialize DSL environment.
@@ -62,6 +61,7 @@ class DSLEnv:
         # Reward function
         if reward_fn is None:
             from tinydsl.rl.rewards.correctness_reward import CorrectnessReward
+
             self.reward_fn = CorrectnessReward(dsl_name)
         else:
             self.reward_fn = reward_fn
@@ -87,7 +87,7 @@ class DSLEnv:
             "id": task_id,
             "code": "",
             "expected_output": "",
-            "description": f"Task {task_id}"
+            "description": f"Task {task_id}",
         }
 
     def _build_vocabulary(self) -> List[str]:
@@ -95,31 +95,96 @@ class DSLEnv:
         # DSL-specific vocabularies
         vocabs = {
             "tinycalc": [
-                "define", "convert", "compute", "show", "base",
-                "1", "2", "3", "5", "10",
-                "flurb", "grobble", "zept", "quib", "voom",
-                "=", "+", "-", "*", "/", "to", "in", "units",
-                "\n"
+                "define",
+                "convert",
+                "compute",
+                "show",
+                "base",
+                "1",
+                "2",
+                "3",
+                "5",
+                "10",
+                "flurb",
+                "grobble",
+                "zept",
+                "quib",
+                "voom",
+                "=",
+                "+",
+                "-",
+                "*",
+                "/",
+                "to",
+                "in",
+                "units",
+                "\n",
             ],
             "lexi": [
-                "say", "set", "remember", "recall", "repeat", "if", "is",
-                "task", "call", "calc",
-                "happy", "sad", "excited",
-                "\"Hello\"", "\"world\"", "\"Hi\"",
-                "{", "}", "\n"
+                "say",
+                "set",
+                "remember",
+                "recall",
+                "repeat",
+                "if",
+                "is",
+                "task",
+                "call",
+                "calc",
+                "happy",
+                "sad",
+                "excited",
+                '"Hello"',
+                '"world"',
+                '"Hi"',
+                "{",
+                "}",
+                "\n",
             ],
             "gli": [
-                "set", "draw", "repeat", "var", "define", "call",
-                "color", "size", "circle", "square", "line",
-                "red", "blue", "green", "orange",
-                "x=", "y=", "cos", "sin", "$i",
-                "{", "}", "\n"
+                "set",
+                "draw",
+                "repeat",
+                "var",
+                "define",
+                "call",
+                "color",
+                "size",
+                "circle",
+                "square",
+                "line",
+                "red",
+                "blue",
+                "green",
+                "orange",
+                "x=",
+                "y=",
+                "cos",
+                "sin",
+                "$i",
+                "{",
+                "}",
+                "\n",
             ],
             "tinysql": [
-                "load", "table", "from", "filter", "where", "select",
-                "sort", "by", "asc", "desc", "limit", "show", "tables",
-                ">", "<", "=", "\n"
-            ]
+                "load",
+                "table",
+                "from",
+                "filter",
+                "where",
+                "select",
+                "sort",
+                "by",
+                "asc",
+                "desc",
+                "limit",
+                "show",
+                "tables",
+                ">",
+                "<",
+                "=",
+                "\n",
+            ],
         }
 
         return vocabs.get(self.dsl_name, ["token"])
@@ -163,14 +228,15 @@ class DSLEnv:
             state=self.program,
             action=token,
             result=result,
-            expected=self.expected_output
+            expected=self.expected_output,
         )
 
         # Episode termination
         self.done = (
             self.current_step >= self.max_steps
             or result.get("success", False)
-            or "\n" in token and len(self.program) > 10
+            or "\n" in token
+            and len(self.program) > 10
         )
 
         observation = self._get_observation()
@@ -179,7 +245,7 @@ class DSLEnv:
             "current_code": code,
             "result": result,
             "expected": self.expected_output,
-            "step": self.current_step
+            "step": self.current_step,
         }
 
         return observation, reward, self.done, info
@@ -189,6 +255,7 @@ class DSLEnv:
         try:
             # Use GenericDSLClient to execute
             from tinydsl.agent_tools.generic_dsl_client import GenericDSLClient
+
             client = GenericDSLClient()
 
             result = client.run(self.dsl_name, code)
@@ -197,14 +264,10 @@ class DSLEnv:
             return {
                 "success": output.strip() == self.expected_output.strip(),
                 "output": output,
-                "error": None
+                "error": None,
             }
         except Exception as e:
-            return {
-                "success": False,
-                "output": "",
-                "error": str(e)
-            }
+            return {"success": False, "output": "", "error": str(e)}
 
     def _get_observation(self) -> np.ndarray:
         """
