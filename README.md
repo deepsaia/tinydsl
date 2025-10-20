@@ -3,7 +3,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 **TinyDSL** is a modular, agent-ready framework for exploring and testing domain-specific languages (DSLs).
-It currently supports five DSLs:
+It currently supports these DSLs:
 
 * 🎨 **Gli** — graphics DSL for procedural image generation
 * 🗣️ **Lexi** — text DSL for structured, expressive text generation and reasoning
