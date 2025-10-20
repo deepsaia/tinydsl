@@ -12,7 +12,6 @@ Each DSL can use these handlers while customizing DSL-specific behavior.
 
 from typing import Any, Callable, Dict, Optional, Type
 from fastapi import HTTPException
-from fastapi.responses import JSONResponse
 from tinydsl.parser.ast_parser import LarkASTParser
 from tinydsl.core.logging_config import get_logger
 import json
@@ -60,7 +59,9 @@ class DSLHandler:
                 self.ast_parser = LarkASTParser(grammar_path)
                 self.logger.debug(f"AST parser initialized for {dsl_name}")
             except Exception as e:
-                self.logger.warning(f"Could not initialize AST parser for {dsl_name}: {e}")
+                self.logger.warning(
+                    f"Could not initialize AST parser for {dsl_name}: {e}"
+                )
 
     def handle_run(
         self,
@@ -88,7 +89,9 @@ class DSLHandler:
         is_exploration = len(code.strip()) < 50
 
         if not is_exploration:
-            self.logger.info(f"Executing {self.dsl_name} code (length: {len(code)} chars)")
+            self.logger.info(
+                f"Executing {self.dsl_name} code (length: {len(code)} chars)"
+            )
 
         try:
             # Create DSL instance with optional kwargs
@@ -256,8 +259,7 @@ class DSLHandler:
         """
         if not self.ast_parser:
             raise HTTPException(
-                status_code=501,
-                detail=f"AST parsing not available for {self.dsl_name}"
+                status_code=501, detail=f"AST parsing not available for {self.dsl_name}"
             )
 
         try:
@@ -276,6 +278,7 @@ class DSLHandler:
 
 
 # Utility functions for common operations
+
 
 def standard_run_response(output: Any) -> Dict:
     """Create standard response for /run endpoint."""

@@ -1,9 +1,18 @@
 """Tests for core framework components."""
+
 import pytest
+import os
 from tinydsl.core.base_dsl import BaseDSL
 from tinydsl.core.dsl_registry import DSLRegistry
 from tinydsl.core.memory import InMemoryStore, JSONFileMemory
 from tinydsl.core.evaluator import BaseEvaluator
+
+
+root_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(root_dir, "..", "data")
+output_dir = os.path.join(root_dir, "output")
+# create output directory if it doesn't exist
+os.makedirs(output_dir, exist_ok=True)
 
 
 class TestBaseDSL:
@@ -98,7 +107,7 @@ class TestEvaluator:
                 "name": "Test Task",
                 "code": "test code",
                 "expected_output": "test output",
-                "difficulty": "easy"
+                "difficulty": "easy",
             }
         ]
         with open(tasks_file, "w") as f:
@@ -119,7 +128,7 @@ class TestEvaluator:
                 "name": "Convert Task",
                 "code": "define 1 flurb = 2 grobble\nconvert 1 flurb to grobble",
                 "expected_output": "2.0 grobble",
-                "difficulty": "easy"
+                "difficulty": "easy",
             }
         ]
         with open(tasks_file, "w") as f:

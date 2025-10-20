@@ -2,8 +2,8 @@
 
 import math
 from pathlib import Path
-from lark import Lark, Transformer, Token
-from typing import Any, Dict
+from lark import Lark, Transformer
+from typing import Dict
 
 
 class TinyMathTransformer(Transformer):
@@ -124,7 +124,7 @@ class TinyMathTransformer(Transformer):
             "round": lambda x: round(x),
             "min": lambda *args: min(args),
             "max": lambda *args: max(args),
-            "pow": lambda x, y: x ** y,
+            "pow": lambda x, y: x**y,
         }
 
         if func_name not in functions:
@@ -160,9 +160,7 @@ class LarkTinyMathParser:
             self.grammar = f.read()
 
         self.parser = Lark(
-            self.grammar,
-            parser="lalr",
-            transformer=TinyMathTransformer()
+            self.grammar, parser="lalr", transformer=TinyMathTransformer()
         )
 
     def parse(self, code: str) -> str:
@@ -180,10 +178,7 @@ class LarkTinyMathParser:
         """
         try:
             transformer = TinyMathTransformer()
-            tree = Lark(
-                self.grammar,
-                parser="lalr"
-            ).parse(code)
+            tree = Lark(self.grammar, parser="lalr").parse(code)
 
             # Transform tree with fresh transformer
             transformer.transform(tree)

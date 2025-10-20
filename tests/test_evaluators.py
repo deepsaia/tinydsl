@@ -1,4 +1,5 @@
 """Tests for all DSL evaluators."""
+
 import pytest
 import json
 import tempfile
@@ -21,7 +22,7 @@ def sample_tasks_file():
             "code": "test code",
             "expected_output": "test output",
             "difficulty": "easy",
-            "tags": ["basic"]
+            "tags": ["basic"],
         },
         {
             "id": "test_002",
@@ -29,11 +30,11 @@ def sample_tasks_file():
             "code": "test code 2",
             "expected_output": "test output 2",
             "difficulty": "medium",
-            "tags": ["intermediate"]
-        }
+            "tags": ["intermediate"],
+        },
     ]
 
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
         json.dump(tasks, f)
         temp_path = f.name
 
@@ -64,7 +65,9 @@ class TestBaseEvaluator:
         """Test BaseEvaluator with fuzzy matching."""
         evaluator = BaseEvaluator(
             sample_tasks_file,
-            comparator=BaseEvaluator.fuzzy_comparator(threshold=0.8, return_metrics=True)
+            comparator=BaseEvaluator.fuzzy_comparator(
+                threshold=0.8, return_metrics=True
+            ),
         )
         result = evaluator.evaluate_single("test_001", "test output!")
         assert result["passed"] is True
@@ -75,7 +78,7 @@ class TestBaseEvaluator:
         evaluator = BaseEvaluator(sample_tasks_file)
         results = [
             {"task_id": "test_001", "output": "test output"},
-            {"task_id": "test_002", "output": "test output 2"}
+            {"task_id": "test_002", "output": "test output 2"},
         ]
         report = evaluator.batch_evaluate(results)
         assert report["accuracy"] == 1.0
@@ -130,7 +133,7 @@ class TestLexiEvaluator:
         evaluator = LexiEvaluator(sample_tasks_file)
         results = [
             {"task_id": "test_001", "output": "test output"},
-            {"task_id": "test_002", "output": "test output 2"}
+            {"task_id": "test_002", "output": "test output 2"},
         ]
         report = evaluator.batch_evaluate(results)
         assert report["accuracy"] == 1.0
@@ -157,7 +160,7 @@ class TestTinyCalcEvaluator:
         evaluator = TinyCalcEvaluator(sample_tasks_file)
         results = [
             {"task_id": "test_001", "output": "test output"},
-            {"task_id": "test_002", "output": "test output 2"}
+            {"task_id": "test_002", "output": "test output 2"},
         ]
         report = evaluator.batch_evaluate(results)
         assert report["accuracy"] == 1.0
@@ -184,7 +187,7 @@ class TestTinySQLEvaluator:
         evaluator = TinySQLEvaluator(sample_tasks_file)
         results = [
             {"task_id": "test_001", "output": "test output"},
-            {"task_id": "test_002", "output": "test output 2"}
+            {"task_id": "test_002", "output": "test output 2"},
         ]
         report = evaluator.batch_evaluate(results)
         assert report["accuracy"] == 1.0
@@ -226,7 +229,7 @@ class TestGliEvaluator:
         evaluator = GliEvaluator(sample_tasks_file)
         results = [
             {"task_id": "test_001", "output": "test output"},
-            {"task_id": "test_002", "output": "test output 2"}
+            {"task_id": "test_002", "output": "test output 2"},
         ]
         report = evaluator.batch_evaluate(results)
         assert report["accuracy"] == 1.0

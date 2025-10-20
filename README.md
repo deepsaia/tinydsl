@@ -21,11 +21,30 @@ Use [uv](https://github.com/astral-sh/uv):
 
 ```bash
 uv venv
-uv sync
+uv add tinydsl
+python -m tinydsl.api.main
+```
+
+Or pip
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install tinydsl
 python -m tinydsl.api.main
 ```
 
 Open [http://localhost:8008/docs](http://localhost:8008/docs).
+
+
+### Local Dev
+
+```bash
+git clone https://github.com/deepsaia/tinydsl.git
+uv venv
+uv sync
+python -m tinydsl.api.main
+```
 
 ---
 
@@ -342,7 +361,6 @@ pytest tests/ --cov=src/tinydsl --cov-report=html
 ```bash
 # Exclude integration tests that require a running server
 pytest tests/ -v -m "not integration and not requires_server"
-# Runs 129 tests in ~10 seconds
 ```
 
 ### Run Integration Tests Only
@@ -353,18 +371,17 @@ python -m tinydsl.api.main
 
 # In another terminal, run integration tests
 pytest tests/ -v -m "integration or requires_server"
-# Runs 19 tests
 ```
 
 ### Test Categories
 
-- **Unit tests** (129 tests): Fast, no server required
+- **Unit tests**: Fast, no server required
   - Core framework (DSL registry, memory, evaluator)
   - DSL interpreters (TinyCalc, TinyMath, TinySQL, Lexi, Gli)
   - RL environment and agents
   - Parsers and evaluators
 
-- **Integration tests** (19 tests): Require running API server
+- **Integration tests**: Require running API server
   - `TestTinyDSLToolIntegration` - API client tools
   - `TestGenericDSLClientIntegration` - Generic DSL client
   - `TestRLEnvironmentIntegration` - RL with live API

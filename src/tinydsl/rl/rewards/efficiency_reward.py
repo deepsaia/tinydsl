@@ -15,10 +15,7 @@ class EfficiencyReward(BaseReward):
     """
 
     def __init__(
-        self,
-        dsl_name: str,
-        target_length: int = 20,
-        length_penalty: float = 0.1
+        self, dsl_name: str, target_length: int = 20, length_penalty: float = 0.1
     ):
         """
         Initialize efficiency reward.
@@ -33,11 +30,7 @@ class EfficiencyReward(BaseReward):
         self.length_penalty = length_penalty
 
     def __call__(
-        self,
-        state: List[str],
-        action: str,
-        result: Dict[str, Any],
-        expected: str
+        self, state: List[str], action: str, result: Dict[str, Any], expected: str
     ) -> float:
         """Calculate reward based on correctness and efficiency."""
         reward = 0.0

@@ -26,11 +26,7 @@ class CorrectnessReward(BaseReward):
         self.step_penalty = step_penalty
 
     def __call__(
-        self,
-        state: List[str],
-        action: str,
-        result: Dict[str, Any],
-        expected: str
+        self, state: List[str], action: str, result: Dict[str, Any], expected: str
     ) -> float:
         """Calculate reward based on correctness."""
         reward = self.step_penalty  # Base step penalty

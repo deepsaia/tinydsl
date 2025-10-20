@@ -19,7 +19,7 @@ class QLearningAgent(BaseAgent):
         gamma: float = 0.99,
         epsilon: float = 0.1,
         epsilon_decay: float = 0.995,
-        epsilon_min: float = 0.01
+        epsilon_min: float = 0.01,
     ):
         """
         Initialize Q-learning agent.
@@ -59,7 +59,7 @@ class QLearningAgent(BaseAgent):
         action: int,
         reward: float,
         next_observation: np.ndarray,
-        done: bool
+        done: bool,
     ):
         """Q-learning update."""
         # Current Q-value

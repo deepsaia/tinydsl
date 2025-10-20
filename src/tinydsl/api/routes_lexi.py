@@ -6,17 +6,21 @@ from tinydsl.lexi.lexi_evaluator import LexiEvaluator
 from tinydsl.api.common_handlers import DSLHandler
 import os
 
-from tinydsl.lexi.lexi_memory import LexiMemoryStore
+from tinydsl.core.memory import JSONFileMemory
 
-memory_store = LexiMemoryStore()
+memory_store = JSONFileMemory(filepath="memory/lexi_memory.json")
 
 router = APIRouter()
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(root_dir, "..", "data")
 
-LEXI_TASKS_PATH = os.getenv("LEXI_TASKS_PATH", os.path.join(data_dir, "lexi_tasks.json"))
-LEXI_GRAMMAR_PATH = os.getenv("LEXI_GRAMMAR_PATH", os.path.join(data_dir, "lexi_grammar.lark"))
+LEXI_TASKS_PATH = os.getenv(
+    "LEXI_TASKS_PATH", os.path.join(data_dir, "lexi_tasks.json")
+)
+LEXI_GRAMMAR_PATH = os.getenv(
+    "LEXI_GRAMMAR_PATH", os.path.join(data_dir, "lexi_grammar.lark")
+)
 
 # Initialize common handler
 handler = DSLHandler(
@@ -83,8 +87,8 @@ def _lexi_run_processor(dsl_instance, output):
     """Custom processor for Lexi /run endpoint to include memory."""
     mem_data = {}
     if hasattr(dsl_instance, "memory"):
-        if hasattr(dsl_instance.memory, "load"):  # LexiMemoryStore
-            mem_data = dsl_instance.memory.load()
+        if hasattr(dsl_instance.memory, "to_dict"):  # JSONFileMemory
+            mem_data = dsl_instance.memory.to_dict()
         elif isinstance(dsl_instance.memory, dict):
             mem_data = dsl_instance.memory
     return {"status": "ok", "output": output, "memory": mem_data}
@@ -93,10 +97,7 @@ def _lexi_run_processor(dsl_instance, output):
 @router.post("/run")
 def run_lexi(request: LexiRequest):
     """Run a Lexi DSL script and return generated text."""
-    response = handler.handle_run(
-        code=request.code,
-        process_output=_lexi_run_processor
-    )
+    response = handler.handle_run(code=request.code, process_output=_lexi_run_processor)
     return JSONResponse(response)
 
 

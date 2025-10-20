@@ -5,7 +5,7 @@ Lark parser for TinySQL DSL - Simple query language.
 import os
 import json
 from typing import Dict, List, Any
-from lark import Lark, Transformer, v_args, Token
+from lark import Lark, Transformer, v_args
 
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -62,7 +62,7 @@ class TinySQLTransformer(Transformer):
             # Try to convert to number
             try:
                 value = float(value)
-            except:
+            except (ValueError, TypeError):
                 pass
         else:
             value = str(val)
@@ -117,9 +117,7 @@ class TinySQLTransformer(Transformer):
 
         try:
             self.current_data = sorted(
-                self.current_data,
-                key=lambda x: x.get(field, 0),
-                reverse=reverse
+                self.current_data, key=lambda x: x.get(field, 0), reverse=reverse
             )
             self.output.append(f"Sorted by {field} {'desc' if reverse else 'asc'}")
         except Exception as e:
@@ -138,7 +136,7 @@ class TinySQLTransformer(Transformer):
 
     def join_stmt(self, other_table, left_key, right_key):
         """Simple inner join (placeholder)."""
-        self.output.append(f"Join not fully implemented yet")
+        self.output.append("Join not fully implemented yet")
 
     def name_list(self, *names):
         """List of field names."""

@@ -1,6 +1,9 @@
 // Unified Lexi Grammar - Supports all V1 and V2 features
 // V1 features: set, say, remember, recall, if, repeat, task, call
 // V2 features: strings, lists, foreach, match, try/catch
+//
+// Post-cutoff keywords: remember, recall, task, call, concat, substring, foreach, match
+// Novel features: persistent memory (remember/recall), task definitions
 
 start: statement+
 

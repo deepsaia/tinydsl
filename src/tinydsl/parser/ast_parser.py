@@ -72,16 +72,9 @@ class LarkASTParser:
                 "children": [LarkASTParser.tree_to_dict(c) for c in node.children],
             }
         elif isinstance(node, Token):
-            return {
-                "type": "token",
-                "terminal": node.type,
-                "value": str(node)
-            }
+            return {"type": "token", "terminal": node.type, "value": str(node)}
         else:
-            return {
-                "type": "literal",
-                "value": repr(node)
-            }
+            return {"type": "literal", "value": repr(node)}
 
     @staticmethod
     def tree_pretty(node: Tree) -> str:

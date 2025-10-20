@@ -1,5 +1,5 @@
 """Tests for TinySQL DSL."""
-import pytest
+
 from tinydsl.tinysql.tinysql import TinySQLInterpreter
 
 

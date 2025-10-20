@@ -1,4 +1,5 @@
 """Tests for RL framework."""
+
 import pytest
 import numpy as np
 from tinydsl.rl.envs import make_env
@@ -12,18 +13,19 @@ from tinydsl.rl.utils import RLTrainer, RLEvaluator
 # Unit Tests
 # ====================
 
+
 class TestRLEnvironment:
     """Test RL environment."""
 
     def test_make_env(self):
         """Test creating an environment."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         assert env is not None
         assert env.max_steps == 10
 
     def test_env_reset(self):
         """Test environment reset."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         obs = env.reset()
         assert obs is not None
         assert isinstance(obs, np.ndarray)
@@ -61,7 +63,7 @@ class TestRLEnvironment:
 
     def test_env_render(self):
         """Test environment render."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         env.reset()
         rendered = env.render()
         assert isinstance(rendered, str)
@@ -69,7 +71,7 @@ class TestRLEnvironment:
 
     def test_env_action_mask(self):
         """Test action mask generation."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         env.reset()
         mask = env.get_action_mask()
         assert isinstance(mask, np.ndarray)
@@ -88,11 +90,7 @@ class TestRLAgents:
 
     def test_q_learning_agent(self):
         """Test Q-learning agent."""
-        agent = QLearningAgent(
-            action_space_size=10,
-            learning_rate=0.01,
-            epsilon=0.3
-        )
+        agent = QLearningAgent(action_space_size=10, learning_rate=0.01, epsilon=0.3)
 
         obs = np.random.rand(100)
         action = agent.act(obs)
@@ -104,10 +102,7 @@ class TestRLAgents:
 
     def test_policy_gradient_agent(self):
         """Test policy gradient agent."""
-        agent = PolicyGradientAgent(
-            action_space_size=10,
-            learning_rate=0.001
-        )
+        agent = PolicyGradientAgent(action_space_size=10, learning_rate=0.001)
 
         obs = np.random.rand(100)
         action = agent.act(obs)
@@ -122,11 +117,7 @@ class TestRLAgents:
 
     def test_epsilon_decay(self):
         """Test epsilon decay in Q-learning agent."""
-        agent = QLearningAgent(
-            action_space_size=10,
-            epsilon=0.5,
-            epsilon_decay=0.9
-        )
+        agent = QLearningAgent(action_space_size=10, epsilon=0.5, epsilon_decay=0.9)
 
         initial_epsilon = agent.epsilon
         agent.decay_epsilon()
@@ -138,39 +129,36 @@ class TestRewardFunctions:
 
     def test_correctness_reward(self):
         """Test correctness reward function."""
-        reward_fn = CorrectnessReward(dsl_name='tinycalc')
+        reward_fn = CorrectnessReward(dsl_name="tinycalc")
 
         # Test success
-        result = {'success': True, 'output': '5.0 grobble'}
-        reward = reward_fn([], 'token', result, '5.0 grobble')
+        result = {"success": True, "output": "5.0 grobble"}
+        reward = reward_fn([], "token", result, "5.0 grobble")
         assert reward > 0
 
         # Test failure
-        result = {'success': False, 'error': 'Parse error'}
-        reward = reward_fn([], 'token', result, '5.0 grobble')
+        result = {"success": False, "error": "Parse error"}
+        reward = reward_fn([], "token", result, "5.0 grobble")
         assert reward < 0
 
     def test_correctness_reward_similarity(self):
         """Test partial reward based on similarity."""
-        reward_fn = CorrectnessReward(dsl_name='tinycalc')
+        reward_fn = CorrectnessReward(dsl_name="tinycalc")
 
         # Partial match
-        result = {'success': False, 'output': '14.0'}
-        reward = reward_fn([], 'convert', result, '14.0 grobble')
+        result = {"success": False, "output": "14.0"}
+        reward = reward_fn([], "convert", result, "14.0 grobble")
         assert reward > -1.0  # Better than error, worse than success
         assert reward < 10.0
 
     def test_efficiency_reward(self):
         """Test efficiency reward function."""
-        reward_fn = EfficiencyReward(
-            dsl_name='tinycalc',
-            target_length=10
-        )
+        reward_fn = EfficiencyReward(dsl_name="tinycalc", target_length=10)
 
         # Test success with short program
-        result = {'success': True, 'output': '5.0 grobble'}
-        state = ['token'] * 5
-        reward = reward_fn(state, 'token', result, '5.0 grobble')
+        result = {"success": True, "output": "5.0 grobble"}
+        state = ["token"] * 5
+        reward = reward_fn(state, "token", result, "5.0 grobble")
         assert reward > 0
 
 
@@ -179,7 +167,7 @@ class TestRLTrainer:
 
     def test_trainer_initialization(self):
         """Test trainer initializes correctly."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         agent = RandomAgent(env.action_space_size)
         trainer = RLTrainer(env, agent)
         assert trainer.env == env
@@ -187,17 +175,17 @@ class TestRLTrainer:
 
     def test_trainer_short_training(self):
         """Test short training run."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         agent = RandomAgent(env.action_space_size)
         trainer = RLTrainer(env, agent)
 
         # Train for just 5 episodes
         stats = trainer.train(num_episodes=5, verbose=False)
 
-        assert 'total_episodes' in stats
-        assert stats['total_episodes'] == 5
-        assert 'final_avg_reward' in stats
-        assert 'final_success_rate' in stats
+        assert "total_episodes" in stats
+        assert stats["total_episodes"] == 5
+        assert "final_avg_reward" in stats
+        assert "final_success_rate" in stats
 
 
 class TestRLEvaluator:
@@ -210,20 +198,20 @@ class TestRLEvaluator:
 
     def test_evaluate_agent(self):
         """Test evaluating an agent."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         agent = RandomAgent(env.action_space_size)
         evaluator = RLEvaluator()
 
         results = evaluator.evaluate_agent(agent, env, n_episodes=3)
 
-        assert 'success_rate' in results
-        assert 'avg_reward' in results
-        assert 'avg_length' in results
-        assert 0 <= results['success_rate'] <= 1
+        assert "success_rate" in results
+        assert "avg_reward" in results
+        assert "avg_length" in results
+        assert 0 <= results["success_rate"] <= 1
 
     def test_compare_agents(self):
         """Test comparing multiple agents."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         agent1 = RandomAgent(env.action_space_size)
         agent2 = RandomAgent(env.action_space_size)
 
@@ -241,6 +229,7 @@ class TestRLEvaluator:
 # Integration Tests (Require Server)
 # ====================
 
+
 @pytest.mark.integration
 @pytest.mark.requires_server
 class TestRLEnvironmentIntegration:
@@ -248,7 +237,7 @@ class TestRLEnvironmentIntegration:
 
     def test_env_step_execution(self):
         """Test environment step with actual DSL execution."""
-        env = make_env('tinycalc', '001', max_steps=10)
+        env = make_env("tinycalc", "001", max_steps=10)
         env.reset()
 
         # Take first action
@@ -269,7 +258,7 @@ class TestRLEnvironmentIntegration:
 
     def test_env_episode_flow(self):
         """Test full episode flow."""
-        env = make_env('tinycalc', '001', max_steps=20)
+        env = make_env("tinycalc", "001", max_steps=20)
         obs = env.reset()
 
         done = False
@@ -319,7 +308,9 @@ class TestRLEnvironmentIntegration:
         client = GenericDSLClient()
 
         # Test client works
-        result = client.run("tinycalc", "define 1 flurb = 3.5 grobble\nconvert 4 flurb to grobble")
+        result = client.run(
+            "tinycalc", "define 1 flurb = 3.5 grobble\nconvert 4 flurb to grobble"
+        )
         assert result.get("status") == "ok"
 
         # Create environment that uses same client internally
@@ -334,33 +325,31 @@ class TestRLTrainerIntegration:
 
     def test_train_random_agent(self):
         """Test training a random agent on real environment."""
-        env = make_env('tinycalc', '001', max_steps=15)
+        env = make_env("tinycalc", "001", max_steps=15)
         agent = RandomAgent(env.action_space_size)
         trainer = RLTrainer(env, agent)
 
         # Short training run
         stats = trainer.train(num_episodes=10, verbose=False)
 
-        assert stats['total_episodes'] == 10
-        assert 'final_avg_reward' in stats
-        assert 'final_success_rate' in stats
-        assert 0 <= stats['final_success_rate'] <= 1
+        assert stats["total_episodes"] == 10
+        assert "final_avg_reward" in stats
+        assert "final_success_rate" in stats
+        assert 0 <= stats["final_success_rate"] <= 1
 
     def test_train_q_learning_agent(self):
         """Test training a Q-learning agent."""
-        env = make_env('tinycalc', '001', max_steps=15)
+        env = make_env("tinycalc", "001", max_steps=15)
         agent = QLearningAgent(
-            action_space_size=env.action_space_size,
-            learning_rate=0.01,
-            epsilon=0.3
+            action_space_size=env.action_space_size, learning_rate=0.01, epsilon=0.3
         )
         trainer = RLTrainer(env, agent)
 
         # Short training run
         stats = trainer.train(num_episodes=10, verbose=False)
 
-        assert stats['total_episodes'] == 10
-        assert isinstance(stats['final_avg_reward'], (int, float))
+        assert stats["total_episodes"] == 10
+        assert isinstance(stats["final_avg_reward"], (int, float))
 
 
 # ====================

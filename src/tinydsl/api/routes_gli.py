@@ -14,7 +14,9 @@ router = APIRouter()
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(root_dir, "..", "data")
-EXAMPLES_PATH = os.getenv("GLI_EXAMPLES_PATH", os.path.join(data_dir, "gli_examples.json"))
+EXAMPLES_PATH = os.getenv(
+    "GLI_EXAMPLES_PATH", os.path.join(data_dir, "gli_examples.json")
+)
 TASKS_PATH = os.getenv("GLI_TASKS_PATH", os.path.join(data_dir, "gli_tasks.json"))
 GRAMMAR_PATH = os.getenv("GLI_GRAMMAR_PATH", os.path.join(data_dir, "gli_grammar.lark"))
 
@@ -242,7 +244,12 @@ def run_example(
             name=name or example.get("name", f"example_{example_id}"),
             artifact_id=example.get("id"),
         )
-        return {"status": "ok", "example_id": example_id, "renderer": "pillow", "output_path": path}
+        return {
+            "status": "ok",
+            "example_id": example_id,
+            "renderer": "pillow",
+            "output_path": path,
+        }
     except HTTPException:
         raise
     except Exception as e:

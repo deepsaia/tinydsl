@@ -15,12 +15,7 @@ class RLTrainer:
     Handles training loops, logging, checkpointing, and evaluation.
     """
 
-    def __init__(
-        self,
-        env: DSLEnv,
-        agent: BaseAgent,
-        log_dir: Optional[str] = None
-    ):
+    def __init__(self, env: DSLEnv, agent: BaseAgent, log_dir: Optional[str] = None):
         """
         Initialize trainer.
 
@@ -43,7 +38,7 @@ class RLTrainer:
         num_episodes: int,
         eval_every: int = 100,
         save_every: int = 500,
-        verbose: bool = True
+        verbose: bool = True,
     ) -> Dict[str, Any]:
         """
         Train agent for specified number of episodes.
@@ -73,7 +68,7 @@ class RLTrainer:
             self.success_rate.append(1.0 if success else 0.0)
 
             # Decay exploration (if applicable)
-            if hasattr(self.agent, 'decay_epsilon'):
+            if hasattr(self.agent, "decay_epsilon"):
                 self.agent.decay_epsilon()
 
             # Logging
@@ -81,7 +76,7 @@ class RLTrainer:
                 avg_reward = sum(self.episode_rewards[-eval_every:]) / eval_every
                 avg_length = sum(self.episode_lengths[-eval_every:]) / eval_every
                 success_rate = sum(self.success_rate[-eval_every:]) / eval_every
-                epsilon = getattr(self.agent, 'epsilon', None)
+                epsilon = getattr(self.agent, "epsilon", None)
 
                 print(f"Episode {episode}/{num_episodes}")
                 print(f"  Avg Reward: {avg_reward:.2f}")
@@ -103,9 +98,11 @@ class RLTrainer:
         stats = {
             "total_episodes": num_episodes,
             "elapsed_seconds": elapsed,
-            "final_avg_reward": sum(self.episode_rewards[-100:]) / min(100, len(self.episode_rewards)),
-            "final_success_rate": sum(self.success_rate[-100:]) / min(100, len(self.success_rate)),
-            "evaluation": final_eval
+            "final_avg_reward": sum(self.episode_rewards[-100:])
+            / min(100, len(self.episode_rewards)),
+            "final_success_rate": sum(self.success_rate[-100:])
+            / min(100, len(self.success_rate)),
+            "evaluation": final_eval,
         }
 
         # Save training curve
@@ -172,13 +169,15 @@ class RLTrainer:
 
             rewards.append(episode_reward)
             lengths.append(episode_length)
-            successes.append(1.0 if info.get("result", {}).get("success", False) else 0.0)
+            successes.append(
+                1.0 if info.get("result", {}).get("success", False) else 0.0
+            )
 
         return {
             "avg_reward": sum(rewards) / len(rewards),
             "avg_length": sum(lengths) / len(lengths),
             "success_rate": sum(successes) / len(successes),
-            "n_episodes": n_episodes
+            "n_episodes": n_episodes,
         }
 
     def _save_checkpoint(self, episode: int):
@@ -191,7 +190,7 @@ class RLTrainer:
         data = {
             "episode_rewards": self.episode_rewards,
             "episode_lengths": self.episode_lengths,
-            "success_rate": self.success_rate
+            "success_rate": self.success_rate,
         }
 
         curve_path = self.log_dir / "training_curve.json"

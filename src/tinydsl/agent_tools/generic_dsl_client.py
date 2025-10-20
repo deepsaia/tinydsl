@@ -78,7 +78,9 @@ class GenericDSLClient:
         resp.raise_for_status()
         return resp.json()
 
-    def get_examples(self, dsl_name: str, tag: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_examples(
+        self, dsl_name: str, tag: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """
         Get examples for a DSL.
 
@@ -99,7 +101,7 @@ class GenericDSLClient:
         self,
         dsl_name: str,
         task_ids: Optional[List[str]] = None,
-        difficulty: Optional[str] = None
+        difficulty: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Run multiple tasks and return combined results.
@@ -122,15 +124,11 @@ class GenericDSLClient:
         for task_id in task_ids:
             try:
                 result = self.run_task(dsl_name, task_id)
-                results.append({
-                    "task_id": task_id,
-                    "output": result.get("generated_output", "")
-                })
+                results.append(
+                    {"task_id": task_id, "output": result.get("generated_output", "")}
+                )
             except Exception as e:
-                results.append({
-                    "task_id": task_id,
-                    "output": f"[ERROR: {str(e)}]"
-                })
+                results.append({"task_id": task_id, "output": f"[ERROR: {str(e)}]"})
 
         # Evaluate all results
         eval_result = self.evaluate(dsl_name, results)
@@ -139,7 +137,7 @@ class GenericDSLClient:
             "dsl": dsl_name,
             "total_tasks": len(results),
             "results": results,
-            "evaluation": eval_result
+            "evaluation": eval_result,
         }
 
 
@@ -166,11 +164,7 @@ class DSLTester:
         except Exception:
             return False
 
-    def benchmark_dsl(
-        self,
-        dsl_name: str,
-        task_ids: List[str]
-    ) -> Dict[str, Any]:
+    def benchmark_dsl(self, dsl_name: str, task_ids: List[str]) -> Dict[str, Any]:
         """
         Run benchmark suite for a DSL.
 
@@ -192,7 +186,7 @@ class DSLTester:
             "tasks_run": results["total_tasks"],
             "accuracy": results["evaluation"].get("summary", {}).get("accuracy", 0.0),
             "elapsed_seconds": elapsed,
-            "tasks_per_second": results["total_tasks"] / elapsed if elapsed > 0 else 0
+            "tasks_per_second": results["total_tasks"] / elapsed if elapsed > 0 else 0,
         }
 
 
@@ -204,12 +198,14 @@ if __name__ == "__main__":
 
     # Test TinyCalc
     print("\n🧮 Testing TinyCalc...")
-    result = client.run("tinycalc", "define 1 flurb = 5 zepts\nconvert 10 flurbs to zepts")
+    result = client.run(
+        "tinycalc", "define 1 flurb = 5 zepts\nconvert 10 flurbs to zepts"
+    )
     print("Output:", result.get("output"))
 
     # Test Lexi
     print("\n💬 Testing Lexi...")
-    result = client.run("lexi", "say \"Hello from generic client!\"")
+    result = client.run("lexi", 'say "Hello from generic client!"')
     print("Output:", result.get("output"))
 
     # Run a task

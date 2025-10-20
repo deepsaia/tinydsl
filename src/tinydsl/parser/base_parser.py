@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class BaseParser(ABC):
     """Abstract base class for all parsers in TinyDSL."""
 

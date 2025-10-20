@@ -41,11 +41,13 @@ jobs:
         run: |
           source .venv/bin/activate
           # Run only unit tests (exclude integration tests that require a running server)
-          # This runs 129/148 tests (19 integration tests excluded)
+          # This runs all unit tests (integration tests excluded)
           pytest tests/ -v --tb=short -m "not integration and not requires_server"
 
       - name: Test summary
         if: always()
         run: |
+          # cleanup after tests are done
           echo "✅ Unit tests completed (integration tests skipped)"
           echo "ℹ️  To run all tests including integration: pytest tests/ -v"
+          rm -rf output memory

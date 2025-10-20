@@ -1,8 +1,6 @@
 """Evaluator for TinyMath DSL tasks."""
 
-import json
 from pathlib import Path
-from typing import Dict, Any, List
 from tinydsl.core.evaluator import BaseEvaluator
 
 

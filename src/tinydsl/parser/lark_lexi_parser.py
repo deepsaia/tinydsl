@@ -16,9 +16,8 @@ V2 features (additional):
 
 import os
 import math
-from typing import Any, List
 from lark import Lark, Transformer, v_args, Tree, Token
-from tinydsl.lexi.lexi_memory import LexiMemoryStore
+from tinydsl.core.memory import JSONFileMemory
 from tinydsl.parser.lark_math_parser import LarkMathParser
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -35,8 +34,8 @@ class LexiTransformer(Transformer):
     V2 features (strings, lists, pattern matching) are active when using v2 grammar.
     """
 
-    def __init__(self, memory=None, context=None, version='v1'):
-        self.memory = memory or LexiMemoryStore()
+    def __init__(self, memory=None, context=None, version="v1"):
+        self.memory = memory or JSONFileMemory(filepath="memory/lexi_memory.json")
         self.context = context or {}
         self.output = []
         self.math_parser = LarkMathParser()
@@ -55,7 +54,9 @@ class LexiTransformer(Transformer):
             self.context[name] = value
         else:
             try:
-                self.context[name] = self.math_parser.parse_expression(str(value), self.context)
+                self.context[name] = self.math_parser.parse_expression(
+                    str(value), self.context
+                )
             except Exception:
                 self.context[name] = str(value)
 
@@ -65,7 +66,9 @@ class LexiTransformer(Transformer):
             self.memory.set(name, value)
         else:
             try:
-                self.memory.set(name, self.math_parser.parse_expression(str(value), self.context))
+                self.memory.set(
+                    name, self.math_parser.parse_expression(str(value), self.context)
+                )
             except Exception:
                 self.memory.set(name, str(value))
 
@@ -84,7 +87,7 @@ class LexiTransformer(Transformer):
         if str(self.context.get(cond_name)) == cond_value:
             for stmt in block:
                 pass
-        elif else_block and self.version == 'v2':
+        elif else_block and self.version == "v2":
             for stmt in else_block:
                 pass
 
@@ -253,18 +256,31 @@ class LexiTransformer(Transformer):
             raise ValueError(f"Unsupported function '{fn}'")
         return float(safe_funcs[fn](float(value)))
 
-    def add(self, a, b): return float(a) + float(b)
-    def sub(self, a, b): return float(a) - float(b)
-    def mul(self, a, b): return float(a) * float(b)
-    def div(self, a, b): return float(a) / float(b)
-    def pow(self, a, b): return float(a) ** float(b)
+    def add(self, a, b):
+        return float(a) + float(b)
+
+    def sub(self, a, b):
+        return float(a) - float(b)
+
+    def mul(self, a, b):
+        return float(a) * float(b)
+
+    def div(self, a, b):
+        return float(a) / float(b)
+
+    def pow(self, a, b):
+        return float(a) ** float(b)
 
     def assign_value(self, v):
         return v
 
     def plain_string(self, s):
         txt = str(s)
-        return txt[1:-1] if len(txt) >= 2 and txt[0] == txt[-1] and txt[0] in ('"', "'") else txt
+        return (
+            txt[1:-1]
+            if len(txt) >= 2 and txt[0] == txt[-1] and txt[0] in ('"', "'")
+            else txt
+        )
 
     def plain_number(self, n):
         return float(n)
@@ -275,7 +291,7 @@ class LexiTransformer(Transformer):
     # ========== Tree Traversal ==========
 
     def start(self, *stmts):
-        if self.version == 'v2':
+        if self.version == "v2":
             return "\n".join(self.output)
         return self.output
 
@@ -288,7 +304,7 @@ class LarkLexiParser:
         version: 'v1' for basic features, 'v2' for enhanced features
     """
 
-    def __init__(self, version: str = 'v1'):
+    def __init__(self, version: str = "v1"):
         self.version = version
 
         # Load unified grammar (supports both v1 and v2 features)
@@ -296,15 +312,13 @@ class LarkLexiParser:
             grammar = f.read()
 
         self.parser = Lark(
-            grammar,
-            parser="lalr",
-            transformer=LexiTransformer(version=version)
+            grammar, parser="lalr", transformer=LexiTransformer(version=version)
         )
 
     def parse(self, code: str):
         try:
             result = self.parser.parse(code)
-            if self.version == 'v2':
+            if self.version == "v2":
                 # V2 returns string from start()
                 return result
             else:
@@ -321,7 +335,7 @@ class LarkLexiASTParser:
     Supports both v1 and v2 grammars.
     """
 
-    def __init__(self, version: str = 'v1'):
+    def __init__(self, version: str = "v1"):
         self.version = version
 
         # Load unified grammar (supports both v1 and v2 features)

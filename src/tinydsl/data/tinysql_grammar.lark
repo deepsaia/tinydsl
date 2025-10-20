@@ -1,4 +1,7 @@
 // TinySQL Grammar - Simplified query DSL
+//
+// Post-cutoff keywords: load, filter, select, sort, limit, join
+// Novel features: simplified SQL-like syntax for educational purposes
 
 start: statement+
 

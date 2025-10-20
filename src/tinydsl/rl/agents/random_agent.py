@@ -25,7 +25,7 @@ class RandomAgent(BaseAgent):
         action: int,
         reward: float,
         next_observation: np.ndarray,
-        done: bool
+        done: bool,
     ):
         """Random agent doesn't learn."""
         pass

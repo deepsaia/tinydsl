@@ -1,4 +1,5 @@
 """Tests for Lexi DSL."""
+
 import pytest
 from tinydsl.lexi.lexi import LexiInterpreter
 
@@ -8,12 +9,12 @@ class TestLexiV1:
 
     def test_lexi_v1_initialization(self):
         """Test Lexi V1 initializes correctly."""
-        lexi = LexiInterpreter(version='v1')
-        assert lexi.version == 'v1'
+        lexi = LexiInterpreter(version="v1")
+        assert lexi.version == "v1"
 
     def test_say_statement(self, sample_lexi_v1_code):
         """Test say statement."""
-        lexi = LexiInterpreter(version='v1')
+        lexi = LexiInterpreter(version="v1")
         lexi.parse(sample_lexi_v1_code)
         output = lexi.render()
         assert "Hello" in output
@@ -21,7 +22,7 @@ class TestLexiV1:
 
     def test_set_statement(self):
         """Test set statement."""
-        lexi = LexiInterpreter(version='v1')
+        lexi = LexiInterpreter(version="v1")
         code = 'set name "Alice"'
         lexi.parse(code)
         # Should execute without error
@@ -29,7 +30,7 @@ class TestLexiV1:
 
     def test_remember_and_recall(self):
         """Test remember and recall."""
-        lexi = LexiInterpreter(version='v1')
+        lexi = LexiInterpreter(version="v1")
         code = """
 remember name = "Alice"
 recall name
@@ -40,7 +41,7 @@ recall name
 
     def test_if_block(self):
         """Test if conditional."""
-        lexi = LexiInterpreter(version='v1')
+        lexi = LexiInterpreter(version="v1")
         code = """
 set mood "happy"
 if mood is happy {
@@ -53,7 +54,7 @@ if mood is happy {
 
     def test_repeat_block(self):
         """Test repeat loop."""
-        lexi = LexiInterpreter(version='v1')
+        lexi = LexiInterpreter(version="v1")
         code = """
 repeat 3 {
     say "Hello"
@@ -67,7 +68,7 @@ repeat 3 {
 
     def test_task_definition_and_call(self):
         """Test task definition and calling."""
-        lexi = LexiInterpreter(version='v1')
+        lexi = LexiInterpreter(version="v1")
         code = """
 task greet {
     say "Hello!"
@@ -84,19 +85,19 @@ class TestLexiV2:
 
     def test_lexi_v2_initialization(self):
         """Test Lexi V2 initializes correctly."""
-        lexi = LexiInterpreter(version='v2')
-        assert lexi.version == 'v2'
+        lexi = LexiInterpreter(version="v2")
+        assert lexi.version == "v2"
 
     def test_string_operations(self, sample_lexi_v2_code):
         """Test string operations."""
-        lexi = LexiInterpreter(version='v2')
+        lexi = LexiInterpreter(version="v2")
         lexi.parse(sample_lexi_v2_code)
         # Should execute without error
         assert lexi.render() is not None
 
     def test_upper_operation(self):
         """Test upper case operation."""
-        lexi = LexiInterpreter(version='v2')
+        lexi = LexiInterpreter(version="v2")
         code = """
 set name "alice"
 upper name as result
@@ -107,7 +108,7 @@ upper name as result
 
     def test_length_operation(self):
         """Test length operation."""
-        lexi = LexiInterpreter(version='v2')
+        lexi = LexiInterpreter(version="v2")
         code = """
 set text "Hello"
 length text as len
@@ -118,7 +119,7 @@ length text as len
 
     def test_list_operations(self):
         """Test list creation and operations."""
-        lexi = LexiInterpreter(version='v2')
+        lexi = LexiInterpreter(version="v2")
         code = """
 list items = ["a", "b", "c"]
 get items 0 as first
@@ -130,7 +131,7 @@ get items 0 as first
     @pytest.mark.skip(reason="foreach loop not yet implemented in Lexi V2 grammar")
     def test_foreach_loop(self):
         """Test foreach loop."""
-        lexi = LexiInterpreter(version='v2')
+        lexi = LexiInterpreter(version="v2")
         code = """
 list items = ["a", "b", "c"]
 foreach item in items {

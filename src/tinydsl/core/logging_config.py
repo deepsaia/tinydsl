@@ -13,8 +13,8 @@ Log Level Colors:
 - INFO: Cyan text
 - SUCCESS: Bold green text
 - WARNING: Bold yellow text
-- ERROR: Bold red text with ❌ marker
-- CRITICAL: Bright red text (with red background) and 🚨 marker
+- ERROR: Bold red text
+- CRITICAL: Bright red text (with red background) and ⚠️ marker
 """
 
 import sys
@@ -74,9 +74,9 @@ def setup_logging(
         """Custom formatter that adds error markers based on level."""
         # Add error marker prefix
         if record["level"].name == "CRITICAL":
-            marker = "🚨 "
+            marker = "⚠️ "
         elif record["level"].name == "ERROR":
-            marker = "❌ "
+            marker = ""
         else:
             marker = ""
 
@@ -144,7 +144,7 @@ def get_logger(name: str = None):
 
 # Default configuration
 # Can be overridden by calling setup_logging() with custom parameters
-logger = setup_logging(
+setup_logging(
     level="INFO",
     colorize=True,
 )
@@ -226,7 +226,9 @@ def setup_standard_logging_interception():
                 frame = frame.f_back
                 depth += 1
 
-            logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+            logger.opt(depth=depth, exception=record.exc_info).log(
+                level, record.getMessage()
+            )
 
     # Intercept specific loggers
     for logger_name in ["uvicorn", "uvicorn.access", "uvicorn.error", "fastapi"]:
@@ -243,8 +245,8 @@ Basic usage:
     logger.debug("Debug message")
     logger.info("Info message")
     logger.warning("Warning message")
-    logger.error("Error message")  # Shows in red with ❌
-    logger.critical("Critical message")  # Shows in bright red with 🚨
+    logger.error("Error message")  # Shows in red
+    logger.critical("Critical message")  # Shows in bright red with ⚠️
 
 In classes:
     from tinydsl.core.logging_config import get_logger

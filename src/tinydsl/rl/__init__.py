@@ -15,10 +15,4 @@ from tinydsl.rl.agents.random_agent import RandomAgent
 from tinydsl.rl.rewards.base_reward import BaseReward
 from tinydsl.rl.utils.trainer import RLTrainer
 
-__all__ = [
-    "DSLEnv",
-    "make_env",
-    "RandomAgent",
-    "BaseReward",
-    "RLTrainer"
-]
+__all__ = ["DSLEnv", "make_env", "RandomAgent", "BaseReward", "RLTrainer"]

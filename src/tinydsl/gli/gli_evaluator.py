@@ -19,7 +19,9 @@ class GliEvaluator(BaseEvaluator):
     but should be structurally equivalent.
     """
 
-    def __init__(self, benchmark_path: str, fuzzy: bool = False, threshold: float = 0.9):
+    def __init__(
+        self, benchmark_path: str, fuzzy: bool = False, threshold: float = 0.9
+    ):
         """
         Initialize Gli evaluator with exact or fuzzy matching.
 
@@ -31,8 +33,7 @@ class GliEvaluator(BaseEvaluator):
         if fuzzy:
             # Use fuzzy comparator for flexible graphics matching
             comparator = BaseEvaluator.fuzzy_comparator(
-                threshold=threshold,
-                return_metrics=True
+                threshold=threshold, return_metrics=True
             )
             super().__init__(benchmark_path, comparator=comparator)
             self.threshold = threshold
@@ -106,10 +107,7 @@ class GliEvaluator(BaseEvaluator):
 
             details.append(item)
 
-        return {
-            "accuracy": round(parent_result["accuracy"], 3),
-            "details": details
-        }
+        return {"accuracy": round(parent_result["accuracy"], 3), "details": details}
 
 
 # Example usage:

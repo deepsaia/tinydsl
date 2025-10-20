@@ -1,7 +1,6 @@
 # src/tinydsl/gli/gli.py
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import List, Tuple, Optional, Union
 
@@ -10,7 +9,10 @@ from tinydsl.parser.lark_gli_parser import LarkGLIParser
 from tinydsl.gli.renderers import PillowRenderer, BaseRenderer
 
 # Support both v1 and v2 shape formats
-Shape = Union[Tuple[str, float, float, float, str], Tuple[str, float, float, float, str, float, List]]
+Shape = Union[
+    Tuple[str, float, float, float, str],
+    Tuple[str, float, float, float, str, float, List],
+]
 
 
 class GlintInterpreter(BaseDSL):
@@ -25,7 +27,7 @@ class GlintInterpreter(BaseDSL):
         self,
         renderer: Optional[BaseRenderer] = None,
         accumulate: bool = False,
-        version: str = 'v1',  # 'v1' or 'v2'
+        version: str = "v1",  # 'v1' or 'v2'
         *,
         canvas_size: int = 768,
         supersample: int = 2,

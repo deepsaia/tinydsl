@@ -1,5 +1,8 @@
 // TinyMath Grammar - General-purpose arithmetic DSL
 // Supports variables, functions, and expressions
+//
+// Post-cutoff keywords: show
+// Novel features: simplified arithmetic calculator with variable assignment
 
 start: statement+
 

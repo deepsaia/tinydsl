@@ -14,7 +14,8 @@ V2 features (additional):
 - Transforms (rotate, scale, translate, push/pop)
 """
 from __future__ import annotations
-import os, math
+import os
+import math
 from typing import Callable, Dict, List, Tuple, Any
 from copy import deepcopy
 
@@ -27,7 +28,9 @@ Shape = Tuple[str, float, float, float, str, ...]
 
 _root = os.path.dirname(os.path.abspath(__file__))
 _data = os.path.join(_root, "..", "data")
-GLI_GRAMMAR_PATH = os.getenv("GLI_GRAMMAR_PATH", os.path.join(_data, "gli_grammar.lark"))
+GLI_GRAMMAR_PATH = os.getenv(
+    "GLI_GRAMMAR_PATH", os.path.join(_data, "gli_grammar.lark")
+)
 
 _MATH_CHARS = set("+-*/^()")
 _MATH_FUNCS = ("sin(", "cos(", "tan(", "sqrt(", "abs(", "min(", "max(", "exp(", "log(")
@@ -40,7 +43,8 @@ def _looks_math(s: str) -> bool:
         or any(f in s for f in _MATH_FUNCS)
         or "calc(" in s
         or "i" == s
-        or s.startswith("i") and any(ch in s for ch in "+-*/^)")
+        or s.startswith("i")
+        and any(ch in s for ch in "+-*/^)")
     )
 
 
@@ -55,7 +59,7 @@ class _GLICompiler(Transformer):
     V2 features (variables, functions, transforms) are active when using v2 grammar.
     """
 
-    def __init__(self, version: str = 'v1'):
+    def __init__(self, version: str = "v1"):
         super().__init__()
         self.version = version
         self.shapes: List[Shape] = []
@@ -73,7 +77,7 @@ class _GLICompiler(Transformer):
             "scale_x": 1.0,
             "scale_y": 1.0,
             "tx": 0.0,
-            "ty": 0.0
+            "ty": 0.0,
         }
 
     # ========== Common Token/Value Handlers ==========
@@ -89,7 +93,11 @@ class _GLICompiler(Transformer):
 
     def plain_string(self, s):
         txt = str(s)
-        return txt[1:-1] if len(txt) >= 2 and txt[0] == txt[-1] and txt[0] in ("'", '"') else txt
+        return (
+            txt[1:-1]
+            if len(txt) >= 2 and txt[0] == txt[-1] and txt[0] in ("'", '"')
+            else txt
+        )
 
     def plain_number(self, n):
         return float(n)
@@ -112,7 +120,7 @@ class _GLICompiler(Transformer):
     def _math_ctx(self):
         """Math context with constants and variables."""
         ctx = {"pi": math.pi, "e": math.e, "i": self.i}
-        if self.version == 'v2':
+        if self.version == "v2":
             ctx.update(self.variables)
         return ctx
 
@@ -123,7 +131,7 @@ class _GLICompiler(Transformer):
         s = s.replace("$i", "i")
 
         # Check if it's a variable reference (v2 only)
-        if self.version == 'v2' and s in self.variables:
+        if self.version == "v2" and s in self.variables:
             return self.variables[s]
 
         # Math evaluation
@@ -179,7 +187,7 @@ class _GLICompiler(Transformer):
                 yf = _coerce(raw_y)
 
                 # Apply transforms (v2 only)
-                if self.version == 'v2':
+                if self.version == "v2":
                     tx = self.current_transform["tx"]
                     ty = self.current_transform["ty"]
                     rot = self.current_transform["rotation"]
@@ -191,12 +199,14 @@ class _GLICompiler(Transformer):
                     yf = yf * sy + ty
 
             except Exception:
-                raise ValueError(f"x/y must be numeric after evaluation, got x={raw_x!r}, y={raw_y!r}")
+                raise ValueError(
+                    f"x/y must be numeric after evaluation, got x={raw_x!r}, y={raw_y!r}"
+                )
 
             size = float(self.context.get("size", 10.0))
             color = str(self.context.get("color", "black"))
 
-            if self.version == 'v2':
+            if self.version == "v2":
                 # V2 shape format with transforms
                 rot = self.current_transform["rotation"]
                 sx = self.current_transform["scale_x"]
@@ -256,7 +266,9 @@ class _GLICompiler(Transformer):
 
     # ========== V2 Only: Conditionals ==========
 
-    def if_block(self, name: Token, op: Token, value: Any, block: List, else_block: List = None):
+    def if_block(
+        self, name: Token, op: Token, value: Any, block: List, else_block: List = None
+    ):
         """Conditional execution (v2)."""
         name = str(name)
         op = str(op)
@@ -367,6 +379,7 @@ class _GLICompiler(Transformer):
 
     def rotate(self, angle: Any):
         """Rotate transform (v2)."""
+
         def _op():
             val = angle if not isinstance(angle, str) else self._eval_value(angle)
             self.current_transform["rotation"] += float(val)
@@ -376,9 +389,14 @@ class _GLICompiler(Transformer):
 
     def scale(self, sx: Any, sy: Any = None):
         """Scale transform (v2)."""
+
         def _op():
             scale_x = sx if not isinstance(sx, str) else self._eval_value(sx)
-            scale_y = sy if sy and not isinstance(sy, str) else (self._eval_value(sy) if sy else scale_x)
+            scale_y = (
+                sy
+                if sy and not isinstance(sy, str)
+                else (self._eval_value(sy) if sy else scale_x)
+            )
             self.current_transform["scale_x"] *= float(scale_x)
             self.current_transform["scale_y"] *= float(scale_y)
 
@@ -387,6 +405,7 @@ class _GLICompiler(Transformer):
 
     def translate(self, tx: Any, ty: Any):
         """Translate transform (v2)."""
+
         def _op():
             t_x = tx if not isinstance(tx, str) else self._eval_value(tx)
             t_y = ty if not isinstance(ty, str) else self._eval_value(ty)
@@ -398,6 +417,7 @@ class _GLICompiler(Transformer):
 
     def push(self):
         """Push transform state (v2)."""
+
         def _op():
             self.transform_stack.append(deepcopy(self.current_transform))
 
@@ -406,6 +426,7 @@ class _GLICompiler(Transformer):
 
     def pop(self):
         """Pop transform state (v2)."""
+
         def _op():
             if self.transform_stack:
                 self.current_transform = self.transform_stack.pop()
@@ -438,7 +459,7 @@ class LarkGLIParser:
         version: 'v1' for basic features, 'v2' for enhanced features
     """
 
-    def __init__(self, version: str = 'v1'):
+    def __init__(self, version: str = "v1"):
         self.version = version
 
         # Load unified grammar (supports both v1 and v2 features)

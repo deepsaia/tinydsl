@@ -7,7 +7,6 @@ Demonstrates BaseDSL implementation with a post-cutoff knowledge domain.
 from pathlib import Path
 from typing import Any
 import json
-import os
 
 from tinydsl.core.base_dsl import BaseDSL
 from tinydsl.parser.lark_tinycalc_parser import LarkTinyCalcParser

@@ -9,7 +9,7 @@ This demonstrates:
 
 from tinydsl.rl.envs import make_env
 from tinydsl.rl.agents import RandomAgent, QLearningAgent, PolicyGradientAgent
-from tinydsl.rl.utils import RLTrainer, RLEvaluator
+from tinydsl.rl.utils import RLTrainer
 from typing import Dict, Any
 
 
@@ -30,22 +30,15 @@ def compare_agents_on_task(dsl_name="tinycalc", task_id="001"):
     agents = {
         "Random": RandomAgent(env.action_space_size),
         "Q-Learning": QLearningAgent(
-            action_space_size=env.action_space_size,
-            learning_rate=0.01,
-            epsilon=0.3
+            action_space_size=env.action_space_size, learning_rate=0.01, epsilon=0.3
         ),
         "Policy Gradient": PolicyGradientAgent(
-            action_space_size=env.action_space_size,
-            learning_rate=0.001
-        )
+            action_space_size=env.action_space_size, learning_rate=0.001
+        ),
     }
 
     # Training configurations
-    training_configs = {
-        "Random": 100,
-        "Q-Learning": 2000,
-        "Policy Gradient": 3000
-    }
+    training_configs = {"Random": 100, "Q-Learning": 2000, "Policy Gradient": 3000}
 
     # Train each agent
     results: Dict[str, Any] = {}
@@ -53,19 +46,19 @@ def compare_agents_on_task(dsl_name="tinycalc", task_id="001"):
     for name, agent in agents.items():
         print(f"\n{'='*60}")
         print(f"Training {name}")
-        print('='*60)
+        print("=" * 60)
 
         trainer = RLTrainer(
             env=make_env(dsl_name, task_id, max_steps=30),
             agent=agent,
-            log_dir=f"output/rl_comparison/{dsl_name}_{task_id}/{name.replace(' ', '_').lower()}"
+            log_dir=f"output/rl_comparison/{dsl_name}_{task_id}/{name.replace(' ', '_').lower()}",
         )
 
         stats = trainer.train(
             num_episodes=training_configs[name],
             eval_every=max(training_configs[name] // 5, 1),
             save_every=max(training_configs[name] // 2, 1),
-            verbose=False  # Less verbose for comparison
+            verbose=False,  # Less verbose for comparison
         )
 
         results[name] = stats
@@ -77,9 +70,9 @@ def compare_agents_on_task(dsl_name="tinycalc", task_id="001"):
     # Compare results
     print(f"\n{'='*60}")
     print("COMPARISON RESULTS")
-    print('='*60)
+    print("=" * 60)
     print(f"{'Agent':<20} {'Success Rate':<15} {'Avg Reward':<15} {'Time (s)':<10}")
-    print('-'*60)
+    print("-" * 60)
 
     for name, stats in results.items():
         print(
@@ -90,8 +83,8 @@ def compare_agents_on_task(dsl_name="tinycalc", task_id="001"):
         )
 
     # Determine winner
-    print('\n🏆 Winner (by success rate):')
-    winner = max(results.items(), key=lambda x: x[1]['final_success_rate'])
+    print("\n🏆 Winner (by success rate):")
+    winner = max(results.items(), key=lambda x: x[1]["final_success_rate"])
     print(f"   {winner[0]} with {winner[1]['final_success_rate']:.2%} success rate")
 
     return results
