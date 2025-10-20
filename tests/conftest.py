@@ -1,11 +1,36 @@
 """Pytest configuration and fixtures."""
 import pytest
 import sys
+import os
+import shutil
 from pathlib import Path
 
 # Add src to path for imports
 src_path = Path(__file__).parent.parent / "src"
 sys.path.insert(0, str(src_path))
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_memory_directory():
+    """Create memory directory before tests and cleanup in CI after tests."""
+    # Get project root (parent of tests directory)
+    project_root = Path(__file__).parent.parent
+    memory_dir = project_root / "memory"
+
+    # Ensure memory directory exists
+    memory_dir.mkdir(exist_ok=True)
+
+    # Create empty lexi_memory.json if it doesn't exist
+    lexi_memory_file = memory_dir / "lexi_memory.json"
+    if not lexi_memory_file.exists():
+        lexi_memory_file.write_text("{}")
+
+    yield
+
+    # Cleanup only in CI environment (GitHub Actions)
+    if os.getenv("CI") or os.getenv("GITHUB_ACTIONS"):
+        if memory_dir.exists():
+            shutil.rmtree(memory_dir)
 
 
 @pytest.fixture

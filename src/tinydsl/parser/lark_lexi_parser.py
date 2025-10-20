@@ -18,7 +18,7 @@ import os
 import math
 from typing import Any, List
 from lark import Lark, Transformer, v_args, Tree, Token
-from tinydsl.lexi.lexi_memory import LexiMemoryStore
+from tinydsl.core.memory import JSONFileMemory
 from tinydsl.parser.lark_math_parser import LarkMathParser
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -36,7 +36,7 @@ class LexiTransformer(Transformer):
     """
 
     def __init__(self, memory=None, context=None, version='v1'):
-        self.memory = memory or LexiMemoryStore()
+        self.memory = memory or JSONFileMemory(filepath="memory/lexi_memory.json")
         self.context = context or {}
         self.output = []
         self.math_parser = LarkMathParser()

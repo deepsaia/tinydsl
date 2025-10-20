@@ -1,9 +1,17 @@
 """Tests for core framework components."""
 import pytest
+import os
 from tinydsl.core.base_dsl import BaseDSL
 from tinydsl.core.dsl_registry import DSLRegistry
 from tinydsl.core.memory import InMemoryStore, JSONFileMemory
 from tinydsl.core.evaluator import BaseEvaluator
+
+
+root_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(root_dir, "..", "data")
+output_dir = os.path.join(root_dir, "output")
+# create output directory if it doesn't exist
+os.makedirs(output_dir, exist_ok=True)
 
 
 class TestBaseDSL:

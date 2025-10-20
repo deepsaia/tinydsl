@@ -88,28 +88,32 @@ class InMemoryStore(BaseMemory):
 
 
 class JSONFileMemory(BaseMemory):
-    """
-    Persistent memory backed by JSON file.
-
-    This is what LexiMemoryStore implements - extracted as base class.
-    """
+    """Persistent memory backed by JSON file."""
 
     def __init__(self, filepath: Optional[str] = None, auto_save: bool = True):
         """
         Initialize JSON-backed memory.
 
         Args:
-            filepath: Path to JSON file (default: output/memory.json)
+            filepath: Path to JSON file (default: memory/memory.json)
             auto_save: Whether to save after each modification
         """
         if filepath is None:
-            output_dir = Path("output")
-            output_dir.mkdir(exist_ok=True)
-            filepath = str(output_dir / "memory.json")
+            memory_dir = Path("memory")
+            memory_dir.mkdir(exist_ok=True)
+            filepath = str(memory_dir / "memory.json")
 
         self.filepath = Path(filepath)
         self.auto_save = auto_save
         self._store: Dict[str, Any] = {}
+
+        # Ensure parent directory exists
+        self.filepath.parent.mkdir(parents=True, exist_ok=True)
+
+        # Create empty file if it doesn't exist
+        if not self.filepath.exists():
+            self.filepath.write_text("{}")
+
         self._load()
 
     def _load(self) -> None:
