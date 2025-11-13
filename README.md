@@ -89,47 +89,20 @@ graph LR
 ```
 tinydsl/
 ├── core/               # Shared abstractions
-│   ├── base_dsl.py    # Base class for all DSLs
-│   ├── evaluator.py   # Generic evaluation framework
-│   ├── memory.py      # Persistent storage
-│   └── dsl_registry.py # Plugin architecture
 │
 ├── parser/            # Grammar-based parsers
-│   ├── lark_lexi_parser.py
-│   ├── lark_gli_parser.py
-│   ├── lark_tinycalc_parser.py
-│   ├── lark_tinysql_parser.py
-│   └── lark_tinymath_parser.py
 │
 ├── data/              # Grammars, examples, benchmarks
-│   ├── lexi_grammar.lark
-│   ├── lexi_tasks.json
-│   ├── gli_grammar.lark
-│   └── ...
 │
 ├── lexi/              # Text DSL implementation
-│   ├── lexi.py        # Main interpreter
-│   ├── lexi_evaluator.py
-│   └── lexi_memory.py
 │
 ├── gli/               # Graphics DSL implementation
-│   ├── gli.py         # Main interpreter
-│   ├── gli_evaluator.py
-│   └── renderers.py   # Pillow/Matplotlib
 │
 ├── tinycalc/          # Unit conversion DSL
 ├── tinysql/           # Query DSL
 ├── tinymath/          # Arithmetic calculator DSL
-│   ├── tinymath.py    # Main interpreter
-│   └── tinymath_evaluator.py
 │
 ├── api/               # REST API layer
-│   ├── main.py        # FastAPI app
-│   ├── routes_lexi.py
-│   ├── routes_gli.py
-│   ├── routes_tinycalc.py
-│   ├── routes_tinysql.py
-│   └── routes_tinymath.py
 │
 ├── agent_tools/       # LLM agent integrations
 ├── rl/                # Reinforcement learning framework
